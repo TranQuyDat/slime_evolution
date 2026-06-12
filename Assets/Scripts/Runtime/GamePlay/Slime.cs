@@ -1,23 +1,22 @@
 using UnityEngine;
-public enum Slimestate
-{
-    Holding,
-    Falling,
-    Landed
-}
+
 class Slime : MonoBehaviour
 {
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
     private SlimeData _data;
+    private bool _isFreeze;
 
-    public Slimestate _curstate = Slimestate.Holding;
+
+
+    public bool IsFreeZe => _isFreeze;
+    public SlimeData Data => _data;
+    public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime","Ground"));
 
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
-        _rb.bodyType = RigidbodyType2D.Kinematic;
     }
     void Update()
     {
@@ -28,19 +27,24 @@ class Slime : MonoBehaviour
     public void Init(SlimeData data)
     {
         _data = data;
-        _sr.color = data.Color;
-        scaleSlime((int)data.Lv);
+        scaleSlime(data.Lv);
     }
 
     private void scaleSlime(int lv)
     {
-        float scale = (1 + (lv - 1)) * 0.25f;
+        float scale = (1 + (lv - 1)) * 0.5f;
         transform.localScale = new Vector3(scale, scale, 1);
     }
 
     public void Unfreeze()
     {
         _rb.bodyType = RigidbodyType2D.Dynamic;
+        _isFreeze = false;
+    }
+    public void Freeze()
+    {
+        _rb.bodyType = RigidbodyType2D.Kinematic;
+        _isFreeze = true;
     }
 
 }

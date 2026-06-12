@@ -3,7 +3,7 @@ using UnityEngine;
 class SpawnSystem : MonoBehaviour
 {
     [SerializeField] private GameObject _slimePrefab;
-    private int[] _spawnPattern  = {1,1,2,1,2,3,2,3,4};
+    private int[] _spawnPattern  = {1, 3, 2, 4, 1, 5, 3, 2, 5};
     private int _spawnIndex = 0;
     public bool _canSpawn = false;
     private Slime _slimeHolder;
@@ -16,7 +16,6 @@ class SpawnSystem : MonoBehaviour
 
     void Update()
     {
-
         if(_canSpawn)
         {
             SpawnSlime();
@@ -32,13 +31,25 @@ class SpawnSystem : MonoBehaviour
         Slime slime = slimeObj.GetComponent<Slime>();
         slime.Init(data); // init
         _slimeHolder = slime;
+        _slimeHolder.Freeze();
     }
 
     private SlimeData RandomSlimeData()
     {
         SlimeData data;
-        int randomLv = (_spawnIndex + 1) % _spawnPattern.Length;
+        _spawnIndex = (_spawnIndex + 1) % _spawnPattern.Length;
+        int randomLv = _spawnPattern[_spawnIndex];
         data = new SlimeData(randomLv);
         return data;
     }
+
+    public void Reset()
+    {
+        _canSpawn = false;
+        _spawnIndex = 0;
+        if(_slimeHolder != null)
+            Destroy(_slimeHolder.gameObject);
+    }
+
+    public void EmptyHolder() => _slimeHolder = null;
 }
