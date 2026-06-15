@@ -78,15 +78,15 @@ class GamePlay : MonoBehaviour
 
     private void DragSlime_X()
     {
-        Transform slimeobj = _spawnSystem.SlimeHolder?.transform;
-        if(slimeobj == null) return;
+        if(_spawnSystem.SlimeHolder == null) return;
+        Transform slimeobj = _spawnSystem.SlimeHolder.transform;
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 slimePos = slimeobj.position;
         Vector3 dragVector = mousePos - slimePos;
-        if(dragVector.magnitude > _dragThreshold)
+        if(dragVector.magnitude > 0.1f)
         {
             Vector3 dragDirection = dragVector.normalized;
-            Vector2 pos = slimeobj.position + dragDirection * Time.deltaTime * 5f;   
+            Vector2 pos = mousePos;   
             pos.x = Mathf.Clamp(pos.x,-_dragThreshold,_dragThreshold);
             pos.y = slimeobj.position.y;
             slimeobj.position = pos;

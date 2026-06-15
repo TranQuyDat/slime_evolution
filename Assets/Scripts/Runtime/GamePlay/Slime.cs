@@ -1,13 +1,15 @@
+using System;
 using UnityEngine;
 
 class Slime : MonoBehaviour
 {
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
+    private Collider2D _collider;
     private SlimeData _data;
     private bool _isFreeze;
 
-
+    [SerializeField] private int DisPLayLevel;
 
     public bool IsFreeZe => _isFreeze;
     public SlimeData Data => _data;
@@ -17,22 +19,29 @@ class Slime : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
+        _collider = GetComponent<Collider2D>();
     }
     void Update()
     {
-        _rb.linearVelocity = Vector2.ClampMagnitude(_rb.linearVelocity, 5f);
+        // Vector3 velocity = _rb.linearVelocity;
+        // velocity.y = Mathf.Clamp(_rb.linearVelocity.y, -10,10f);
+        // _rb.linearVelocity = velocity;
         
+    }
+    void LateUpdate()
+    {
+        DisPLayLevel = _data.Lv;
     }
 
     public void Init(SlimeData data)
     {
         _data = data;
-        scaleSlime(data.Lv);
+        _sr.sprite = data.Sprite;
+        scaleSlime(data.Scale);
     }
 
-    private void scaleSlime(int lv)
+    private void scaleSlime(float scale)
     {
-        float scale = (1 + (lv - 1)) * 0.5f;
         transform.localScale = new Vector3(scale, scale, 1);
     }
 

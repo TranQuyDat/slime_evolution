@@ -1,0 +1,265 @@
+fileFormatVersion: 2
+guid: 7d865b68133309f628b928739c1d42c6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 9047596300894710109
+    second: pit_2Layer_0
+  - first:
+      213: -3290520846377844332
+    second: pit_2Layer_1
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: pit_2Layer_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 196
+        width: 767
+        height: 659
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: 24.5, y: -244.5}
+        - {x: 39.5, y: -244.5}
+        - {x: 66.5, y: -241.5}
+        - {x: 87.5, y: -238.5}
+        - {x: 103.5, y: -234.5}
+        - {x: 125.5, y: -226.5}
+        - {x: 154.5, y: -215.5}
+        - {x: 207.5, y: -190.5}
+        - {x: 207.5, y: -183.5}
+        - {x: 232.5, y: -153.5}
+        - {x: 246.5, y: -131.5}
+        - {x: 257.5, y: -106.5}
+        - {x: 264.5, y: -87.5}
+        - {x: 270.5, y: -68.5}
+        - {x: 273.5, y: -48.5}
+        - {x: 280.5, y: 26.5}
+        - {x: 273.5, y: 59.5}
+        - {x: 247.5, y: 134.5}
+        - {x: 236.5, y: 146.5}
+        - {x: 238.5, y: 169.5}
+        - {x: 244.5, y: 201.5}
+        - {x: 235.5, y: 225.5}
+        - {x: 230.5, y: 200.5}
+        - {x: 223.5, y: 186.5}
+        - {x: 192.5, y: 162.5}
+        - {x: 196.5, y: 135.5}
+        - {x: 205.5, y: 98.5}
+        - {x: 215.5, y: 64.5}
+        - {x: 225.5, y: 7.5}
+        - {x: 226.5, y: -7.5}
+        - {x: 226.5, y: -37.5}
+        - {x: 220.5, y: -83.5}
+        - {x: 210.5, y: -115.5}
+        - {x: 201.5, y: -133.5}
+        - {x: 189.5, y: -150.5}
+        - {x: 173.5, y: -164.5}
+        - {x: 161.5, y: -174.5}
+        - {x: 135.5, y: -187.5}
+        - {x: 110.5, y: -195.5}
+        - {x: 77.5, y: -202.5}
+        - {x: 23.5, y: -207.5}
+        - {x: -27.5, y: -208.5}
+        - {x: -28.5, y: -207.5}
+        - {x: -78.5, y: -203.5}
+        - {x: -113.5, y: -197.5}
+        - {x: -142.5, y: -189.5}
+        - {x: -163.5, y: -181.5}
+        - {x: -190.5, y: -165.5}
+        - {x: -208.5, y: -146.5}
+        - {x: -233.5, y: -87.5}
+        - {x: -238.5, y: -51.5}
+        - {x: -238.5, y: -9.5}
+        - {x: -234.5, y: 27.5}
+        - {x: -230.5, y: 50.5}
+        - {x: -211.5, y: 121.5}
+        - {x: -206.5, y: 152.5}
+        - {x: -210.5, y: 167.5}
+        - {x: -222.5, y: 176.5}
+        - {x: -242.5, y: 183.5}
+        - {x: -252.5, y: 194.5}
+        - {x: -260.5, y: 215.5}
+        - {x: -265.5, y: 194.5}
+        - {x: -252.5, y: 162.5}
+        - {x: -257.5, y: 142.5}
+        - {x: -262.5, y: 137.5}
+        - {x: -287.5, y: 63.5}
+        - {x: -293.5, y: 32.5}
+        - {x: -291.5, y: -45.5}
+        - {x: -284.5, y: -77.5}
+        - {x: -280.5, y: -93.5}
+        - {x: -271.5, y: -117.5}
+        - {x: -254.5, y: -149.5}
+        - {x: -237.5, y: -170.5}
+        - {x: -225.5, y: -181.5}
+        - {x: -174.5, y: -218.5}
+        - {x: -153.5, y: -224.5}
+        - {x: -125.5, y: -232.5}
+        - {x: -117.5, y: -234.5}
+        - {x: -89.5, y: -240.5}
+        - {x: -74.5, y: -242.5}
+        - {x: -44.5, y: -244.5}
+      tessellationDetail: 0.2
+      bones: []
+      spriteID: d59a7f146e48f8d70800000000000000
+      internalID: 9047596300894710109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pit_2Layer_1
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 196
+        width: 767
+        height: 659
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49181a169b8b552d0800000000000000
+      internalID: -3290520846377844332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 267b068af406cba4fa07219ec7e3c2c4
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":1.0},"gridSpriteSize":{"x":767.0,"y":659.0},"gridSpriteOffset":{"x":1.0,"y":169.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      pit_2Layer_0: 9047596300894710109
+      pit_2Layer_1: -3290520846377844332
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
