@@ -49,3 +49,4 @@ MonoBehaviour:
   - _lv: 11
     _sprite: {fileID: -378425998, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
     _scale: 3
+  _slimePrefab: {fileID: 5653574659505928494, guid: 0a4a5a9075bf832989c3a1f5a3deb940, type: 3}
