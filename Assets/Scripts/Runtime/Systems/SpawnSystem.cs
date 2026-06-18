@@ -32,7 +32,7 @@ class SpawnSystem : MonoBehaviour
 
         Vector3 spwnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.9f,10)); // pos mouse
         GameObject slimeObj = _objectPoolSys.Order(_slimeDatabase.SlimePrefab); // spawn
-
+        slimeObj.transform.rotation = Quaternion.identity;
         Slime slime = slimeObj.GetComponent<Slime>();
 
         slimeObj.transform.position = spwnPos;

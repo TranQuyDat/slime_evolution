@@ -31,7 +31,7 @@ public class PitController : MonoBehaviour
     {
         foreach(Transform t in _content)
         {
-            Destroy(t.gameObject);
+            t.GetComponent<IDestroyable>()?.Destroy();
         }
         _highestContentY = 0;
     }
