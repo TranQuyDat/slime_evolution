@@ -371,7 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46f4b2650dcd47a98d497a8944ba7f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnSystem
-  _slimePrefab: {fileID: 5653574659505928494, guid: 0a4a5a9075bf832989c3a1f5a3deb940, type: 3}
+  _slimeDatabase: {fileID: 11400000, guid: 2e8491dd6edf89a3ca9fe7a5f0f84110, type: 2}
   _canSpawn: 0
 --- !u!114 &1476660233
 MonoBehaviour:
@@ -425,6 +425,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1760433137}
   - component: {fileID: 1760433138}
+  - component: {fileID: 1760433139}
   m_Layer: 0
   m_Name: GamePlay
   m_TagString: Untagged
@@ -462,7 +463,19 @@ MonoBehaviour:
   _inputSystem: {fileID: 1476660233}
   _spawnSystem: {fileID: 1476660232}
   _pitPrefab: {fileID: 7926584878437095606, guid: fb6757bd063c460989d11d13ad1e5592, type: 3}
-  _dragThreshold: 4
+  _dragThreshold: 2
+--- !u!114 &1760433139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760433136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e29edcf3f9a82c26ea3401bc986b3fab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolSystem
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-class Slime : MonoBehaviour
+class Slime : MonoBehaviour ,IPoolable,IDestroyable
 {
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
@@ -14,6 +14,8 @@ class Slime : MonoBehaviour
     public bool IsFreeZe => _isFreeze;
     public SlimeData Data => _data;
     public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime","Ground"));
+
+    public string PoolKey =>"Slime";
 
     void Awake()
     {
@@ -56,4 +58,8 @@ class Slime : MonoBehaviour
         _isFreeze = true;
     }
 
+    public void Destroy()
+    {
+        ObjectPoolSystem.Instance.Cancel(gameObject,PoolKey);
+    }
 }

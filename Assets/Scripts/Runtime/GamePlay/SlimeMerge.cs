@@ -3,7 +3,7 @@ using UnityEngine;
 class SlimeMerge : MonoBehaviour
 {
     private Slime _thisSlime;
-    [SerializeField] private GameObject _prefabSlime;
+    private GameObject _slimePrefab;
     private SpawnSystem _spawnSystem;
     private int _nextLV;
     private int _maxLv;
@@ -12,6 +12,7 @@ class SlimeMerge : MonoBehaviour
     {
         _thisSlime = GetComponent<Slime>();
         _spawnSystem = GameManager.Instance.GetComponent<SpawnSystem>();
+        _slimePrefab = _spawnSystem.SlimeDatabase.SlimePrefab;
     }
     void Start()
     {
@@ -36,7 +37,8 @@ class SlimeMerge : MonoBehaviour
         if(_isMerging) return;
         if(this.GetInstanceID() > OtherSlime.GetInstanceID()) return;
         _isMerging = true;
-        GameObject newSlimeobj = Instantiate(_prefabSlime,transform.position,Quaternion.identity);
+        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab);
+        newSlimeobj.transform.position = transform.position;
         Slime newSlime = newSlimeobj.GetComponent<Slime>();
        
         SlimeDatabase slimeDatabase = _spawnSystem.SlimeDatabase;
@@ -46,7 +48,7 @@ class SlimeMerge : MonoBehaviour
         newSlimeobj.transform.SetParent(transform.parent,true);
        
         //destroy
-        Destroy(this.gameObject);
-        Destroy(OtherSlime.gameObject);
+        _thisSlime.Destroy();
+        OtherSlime.Destroy();
     }
 }

@@ -3,8 +3,7 @@ using UnityEngine;
 
 class SpawnSystem : MonoBehaviour
 {
-    [SerializeField] private GameObject _slimePrefab;
-    private int[] _spawnPattern  = {1, 3, 2, 4, 1, 5, 3, 2, 5};
+    private ObjectPoolSystem _objectPoolSys;
     [SerializeField] private SlimeDatabase _slimeDatabase; 
     private  List<SlimeDatabase.SlimeType> _spawnBag = new List<SlimeDatabase.SlimeType>();
     public bool _canSpawn = false;
@@ -14,7 +13,7 @@ class SpawnSystem : MonoBehaviour
     public SlimeDatabase SlimeDatabase => _slimeDatabase;
     private void Start()
     {
-        
+        _objectPoolSys = ObjectPoolSystem.Instance;
     }
 
     void Update()
@@ -32,9 +31,12 @@ class SpawnSystem : MonoBehaviour
         SlimeData data = _slimeDatabase.SlimeDatas[i];
 
         Vector3 spwnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.9f,10)); // pos mouse
-        GameObject slimeObj = Instantiate(_slimePrefab, spwnPos, Quaternion.identity); // spawn
+        GameObject slimeObj = _objectPoolSys.Order(_slimeDatabase.SlimePrefab); // spawn
 
         Slime slime = slimeObj.GetComponent<Slime>();
+
+        slimeObj.transform.position = spwnPos;
+        slimeObj.transform.SetParent(null,true);
         slime.Init(data); // init
         _slimeHolder = slime;
         _slimeHolder.Freeze();
@@ -82,7 +84,7 @@ class SpawnSystem : MonoBehaviour
         _canSpawn = false;
         _spawnBag.Clear();
         if(_slimeHolder != null)
-            Destroy(_slimeHolder.gameObject);
+            _slimeHolder.Destroy();
     }
 
     public void EmptyHolder() => _slimeHolder = null;

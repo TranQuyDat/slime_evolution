@@ -1,7 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 [CreateAssetMenu(fileName ="SlimeDatabase",menuName ="Data/SlimeDatabase")]
 class SlimeDatabase : ScriptableObject
@@ -12,8 +10,10 @@ class SlimeDatabase : ScriptableObject
         Goat = 6, Pig = 7, Horse = 8, Tiger = 9, Buffalo = 10, Dragon = 11
     }
     [SerializeField]private SlimeData[] _slimeDatas ;
+    [SerializeField]private GameObject _slimePrefab;
     
     public SlimeData[] SlimeDatas =>_slimeDatas;
+    public GameObject SlimePrefab => _slimePrefab;
     void Reset()
     {
         Sprite[] allSprites = Resources.LoadAll<Sprite>("SlimeSprites");
