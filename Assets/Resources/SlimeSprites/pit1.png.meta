@@ -1,0 +1,488 @@
+fileFormatVersion: 2
+guid: 6f04269ef62d26df78e58074da90c390
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5685094100023643636
+    second: pit1_0
+  - first:
+      213: -4177179116545210634
+    second: pit1_1
+  - first:
+      213: 3040765940029021928
+    second: pit1_2
+  - first:
+      213: -514943965291517314
+    second: pit1_3
+  - first:
+      213: 63639949945848568
+    second: pit1_4
+  - first:
+      213: -6916517083457061608
+    second: pit1_5
+  - first:
+      213: 2510570367724088882
+    second: pit1_6
+  - first:
+      213: -5911151493747203686
+    second: pit1_7
+  - first:
+      213: 4418450444587252446
+    second: pit1_8
+  - first:
+      213: 6583876742090417903
+    second: pit1_9
+  - first:
+      213: 8224143556029297701
+    second: pit1_10
+  - first:
+      213: -2137223389165811789
+    second: pit1_11
+  - first:
+      213: 7073589454460443684
+    second: pit1_12
+  - first:
+      213: 4638088032072960831
+    second: pit1_13
+  - first:
+      213: -8245558047404287607
+    second: pit1_14
+  - first:
+      213: 5427951883749118636
+    second: pit1_15
+  - first:
+      213: -8466123169939877934
+    second: pit1_16
+  - first:
+      213: 8842484356022839259
+    second: pit1_17
+  - first:
+      213: -3431707995352011043
+    second: pit1_18
+  - first:
+      213: 3826086662663947991
+    second: pit1_19
+  - first:
+      213: 8346172039325269645
+    second: pit1_20
+  - first:
+      213: 4299999505566409482
+    second: pit1_21
+  - first:
+      213: -6063901857212610745
+    second: pit1_22
+  - first:
+      213: -6822847332925808562
+    second: pit1_23
+  - first:
+      213: -1753160672157448710
+    second: pit1_24
+  - first:
+      213: -3081369741914810448
+    second: pit1_25
+  - first:
+      213: -842976884816863184
+    second: pit1_26
+  - first:
+      213: 7929241457858521685
+    second: pit1_27
+  - first:
+      213: 4710343520234600712
+    second: pit1_28
+  - first:
+      213: -8516207811373399532
+    second: pit1_29
+  - first:
+      213: -7773686758625549172
+    second: pit1_30
+  - first:
+      213: 7251118295962715808
+    second: pit1_31
+  - first:
+      213: 2790909769948695422
+    second: pit1_32
+  - first:
+      213: 2901490568211438849
+    second: pit1_33
+  - first:
+      213: 4609472870797873998
+    second: pit1_34
+  - first:
+      213: -6911151876576050261
+    second: pit1_35
+  - first:
+      213: -7543278650214348141
+    second: pit1_36
+  - first:
+      213: 282042564625888038
+    second: pit1_37
+  - first:
+      213: 8120519932992114730
+    second: pit1_38
+  - first:
+      213: 1819956081852795177
+    second: pit1_39
+  - first:
+      213: -6100626329871713941
+    second: pit1_40
+  - first:
+      213: -6457745125493264188
+    second: pit1_41
+  - first:
+      213: 7454698648431775687
+    second: pit1_42
+  - first:
+      213: -4250398038628284864
+    second: pit1_43
+  - first:
+      213: 4369609761003169027
+    second: pit1_44
+  - first:
+      213: 3953224729893254886
+    second: pit1_45
+  - first:
+      213: 1344050291571816270
+    second: pit1_46
+  - first:
+      213: 641717985607868972
+    second: pit1_47
+  - first:
+      213: -5640039006032963667
+    second: pit1_48
+  - first:
+      213: 3413018054793899025
+    second: pit1_49
+  - first:
+      213: -2390902492116219754
+    second: pit1_50
+  - first:
+      213: -1258664429750451359
+    second: pit1_51
+  - first:
+      213: 3130511024570495605
+    second: pit1_52
+  - first:
+      213: -5012797966263873915
+    second: pit1_53
+  - first:
+      213: -3108473702531876634
+    second: pit1_54
+  - first:
+      213: 4943233408679966773
+    second: pit1_55
+  - first:
+      213: -6367653328339416016
+    second: pit1_56
+  - first:
+      213: 1910299270600516888
+    second: pit1_57
+  - first:
+      213: 8792012680165272088
+    second: pit1_58
+  - first:
+      213: -8981735146692113058
+    second: pit1_59
+  - first:
+      213: 6524990954204047775
+    second: pit1_60
+  - first:
+      213: 988810460239729625
+    second: pit1_61
+  - first:
+      213: -5204354240872818522
+    second: pit1_62
+  - first:
+      213: -2579817195581138170
+    second: pit1_63
+  - first:
+      213: 3736778323310738273
+    second: pit1_64
+  - first:
+      213: -1603274914704600477
+    second: pit1_65
+  - first:
+      213: 4668074301318933122
+    second: pit1_66
+  - first:
+      213: 286530738293433531
+    second: pit1_67
+  - first:
+      213: -801957781982251178
+    second: pit1_68
+  - first:
+      213: -6618499164238700987
+    second: pit1_69
+  - first:
+      213: 3995420837652087987
+    second: pit1_70
+  - first:
+      213: 1755497070678097065
+    second: pit1_71
+  - first:
+      213: -4315801113470731680
+    second: pit1_72
+  - first:
+      213: -1138201079500856690
+    second: pit1_73
+  - first:
+      213: 6485950796746313787
+    second: pit1_74
+  - first:
+      213: 7713386127318494991
+    second: pit1_75
+  - first:
+      213: -7068038188059121709
+    second: pit1_76
+  - first:
+      213: 510626184306709719
+    second: pit1_77
+  - first:
+      213: 89067516993315685
+    second: pit1_78
+  - first:
+      213: 8698803783486331620
+    second: pit1_79
+  - first:
+      213: 7206210530096690482
+    second: pit1_80
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: pit1_0
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 13
+        width: 1122
+        height: 883
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: 42, y: -432.5}
+        - {x: 44, y: -417.5}
+        - {x: 51, y: -350.5}
+        - {x: 100, y: -347.5}
+        - {x: 159, y: -340.5}
+        - {x: 244, y: -316.5}
+        - {x: 277, y: -301.5}
+        - {x: 301, y: -369.5}
+        - {x: 328, y: -381.5}
+        - {x: 351, y: -376.5}
+        - {x: 371, y: -370.5}
+        - {x: 384, y: -351.5}
+        - {x: 365, y: -314.5}
+        - {x: 352, y: -258.5}
+        - {x: 374, y: -240.5}
+        - {x: 404, y: -204.5}
+        - {x: 436, y: -149.5}
+        - {x: 459, y: -71.5}
+        - {x: 471, y: 22.5}
+        - {x: 475, y: 50.5}
+        - {x: 508, y: 89.5}
+        - {x: 535, y: 133.5}
+        - {x: 549, y: 176.5}
+        - {x: 551, y: 192.5}
+        - {x: 551, y: 235.5}
+        - {x: 546, y: 262.5}
+        - {x: 518, y: 296.5}
+        - {x: 501, y: 304.5}
+        - {x: 479, y: 312.5}
+        - {x: 438, y: 306.5}
+        - {x: 418, y: 295.5}
+        - {x: 396, y: 276.5}
+        - {x: 391, y: 301.5}
+        - {x: 406, y: 330.5}
+        - {x: 407, y: 350.5}
+        - {x: 389, y: 375.5}
+        - {x: 351, y: 391.5}
+        - {x: 259, y: 410.5}
+        - {x: 178, y: 417.5}
+        - {x: 95, y: 423.5}
+        - {x: 66, y: 424.5}
+        - {x: -48, y: 424.5}
+        - {x: -120, y: 421.5}
+        - {x: -167, y: 418.5}
+        - {x: -243, y: 410.5}
+        - {x: -305, y: 401.5}
+        - {x: -358, y: 387.5}
+        - {x: -385, y: 375.5}
+        - {x: -404, y: 350.5}
+        - {x: -395, y: 265.5}
+        - {x: -416, y: 297.5}
+        - {x: -460, y: 314.5}
+        - {x: -484, y: 310.5}
+        - {x: -514, y: 298.5}
+        - {x: -538, y: 274.5}
+        - {x: -549, y: 242.5}
+        - {x: -549, y: 188.5}
+        - {x: -543, y: 159.5}
+        - {x: -534, y: 138.5}
+        - {x: -518, y: 106.5}
+        - {x: -494, y: 73.5}
+        - {x: -485, y: 64.5}
+        - {x: -462, y: 34.5}
+        - {x: -470, y: 18.5}
+        - {x: -467, y: 0.5}
+        - {x: -451, y: -85.5}
+        - {x: -438, y: -129.5}
+        - {x: -420, y: -169.5}
+        - {x: -404, y: -197.5}
+        - {x: -390, y: -218.5}
+        - {x: -372, y: -237.5}
+        - {x: -349, y: -271.5}
+        - {x: -363, y: -327.5}
+        - {x: -372, y: -330.5}
+        - {x: -380, y: -362.5}
+        - {x: -356, y: -376.5}
+        - {x: -324, y: -380.5}
+        - {x: -300, y: -371.5}
+        - {x: -288, y: -327.5}
+        - {x: -275, y: -301.5}
+        - {x: -237, y: -318.5}
+        - {x: -164, y: -339.5}
+        - {x: -116, y: -346.5}
+        - {x: -48, y: -350.5}
+        - {x: -36, y: -390.5}
+        - {x: -41, y: -425.5}
+        - {x: -17, y: -437.5}
+        - {x: 26, y: -437.5}
+      tessellationDetail: 0.1
+      bones: []
+      spriteID: 80b45cf934f08552196e73f88dcf5da9
+      internalID: -5685094100023643636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e3a246c500ccd05048ab0979bd043871
+    internalID: 532735673
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":1536.0,"y":1024.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      - key: SpriteEditor.SliceOnImport
+        value: False
+    nameFileIdTable:
+      pit1_0: -5685094100023643636
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

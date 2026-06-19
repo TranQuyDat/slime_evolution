@@ -53,7 +53,8 @@ class SlimeMerge : MonoBehaviour
        
         newSlime.Init(slimeData);
         newSlimeobj.transform.SetParent(transform.parent,true);
-       
+        if(newSlime.Data.Lv == (int)SlimeDatabase.SlimeType.Dragon)
+            GameEvents.OnDragonExploded.Invoke(newSlime);
         //destroy
         _slime.Destroy();
         Other.Slime.Destroy();

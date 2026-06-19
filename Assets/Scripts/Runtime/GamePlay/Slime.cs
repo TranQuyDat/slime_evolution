@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 
-class Slime : MonoBehaviour ,IPoolable,IDestroyable
+public class Slime : MonoBehaviour ,IPoolable,IDestroyable
 {
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
     private Collider2D _collider;
     private SlimeData _data;
     private bool _isFreeze;
+    private bool _isDestroying;
 
     [SerializeField] private int DisPLayLevel;
 
@@ -25,10 +26,6 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     }
     void Update()
     {
-        // Vector3 velocity = _rb.linearVelocity;
-        // velocity.y = Mathf.Clamp(_rb.linearVelocity.y, -10,10f);
-        // _rb.linearVelocity = velocity;
-        
     }
     void LateUpdate()
     {
@@ -40,6 +37,31 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _data = data;
         _sr.sprite = data.Sprite;
         scaleSlime(data.Scale);
+    }
+
+    void OnEnable()
+    {
+        GameEvents.OnDragonExploded += HandleDragonExploded;
+        _isDestroying = false;
+    }
+
+    private void HandleDragonExploded(Slime dragon)
+    {
+        if(_isDestroying) return;
+
+        _isDestroying = true; 
+        if(dragon == this)
+        {
+            //dragon vfx explosion
+
+            //
+            Destroy();
+            return;
+        }
+        //vfx
+
+        //
+        Destroy();
     }
 
     private void scaleSlime(float scale)
@@ -60,6 +82,8 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 
     public void Destroy()
     {
+        _isDestroying = true;
+        GameEvents.OnDragonExploded -= HandleDragonExploded;
         ObjectPoolSystem.Instance.Cancel(gameObject,PoolKey);
     }
 }

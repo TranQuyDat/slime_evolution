@@ -8,7 +8,7 @@ class SpawnSystem : MonoBehaviour
     private  List<SlimeDatabase.SlimeType> _spawnBag = new List<SlimeDatabase.SlimeType>();
     public bool _canSpawn = false;
     private Slime _slimeHolder;
-
+    public int difficulty = 0;
     public Slime SlimeHolder => _slimeHolder;
     public SlimeDatabase SlimeDatabase => _slimeDatabase;
     private void Start()
@@ -60,7 +60,8 @@ class SpawnSystem : MonoBehaviour
 
         foreach(int i in ids)
         {
-            _spawnBag.Add((SlimeDatabase.SlimeType)i);
+            int id =i + difficulty;
+            _spawnBag.Add((SlimeDatabase.SlimeType)id);
         }
 
         ShuffleBag();

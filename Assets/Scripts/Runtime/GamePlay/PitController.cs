@@ -16,6 +16,10 @@ public class PitController : MonoBehaviour
         _compositeColl = GetComponent<CompositeCollider2D>();
 
     }
+    void Start()
+    {
+        _highestContentY = _compositeColl.bounds.min.y;
+    }
 
     void Update()
     {
@@ -33,7 +37,7 @@ public class PitController : MonoBehaviour
         {
             t.GetComponent<IDestroyable>()?.Destroy();
         }
-        _highestContentY = 0;
+        _highestContentY = _compositeColl.bounds.min.y;
     }
 
     private void CheckHeighestContentY()
