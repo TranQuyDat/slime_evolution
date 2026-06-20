@@ -3,8 +3,11 @@ using UnityEngine;
 class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public InputSystem _inputSystem;
-    public GamePlay _gamePlay;
+    [SerializeField]private InputSystem _inputSystem;
+    [SerializeField]private GamePlay _gamePlay;
+
+    public InputSystem InputSystem => _inputSystem;
+    public GamePlay GamePlay => _gamePlay;
     void Awake()
     {
         if (Instance != null)

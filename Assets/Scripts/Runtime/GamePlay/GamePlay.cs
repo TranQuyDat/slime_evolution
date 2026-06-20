@@ -6,13 +6,20 @@ using UnityEngine;
 class GamePlay : MonoBehaviour
 {
     private GameManager _gameManager = GameManager.Instance;
-    [SerializeField] private InputSystem _inputSystem ;
     [SerializeField] private SpawnSystem _spawnSystem;
     [SerializeField] private GameObject _pitPrefab;
     [SerializeField] private float _dragThreshold = 0.5f;
+
+    private InputSystem _inputSystem ;
+    private ScoreSystem _scoreSystem;
     private PitController _pitCtrl;
     private float _timeDelay = 0f;
     private bool isDropSlime;
+    public ScoreSystem ScoreSystem => _scoreSystem;
+    void Awake()
+    {
+        _inputSystem = _gameManager.InputSystem;
+    }
     void Start()
     {
         _inputSystem.BindAction(KeyCode.Mouse0,DropSlime);
@@ -30,7 +37,7 @@ class GamePlay : MonoBehaviour
             CheckGameOver(3f);
             return;
         }
-
+        
         
         if(!_spawnSystem._canSpawn && isDropSlime)
             waitToSpawn(3f);
@@ -39,6 +46,7 @@ class GamePlay : MonoBehaviour
 
     private void Init()
     {
+        //create pit and set pos pit
         GameObject pitObj = Instantiate(_pitPrefab,transform); 
         CompositeCollider2D compositeCol = pitObj.GetComponent<CompositeCollider2D>();
         _pitCtrl = pitObj.GetComponent<PitController>();
@@ -46,6 +54,8 @@ class GamePlay : MonoBehaviour
         Vector2 pos =  Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.1f,10f));
         pos.y += pitSizeY;
         _pitCtrl.transform.position = pos;
+        // init Score
+        _scoreSystem = new ScoreSystem(); 
     }
 
     private void waitToSpawn(float t = 3f)
@@ -100,9 +110,21 @@ class GamePlay : MonoBehaviour
             _timeDelay += Time.deltaTime;
             return;
         }
+        Reset();
+    }
+
+    private void Reset()
+    {
         _spawnSystem.Reset();
         _pitCtrl.ClearAllContent();
         _timeDelay = 0f;
+        _scoreSystem.SetScore(0);
+    }
+
+    public void AddScoreByLevel(int lv)
+    {
+        int score = ((lv+1)*(lv+2))/2;
+        _scoreSystem.AddScore(score);
     }
 
     void OnDrawGizmosSelected()

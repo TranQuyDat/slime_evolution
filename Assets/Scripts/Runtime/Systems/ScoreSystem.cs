@@ -7,13 +7,19 @@ class ScoreSystem
     private int _curScore;
 
     public int CurrentScore => _curScore;
-    public ScoreSystem(int initScore)
+    public ScoreSystem(int initScore = 0)
     {
         _curScore = initScore;
     }
     public void AddScore(int i)
     {
         _curScore+=i;
+        OnChangeScore?.Invoke(_curScore);
+    }
+
+    public void SetScore(int i)
+    {
+        _curScore = i;
         OnChangeScore?.Invoke(_curScore);
     }
 }
