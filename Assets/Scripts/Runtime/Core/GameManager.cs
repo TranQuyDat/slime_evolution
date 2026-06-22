@@ -22,31 +22,31 @@ class GameManager : MonoBehaviour
     }
     void Start()
     {
-        _hud.OnClickedBtn += HandleBtnCommand;
+        _hud.OnCommand += HandleBtnCommand;
     }
 
     void OnDestroy()
     {
-        _hud.OnClickedBtn -= HandleBtnCommand;
+        _hud.OnCommand -= HandleBtnCommand;
     }
 
-    private void HandleBtnCommand(BtnCommand type)
+    private void HandleBtnCommand(CommandType type, object _)
     {
         switch(type)
         {
-            case  (BtnCommand.Play) :
+            case  (CommandType.Play) :
             _gamePlay.StartPlay();
             break;
-            case(BtnCommand.Pause):
+            case(CommandType.Pause):
             _gamePlay.PausePlay();
             break;
-            case  (BtnCommand.Resume) :
+            case  (CommandType.Resume) :
             _gamePlay.ResumePlay();
             break;
-            case  (BtnCommand.Home) :
+            case  (CommandType.Home) :
             _gamePlay.StopAndClearPlay();
             break;
-            case(BtnCommand.Reset):
+            case(CommandType.Reset):
             _gamePlay.ResetPlay();
             break;
         }

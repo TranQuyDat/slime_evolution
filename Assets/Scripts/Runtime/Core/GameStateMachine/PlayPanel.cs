@@ -23,10 +23,14 @@ class PlayPanel : IState
     {
         this.gameObject.SetActive(true);
         _btnPause.onClick.AddListener(BtnPause);
+        _hud.OnCommand +=HandleUpdateHightScore;
+        _hud.OnCommand +=HandleUpdateScore;
     }
 
     public override void Exit()
     {
+        _hud.OnCommand -=HandleUpdateHightScore;
+        _hud.OnCommand -=HandleUpdateScore;
         _btnPause.onClick.RemoveListener(BtnPause);
     }
     private void HandleChangeHud(StateType type)
@@ -38,7 +42,21 @@ class PlayPanel : IState
     private void BtnPause() 
     { 
         _hud.ChangeHud(StateType.Pause);
-        _hud.SendClickCommand(BtnCommand.Pause);
+        _hud.SendCommand(CommandType.Pause);
+    }
+
+    private void HandleUpdateScore(CommandType cm,object data)
+    {
+        if(cm != CommandType.AddScore) return;
+        int score  = (int)data;
+        _txtScore.text = ""+score;
+    }
+    
+    private void HandleUpdateHightScore(CommandType cm,object data)
+    {
+        if(cm != CommandType.UpdateHightScore) return;
+        int hightscore = (int)data;
+        _txtHightScore.text = ""+hightscore;
     }
 
 }

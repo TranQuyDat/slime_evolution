@@ -9,13 +9,12 @@ public enum StateType
     Pause = 2,
     Over = 3,
 }
-public enum BtnCommand
+public enum CommandType
 {
-    Play,
-    Pause,
-    Resume,
-    Reset,
-    Home,
+    //game flow command
+    Play,  Pause,  Resume, Reset, Home,
+    //game event command
+    AddScore,UpdateHightScore,
 }
 class HudManager : MonoBehaviour
 {
@@ -24,7 +23,7 @@ class HudManager : MonoBehaviour
     private StateMachine _stateMachine;
     private SortedList<StateType,IState> _uiStates;
     public event Action<StateType> OnChangeHud ;
-    public event Action<BtnCommand> OnClickedBtn ;
+    public event Action<CommandType,object> OnCommand ;  
 
     void Start()
     {
@@ -59,9 +58,9 @@ class HudManager : MonoBehaviour
             }
         }
     }
-    public void SendClickCommand(BtnCommand btnCm)
+    public void SendCommand(CommandType cm,object data = null)
     {
-        OnClickedBtn?.Invoke(btnCm);
+        OnCommand?.Invoke(cm,data);
     }
 
     public void SetBackGround(Sprite sprite) => _bg.sprite = sprite;

@@ -18,10 +18,12 @@ class MenuPanel :  IState
     {
         this.gameObject.SetActive(true);
         _btnPlay.onClick.AddListener(BtnPlay); 
+        _hud.OnCommand +=HandleUpdateHightScore;
     }
 
     public override void Exit()
     {
+        _hud.OnCommand -=HandleUpdateHightScore;
         _btnPlay.onClick.RemoveListener(BtnPlay);
         this.gameObject.SetActive(false);
     }
@@ -29,7 +31,13 @@ class MenuPanel :  IState
     private void BtnPlay()
     {
         _hud.ChangeHud(StateType.Play);
-        _hud.SendClickCommand(BtnCommand.Play);
+        _hud.SendCommand(CommandType.Play);
+    }
+    private void HandleUpdateHightScore(CommandType cm,object data)
+    {
+        if(cm != CommandType.UpdateHightScore) return;
+        int hightscore = (int)data;
+        _txtHightScore.text = ""+hightscore;
     }
 
 }

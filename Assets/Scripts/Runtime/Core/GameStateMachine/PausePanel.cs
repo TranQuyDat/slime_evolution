@@ -30,17 +30,17 @@ class PausePanel : IState
     private void BtnPlay()
     {
         _hud.ChangeHud(StateType.Play);
-        _hud.SendClickCommand(BtnCommand.Resume);
+        _hud.SendCommand(CommandType.Resume);
     } 
     private void BtnReset()
     {
         _hud.ChangeHud(StateType.Play);
-        _hud.SendClickCommand(BtnCommand.Reset);
+        _hud.SendCommand(CommandType.Reset);
     } 
     private void BtnHome()
     { 
         _hud.ChangeHud(StateType.Menu);
-        _hud.SendClickCommand(BtnCommand.Home);
+        _hud.SendCommand(CommandType.Home);
     }
 
 }

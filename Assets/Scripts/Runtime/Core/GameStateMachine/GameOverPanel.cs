@@ -27,12 +27,12 @@ class GameOverPanel:IState
     private void BtnExit()
     {
         _hud.ChangeHud(StateType.Menu);
-        _hud.SendClickCommand(BtnCommand.Home);
+        _hud.SendCommand(CommandType.Home);
     }
     private void BtnRestart()
     {
         _hud.ChangeHud(StateType.Play);
-        _hud.SendClickCommand(BtnCommand.Reset);
+        _hud.SendCommand(CommandType.Reset);
     }
 
 }
