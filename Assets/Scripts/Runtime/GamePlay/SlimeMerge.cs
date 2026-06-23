@@ -44,6 +44,7 @@ class SlimeMerge : MonoBehaviour
     {
         if(this.GetInstanceID() > Other.GetInstanceID()) return;
         GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab);
+        newSlimeobj.transform.rotation = Quaternion.identity;
         newSlimeobj.transform.position = transform.position;
         Slime newSlime = newSlimeobj.GetComponent<Slime>();
        
@@ -52,7 +53,8 @@ class SlimeMerge : MonoBehaviour
        
         newSlime.Init(slimeData);
         newSlimeobj.transform.SetParent(transform.parent,true);
-       
+        if(newSlime.Data.Lv == (int)SlimeDatabase.SlimeType.Dragon)
+            GameEvents.OnDragonExploded.Invoke(newSlime);
         //destroy
         _slime.Destroy();
         Other.Slime.Destroy();

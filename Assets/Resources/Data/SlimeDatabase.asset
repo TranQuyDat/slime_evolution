@@ -14,39 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlimeDatabase
   _slimeDatas:
   - _lv: 0
-    _sprite: {fileID: 215043410, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: 5255588241266657465, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 0.4
   - _lv: 1
-    _sprite: {fileID: -1560195010, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -3836151945384074853, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 0.6
   - _lv: 2
-    _sprite: {fileID: -457936116, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -2716392305719525076, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 0.8
   - _lv: 3
-    _sprite: {fileID: -627294185, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -2911233865420959080, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1
   - _lv: 4
-    _sprite: {fileID: -756225654, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -4351205224039999626, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.2
   - _lv: 5
-    _sprite: {fileID: -1126842707, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -6147647869968507339, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.4
   - _lv: 6
-    _sprite: {fileID: 640389360, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: 4793449427321452695, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.6
   - _lv: 7
-    _sprite: {fileID: 226372804, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -4666846895406301248, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.8
   - _lv: 8
-    _sprite: {fileID: -1448873742, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: -356368168108567297, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2
   - _lv: 9
-    _sprite: {fileID: 310987694, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: 4359992070850022443, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2.2
   - _lv: 10
-    _sprite: {fileID: -130294533, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: 341434392134410815, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2.5
   - _lv: 11
-    _sprite: {fileID: -378425998, guid: 70513ca83d20a52f9814f1885968d0d9, type: 3}
+    _sprite: {fileID: 4917756665049490726, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 3
   _slimePrefab: {fileID: 5653574659505928494, guid: 0a4a5a9075bf832989c3a1f5a3deb940, type: 3}
