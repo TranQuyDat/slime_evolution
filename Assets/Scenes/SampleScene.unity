@@ -373,6 +373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnSystem
   _slimeDatabase: {fileID: 11400000, guid: 2e8491dd6edf89a3ca9fe7a5f0f84110, type: 2}
   _canSpawn: 0
+  difficulty: 7
 --- !u!114 &1476660233
 MonoBehaviour:
   m_ObjectHideFlags: 0

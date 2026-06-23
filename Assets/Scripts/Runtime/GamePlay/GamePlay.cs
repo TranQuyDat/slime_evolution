@@ -43,7 +43,7 @@ class GamePlay : MonoBehaviour
         CompositeCollider2D compositeCol = pitObj.GetComponent<CompositeCollider2D>();
         _pitCtrl = pitObj.GetComponent<PitController>();
         float pitSizeY = compositeCol.bounds.size.y/2f;
-        Vector2 pos =  Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.1f,10f));
+        Vector2 pos =  Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0f,10f));
         pos.y += pitSizeY;
         _pitCtrl.transform.position = pos;
     }
