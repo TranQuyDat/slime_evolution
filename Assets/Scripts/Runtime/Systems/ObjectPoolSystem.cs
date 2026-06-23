@@ -21,11 +21,8 @@ class ObjectPoolSystem :MonoBehaviour
     /// 1. Key = "" => IPoolable.PoolKey
     /// 2. IPoolable.PoolKey = null => prefab.name  
     /// </param>
-    public GameObject Order(GameObject prefab,string key = "")
+    public GameObject Order(GameObject prefab,string key)
     {
-        if(string.IsNullOrEmpty(key))
-            key  = prefab.GetComponent<IPoolable>()?.PoolKey ?? prefab.name;
-
         GameObject newObj ;
         if (!_pools.TryGetValue(key,out var pool))
         {
@@ -34,7 +31,7 @@ class ObjectPoolSystem :MonoBehaviour
             newObj = Instantiate(prefab);
         }
         else if(pool.Count > 0)
-            newObj = _pools[key].Dequeue();
+            newObj = pool.Dequeue();
         else newObj = Instantiate(prefab);
 
         newObj.name = prefab.name;
@@ -43,13 +40,14 @@ class ObjectPoolSystem :MonoBehaviour
 
     }
 
-    public void Cancel(GameObject obj,string key ="")
+    public void Cancel(GameObject obj,string key)
     {
-        
-        if(string.IsNullOrEmpty(key))
-            key  = obj.GetComponent<IPoolable>()?.PoolKey ?? obj.name;
-
+        if (!_pools.TryGetValue(key,out var pool))
+        {
+            pool = new Queue<GameObject>();
+            _pools.Add(key,pool);
+        }
         obj.SetActive(false);
-        _pools[key].Enqueue(obj);
+        pool.Enqueue(obj);
     }
 }

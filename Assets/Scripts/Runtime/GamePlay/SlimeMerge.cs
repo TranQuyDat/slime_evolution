@@ -37,7 +37,7 @@ class SlimeMerge : MonoBehaviour
         if(_isMerging) return;
         if(this.GetInstanceID() > OtherSlime.GetInstanceID()) return;
         _isMerging = true;
-        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab);
+        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab,"Slime");
         newSlimeobj.transform.position = transform.position;
         Slime newSlime = newSlimeobj.GetComponent<Slime>();
        
