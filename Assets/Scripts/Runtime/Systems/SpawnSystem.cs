@@ -8,7 +8,7 @@ class SpawnSystem : MonoBehaviour
     private  List<SlimeDatabase.SlimeType> _spawnBag = new List<SlimeDatabase.SlimeType>();
     public bool _canSpawn = false;
     private Slime _slimeHolder;
-
+    public int difficulty = 0;
     public Slime SlimeHolder => _slimeHolder;
     public SlimeDatabase SlimeDatabase => _slimeDatabase;
     private void Start()
@@ -33,6 +33,7 @@ class SpawnSystem : MonoBehaviour
         Vector3 spwnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.9f,10)); // pos mouse
         GameObject slimeObj = _objectPoolSys.Order(_slimeDatabase.SlimePrefab,"Slime"); // spawn
 
+        slimeObj.transform.rotation = Quaternion.identity;
         Slime slime = slimeObj.GetComponent<Slime>();
 
         slimeObj.transform.position = spwnPos;
@@ -60,7 +61,8 @@ class SpawnSystem : MonoBehaviour
 
         foreach(int i in ids)
         {
-            _spawnBag.Add((SlimeDatabase.SlimeType)i);
+            int id =i + difficulty;
+            _spawnBag.Add((SlimeDatabase.SlimeType)id);
         }
 
         ShuffleBag();
