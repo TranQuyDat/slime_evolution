@@ -30,7 +30,7 @@ class SpawnSystem : MonoBehaviour
         int i = (int)NextSlime();
         SlimeData data = _slimeDatabase.SlimeDatas[i];
 
-        Vector3 spwnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.9f,10)); // pos mouse
+        Vector3 spwnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.8f,10)); // pos mouse
         GameObject slimeObj = _objectPoolSys.Order(_slimeDatabase.SlimePrefab); // spawn
         slimeObj.transform.rotation = Quaternion.identity;
         Slime slime = slimeObj.GetComponent<Slime>();

@@ -8,17 +8,24 @@ class GamePlay : MonoBehaviour
     [SerializeField] private InputSystem _inputSystem ;
     [SerializeField] private SpawnSystem _spawnSystem;
     [SerializeField] private GameObject _pitPrefab;
+    [SerializeField] private ComboWindow _comboWindowPrefab;
     [SerializeField] private float _dragThreshold = 0.5f;
 
-    private GameManager _gameManager ;
+    private GameManager _gameManager;
+    private ScoreSystem _scoreSystem;
+    private ComboSystem _comboSystem;
     private PitController _pitCtrl;
+    private ComboWindow _CombowindowCtrl;
     private float _timeDelay = 0f;
     public bool IsGameOver {get;private set;}
     private bool _isDropSlime;
+    public ScoreSystem ScoreSystem => _scoreSystem;
     private bool _canPlay;
     void Awake()
     {
         _gameManager = GameManager.Instance;
+        _scoreSystem = new ScoreSystem(); 
+        _comboSystem = new ComboSystem();
     }
     void Start()
     {
@@ -37,12 +44,13 @@ class GamePlay : MonoBehaviour
             CheckGameOverByTimeout(3f);
             return;
         }
-
+        
         
         if(!_spawnSystem._canSpawn && _isDropSlime)
             waitToSpawn(3f);
 
-           
+        _comboSystem.ResetComboByTime(1.5f);
+
     }
 
     public void StartPlay()
@@ -50,18 +58,24 @@ class GamePlay : MonoBehaviour
         if(_pitCtrl == null)
         {
             // create pit
+            //create pit and set pos pit
             GameObject pitObj = Instantiate(_pitPrefab,transform); 
             _pitCtrl = pitObj.GetComponent<PitController>();
 
             CompositeCollider2D compositeCol = pitObj.GetComponent<CompositeCollider2D>();
             float pitSizeY = compositeCol.bounds.size.y/2f;
-            Vector2 pos =  Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.1f,10f));
+            Vector2 pos =  Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0f,10f));
             pos.y += pitSizeY;
             pitObj.transform.position = pos; // set pos for pit
         }
-        
+        if(_CombowindowCtrl == null) 
+            _CombowindowCtrl = Instantiate(_comboWindowPrefab,_gameManager.Hud.transform);
         _pitCtrl.gameObject.SetActive(true);
+        _CombowindowCtrl.gameObject.SetActive(false);
+        
 
+        _comboSystem.OnComboChanged += HandleComboChange;
+        _comboSystem.OnComboReset += HandleComboReset;
         _spawnSystem._canSpawn = true;
         IsGameOver = false;
         _timeDelay = 0f;
@@ -89,6 +103,9 @@ class GamePlay : MonoBehaviour
         _pitCtrl.ClearAllContent();
         _timeDelay = 0f;
         _pitCtrl.gameObject.SetActive(false);
+        
+        _comboSystem.OnComboChanged -= HandleComboChange;
+        _comboSystem.OnComboReset -= HandleComboReset;
     }
 
 
@@ -144,11 +161,33 @@ class GamePlay : MonoBehaviour
             _timeDelay += Time.deltaTime;
             return;
         }
+        Reset();
+    }
+
+    private void Reset()
+    {
         _canPlay = false;
         IsGameOver = true;
         _gameManager.ShowGameOverHud();
         PausePlay();
+        _scoreSystem.SetScore(0);
     }
+
+    public void CalScoreByLevel(int lv)
+    {
+        _comboSystem.AddComboCount();
+
+        int score = ((lv+1)*(lv+2))/2;
+        score = score * _comboSystem.ComBoCount;
+        _scoreSystem.AddScore(score);
+    }
+
+    private void HandleComboChange(int cb)
+    {
+        _CombowindowCtrl.SetCombo(cb);
+        _CombowindowCtrl.show();
+    }
+    private void HandleComboReset() => _CombowindowCtrl.Hide();
 
     void OnDrawGizmosSelected()
     {

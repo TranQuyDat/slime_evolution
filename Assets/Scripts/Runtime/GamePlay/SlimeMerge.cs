@@ -2,6 +2,7 @@ using UnityEngine;
 
 class SlimeMerge : MonoBehaviour
 {
+    private GamePlay _gamePlay;
     private Slime _slime;
     private GameObject _slimePrefab;
     private SpawnSystem _spawnSystem;
@@ -14,6 +15,7 @@ class SlimeMerge : MonoBehaviour
         _slime = GetComponent<Slime>();
         _spawnSystem = GameManager.Instance.GetComponent<SpawnSystem>();
         _slimePrefab = _spawnSystem.SlimeDatabase.SlimePrefab;
+        _gamePlay = GameManager.Instance.GamePlay;
     }
     void Start()
     {
@@ -55,6 +57,8 @@ class SlimeMerge : MonoBehaviour
         newSlimeobj.transform.SetParent(transform.parent,true);
         if(newSlime.Data.Lv == (int)SlimeDatabase.SlimeType.Dragon)
             GameEvents.OnDragonExploded.Invoke(newSlime);
+        _gamePlay.CalScoreByLevel(newSlime.Data.Lv);
+
         //destroy
         _slime.Destroy();
         Other.Slime.Destroy();

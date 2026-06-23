@@ -320,11 +320,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: -1
+  far clip plane: 1018.4
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -690,8 +690,8 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 519420031}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PlaneDistance: 200
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -792,7 +792,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay
   _inputSystem: {fileID: 1476660233}
   _spawnSystem: {fileID: 1476660232}
-  _pitPrefab: {fileID: 7926584878437095606, guid: fb6757bd063c460989d11d13ad1e5592, type: 3}
+  _pitPrefab: {fileID: 7926584878437095606, guid: ef8147d0bf68d4b7bba95c214fec0ecd, type: 3}
+  _comboWindowPrefab: {fileID: 8800167819447629924, guid: d8b41ece5a8b9c4dfa44dd042cbe7abd, type: 3}
   _dragThreshold: 2
 --- !u!114 &1760433139
 MonoBehaviour:

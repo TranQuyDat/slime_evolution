@@ -34,7 +34,7 @@ class ObjectPoolSystem :MonoBehaviour
             newObj = Instantiate(prefab);
         }
         else if(pool.Count > 0)
-            newObj = _pools[key].Dequeue();
+            newObj = pool.Dequeue();
         else newObj = Instantiate(prefab);
 
         newObj.name = prefab.name;
