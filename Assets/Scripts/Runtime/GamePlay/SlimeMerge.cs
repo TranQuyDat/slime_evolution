@@ -45,7 +45,7 @@ class SlimeMerge : MonoBehaviour
     private void mergeSlime(SlimeMerge Other)
     {
         if(this.GetInstanceID() > Other.GetInstanceID()) return;
-        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab);
+        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab,"Slime");
         newSlimeobj.transform.rotation = Quaternion.identity;
         newSlimeobj.transform.position = transform.position;
         Slime newSlime = newSlimeobj.GetComponent<Slime>();
