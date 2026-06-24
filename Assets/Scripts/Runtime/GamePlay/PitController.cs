@@ -8,7 +8,7 @@ public class PitController : MonoBehaviour
 
     public float TopYpit => _compositeColl.bounds.max.y;
     public float HeighestContentY => _highestContentY;
-    public bool HasOverflowed => _highestContentY > TopYpit;
+    public bool HadOverflowed => _highestContentY > TopYpit;
 
 
     void Awake()

@@ -16,10 +16,10 @@ class SlimeDatabase : ScriptableObject
     public GameObject SlimePrefab => _slimePrefab;
     void Reset()
     {
-        Sprite[] allSprites = Resources.LoadAll<Sprite>("SlimeSprites");
+        Sprite[] allSprites = Resources.LoadAll<Sprite>("SlimeSprites/Slime12");
         float[] scales = { 0.4f, 0.6f, 0.8f, 1.0f, 1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.5f, 3.0f };
 
-        _slimeDatas = new SlimeData[allSprites.Length];
+        _slimeDatas = new SlimeData[12];
         foreach(Sprite s in allSprites)
         {
             if(Enum.TryParse(s.name,true,out SlimeType slimeType))
