@@ -78,6 +78,7 @@ class GamePlay : MonoBehaviour
         _comboSystem.OnComboReset += HandleComboReset;
         _spawnSystem._canSpawn = true;
         IsGameOver = false;
+        _scoreSystem.SetScore(0);
         _timeDelay = 0f;
         _canPlay = true;
         waitToSpawn(0f);
@@ -89,6 +90,7 @@ class GamePlay : MonoBehaviour
     public void ResetPlay()
     {
         IsGameOver = false;
+        _scoreSystem.SetScore(0);
         _spawnSystem.Reset();
         _pitCtrl.ClearAllContent();
         _timeDelay = 0f;
@@ -116,6 +118,8 @@ class GamePlay : MonoBehaviour
             _timeDelay += Time.deltaTime;
             return;
         }
+        if(_spawnSystem.SlimeHolder != null &&
+        _spawnSystem.SlimeHolder.transform.parent == null) return;
         _spawnSystem._canSpawn = true;
         _isDropSlime = false;
         _timeDelay = 0;
@@ -125,15 +129,14 @@ class GamePlay : MonoBehaviour
     {
         if(_spawnSystem.SlimeHolder == null) return;
         _spawnSystem.SlimeHolder.Unfreeze();
-        StartCoroutine(MoveSlimeToPitContent(_spawnSystem.SlimeHolder));
+        MoveSlimeToPitContent(_spawnSystem.SlimeHolder);
         _spawnSystem.EmptyHolder();
         _isDropSlime = true;
     }
 
-    IEnumerator MoveSlimeToPitContent(Slime slime)
+    private void MoveSlimeToPitContent(Slime slime)
     {
         Collider2D coll = slime.GetComponent<Collider2D>();
-        yield return new WaitUntil(() => (_pitCtrl.TopYpit > coll.bounds.min.y));
         _pitCtrl.AddToPit(slime.gameObject);
     }
 
@@ -161,10 +164,10 @@ class GamePlay : MonoBehaviour
             _timeDelay += Time.deltaTime;
             return;
         }
-        Reset();
+        HandleGameOver();
     }
 
-    private void Reset()
+    private void HandleGameOver()
     {
         _canPlay = false;
         IsGameOver = true;

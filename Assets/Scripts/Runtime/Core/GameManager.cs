@@ -14,7 +14,7 @@ class GameManager : MonoBehaviour
     public GamePlay GamePlay => _gamePlay;
 
     private SaveSystem _saveSystem;
-
+    private int _hightScore;
     void Awake()
     {
         if (Instance != null)
@@ -29,6 +29,7 @@ class GameManager : MonoBehaviour
     }
     void Start()
     {
+        _hightScore = _saveSystem.Load<int>("hightscore");
         _hud.OnCommand += HandleBtnCommand;
         _hud.OnChangeHud += HandleLoadDataHud;
         _gamePlay.ScoreSystem.OnChangeScore += HandleHightScoreChange;
@@ -50,6 +51,7 @@ class GameManager : MonoBehaviour
         {
             case  (CommandType.Play) :
             _gamePlay.StartPlay();
+            _hud.SendCommand(CommandType.AddScore,0);
             break;
             case(CommandType.Pause):
             _gamePlay.PausePlay();
@@ -80,8 +82,7 @@ class GameManager : MonoBehaviour
     }
     private void HandleHightScoreChange(int score)
     {
-        int hightScore = _saveSystem.Load<int>("hightscore");
-        if(score <= hightScore) return;
+        if(score <= _hightScore) return;
         _saveSystem.Save<int>(score,"hightscore");
         _hud.SendCommand(CommandType.UpdateHightScore,score);
     }
