@@ -2,8 +2,5 @@ using UnityEngine;
 
 public struct AudioContext
 {
-    public static AudioContext Default => new AudioContext
-    {
-        
-    };
+    public static readonly AudioContext Default = new();
 }

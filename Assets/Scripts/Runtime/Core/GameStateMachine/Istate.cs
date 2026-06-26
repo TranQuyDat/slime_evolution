@@ -20,9 +20,7 @@ abstract class IState : MonoBehaviour
 
     private void soundClickBtn()
     {
-        AudioSource source = AudioManager.Instance.getSource();
-        _BtnclickAudioEvent.play(source);
-        AudioManager.Instance.StopSfxUntillFinish(source);
+        _BtnclickAudioEvent.Play();
     }
 
     public abstract void Enter();

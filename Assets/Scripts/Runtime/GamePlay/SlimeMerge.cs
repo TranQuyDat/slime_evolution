@@ -10,12 +10,18 @@ class SlimeMerge : MonoBehaviour
     private int _maxLv;
     public bool IsMerging {get;set;} = false;  
     public Slime Slime => _slime;
+
+    private BaseAudioEvent _mergeAudioEvent;
+    private BaseVfxEvent _mergeVfxEvent;
     void Awake()
     {
         _slime = GetComponent<Slime>();
         _spawnSystem = GameManager.Instance.GetComponent<SpawnSystem>();
         _slimePrefab = _spawnSystem.SlimeDatabase.SlimePrefab;
         _gamePlay = GameManager.Instance.GamePlay;
+
+        _mergeAudioEvent= Resources.Load<BaseAudioEvent>("Events/Merge_Audio_Event");
+        _mergeVfxEvent =Resources.Load<BaseVfxEvent>("Events/Merge_Vfx_Event");
     }
     void Start()
     {
@@ -59,6 +65,17 @@ class SlimeMerge : MonoBehaviour
             GameEvents.OnDragonExploded.Invoke(newSlime);
         _gamePlay.CalScoreByLevel(newSlime.Data.Lv);
 
+        //sound
+        _mergeAudioEvent.Play();
+        //Vfx
+        Collider2D col = newSlimeobj.GetComponent<Collider2D>();
+        
+        _mergeVfxEvent.Play(new()
+        {
+           Position =  col.transform.TransformPoint(col.offset),
+           Speed = 3f,
+           Scale = Vector2.one* newSlimeobj.transform.localScale,
+        });
         //destroy
         _slime.Destroy();
         Other.Slime.Destroy();

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-class BaseVfxEvent : ScriptableObject
+abstract class  BaseVfxEvent : ScriptableObject
 {
-    
+    public abstract void Play(VFXContext ctx = default);
 }

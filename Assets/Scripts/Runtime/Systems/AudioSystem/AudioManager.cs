@@ -18,7 +18,7 @@ class AudioManager : MonoBehaviour
         _sfxSources = new Queue<AudioSource>();
     }
   
-    public AudioSource getSource()
+    public AudioSource GetSource()
     { 
         AudioSource source ;
         if (_sfxSources.Count <= 0)
@@ -31,7 +31,7 @@ class AudioManager : MonoBehaviour
         return source;
     }
 
-    public void StopSfxUntillFinish(AudioSource source)
+    public void StopSfxUntilFinish(AudioSource source)
     {
         StartCoroutine(StopSfx(source));
     }
