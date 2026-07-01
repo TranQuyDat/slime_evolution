@@ -3,9 +3,10 @@ using UnityEngine;
 
 public abstract class AdProviBase: ScriptableObject
 {
+    public bool IsBannerInvisible { get; protected set; }
     public abstract void Initialize(Action onInitComplete);
     public abstract void ShowBanner();
     public abstract void HideBanner();
-    public abstract void RefreshBanner();
     public abstract void ShowRewarded(Action onRewardSuccess);
+    public abstract void ShowAdMidGame(Action onSuccess);
 }

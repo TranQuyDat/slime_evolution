@@ -1,22 +1,20 @@
 using System;
+using System.Threading.Tasks;
 using CrazyGames;
 using UnityEngine;
 [CreateAssetMenu(fileName ="CrazyGamesProvider",menuName ="Ads/CrazyGamesProvider")]
 class CrazyGamesProvider : AdProviBase
 {
-    private bool _isInitialized = false;
     public bool IsReady()
     {
-        return _isInitialized && CrazySDK.IsInitialized;
+        return CrazySDK.IsAvailable && CrazySDK.IsInitialized;
     }
 
     public override void Initialize(Action onInitComplete)
     {
+        if(!CrazySDK.IsAvailable) return;
         CrazySDK.Init(() =>
         {
-            _isInitialized = true;
-            CrazySDK.Banner.RefreshBanners();
-
             if(onInitComplete !=null)
                 onInitComplete.Invoke();
         });
@@ -24,16 +22,17 @@ class CrazyGamesProvider : AdProviBase
 
     public override void HideBanner()
     {
+        if(!IsReady()) return;
         CrazySDK.Banner.Banners.ForEach(b => b.gameObject.SetActive(false));
+        IsBannerInvisible = true;
+        CrazySDK.Banner.RefreshBanners();
     }
 
     public override void ShowBanner()
     {
+        if(!IsReady()) return;
         CrazySDK.Banner.Banners.ForEach(b => b.gameObject.SetActive(true));
-    }
-
-    public override void RefreshBanner()
-    {
+        IsBannerInvisible = false;
         CrazySDK.Banner.RefreshBanners();
     }
 
@@ -46,6 +45,18 @@ class CrazyGamesProvider : AdProviBase
             Debug.LogError(error);
         },
         adFinished:onRewardSuccess
+        );
+    }
+
+    public override void ShowAdMidGame(Action onSuccess)
+    {
+        if(!IsReady()) return;
+        CrazySDK.Ad.RequestAd(CrazyAdType.Midgame,default,
+        adError:(error)=>
+        {
+            Debug.LogError(error);
+        },
+        adFinished:onSuccess
         );
     }
 }
