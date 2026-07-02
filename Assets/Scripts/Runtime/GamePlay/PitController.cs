@@ -9,7 +9,7 @@ public class PitController : MonoBehaviour
     public float TopYpit => _compositeColl.bounds.max.y;
     public float HeighestContentY => _highestContentY;
     public bool HadOverflowed => _highestContentY > TopYpit;
-
+    public Bounds Bounds => _compositeColl.bounds;
 
     void Awake()
     {
@@ -54,6 +54,10 @@ public class PitController : MonoBehaviour
             _highestContentY = hit.collider.bounds.max.y;
 
 
+    }
+    public T[] GetAllContents<T>()
+    {
+        return _content.GetComponentsInChildren<T>();
     }
 
     
