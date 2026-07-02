@@ -11,8 +11,6 @@ class MonetizationManager : MonoBehaviour
     [SerializeField]private Button _btnHideBanners;
     [SerializeField]private HudManager _hud;
 
-    private bool _isWaittingToshowbtnHide;
-    private SafeDelay _saveDelay = new SafeDelay();
     void Awake()
     {
         if(Instance == null) Instance = this;

@@ -206,7 +206,6 @@ class GamePlay : MonoBehaviour
         IsGameOver = true;
         _gameManager.ShowGameOverHud();
         PausePlay();
-        _scoreSystem.SetScore(0);
     }
 # region====>Support Actions<====
     public void ReviveSupport()
