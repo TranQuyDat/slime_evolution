@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -21,11 +23,15 @@ class GamePlay : MonoBehaviour
     private bool _isDropSlime;
     public ScoreSystem ScoreSystem => _scoreSystem;
     private bool _canPlay;
+    private bool _trigerRemoveSlime;
+    private SupportAction _reviveAction;
+    private SupportAction _removeSlimeAction;
     void Awake()
     {
         _gameManager = GameManager.Instance;
         _scoreSystem = new ScoreSystem(); 
         _comboSystem = new ComboSystem();
+       
     }
     void Start()
     {
@@ -38,6 +44,12 @@ class GamePlay : MonoBehaviour
     {
         if(!_canPlay) return;
         DragSlime_X();
+
+        if(_trigerRemoveSlime)
+        {
+            _removeSlimeAction.OnUpdate();
+            return;
+        }
 
         if(_pitCtrl.HadOverflowed)
         {
@@ -57,7 +69,6 @@ class GamePlay : MonoBehaviour
     {
         if(_pitCtrl == null)
         {
-            // create pit
             //create pit and set pos pit
             GameObject pitObj = Instantiate(_pitPrefab,transform); 
             _pitCtrl = pitObj.GetComponent<PitController>();
@@ -72,15 +83,18 @@ class GamePlay : MonoBehaviour
             _CombowindowCtrl = Instantiate(_comboWindowPrefab,_gameManager.Hud.transform);
         _pitCtrl.gameObject.SetActive(true);
         _CombowindowCtrl.gameObject.SetActive(false);
+
+        if(_reviveAction == null)
+            _reviveAction = new ReviveAction(_pitCtrl);
         
+        if(_removeSlimeAction == null)
+            _removeSlimeAction = new RemoveSlimeAction(_pitCtrl,_inputSystem);
 
         _comboSystem.OnComboChanged += HandleComboChange;
         _comboSystem.OnComboReset += HandleComboReset;
         _spawnSystem._canSpawn = true;
-        IsGameOver = false;
+        ResetVariables();
         _scoreSystem.SetScore(0);
-        _timeDelay = 0f;
-        _canPlay = true;
         waitToSpawn(0f);
 
     }
@@ -93,9 +107,9 @@ class GamePlay : MonoBehaviour
         _scoreSystem.SetScore(0);
         _spawnSystem.Reset();
         _pitCtrl.ClearAllContent();
-        _timeDelay = 0f;
-        _canPlay = true;
+        ResetVariables();
         waitToSpawn(0f);
+        _removeSlimeAction.OnFinish();
     }
 
     public void StopAndClearPlay()
@@ -110,6 +124,14 @@ class GamePlay : MonoBehaviour
         _comboSystem.OnComboReset -= HandleComboReset;
     }
 
+    private void ResetVariables()
+    {
+        _timeDelay = 0f;
+        _isDropSlime = false;
+        _trigerRemoveSlime = false;
+        _canPlay = true;
+        IsGameOver = false;
+    }
 
     private void waitToSpawn(float t = 3f)
     {
@@ -169,13 +191,28 @@ class GamePlay : MonoBehaviour
 
     private void HandleGameOver()
     {
-        _canPlay = false;
         IsGameOver = true;
         _gameManager.ShowGameOverHud();
         PausePlay();
         _scoreSystem.SetScore(0);
     }
-
+# region====>Support Actions<====
+    public void ReviveSupport()
+    {
+        _reviveAction.OnAction();
+        ResetVariables();
+        waitToSpawn(0f);
+    }
+    public void TrigerRemoveSlimesSupport()
+    {
+        _trigerRemoveSlime = true;
+    }
+    public void RemoveSlimesSupport()
+    {
+        _removeSlimeAction.OnAction();
+        _trigerRemoveSlime = false;
+    }
+#endregion
     public void CalScoreByLevel(int lv)
     {
         _comboSystem.AddComboCount();
@@ -184,7 +221,6 @@ class GamePlay : MonoBehaviour
         score = score * _comboSystem.ComBoCount;
         _scoreSystem.AddScore(score);
     }
-
     private void HandleComboChange(int cb)
     {
         _CombowindowCtrl.SetCombo(cb);
