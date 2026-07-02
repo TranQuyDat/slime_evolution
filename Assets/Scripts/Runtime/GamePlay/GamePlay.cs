@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 class GamePlay : MonoBehaviour
 {
@@ -20,30 +21,30 @@ class GamePlay : MonoBehaviour
     private ComboWindow _CombowindowCtrl;
     private float _timeDelay = 0f;
     public bool IsGameOver {get;private set;}
-    private bool _isDropSlime;
+    private bool _CanDropSlime;
     public ScoreSystem ScoreSystem => _scoreSystem;
     private bool _canPlay;
     private bool _trigerRemoveSlime;
     private SupportAction _reviveAction;
     private SupportAction _removeSlimeAction;
+    private Camera _camera;
     void Awake()
     {
         _gameManager = GameManager.Instance;
         _scoreSystem = new ScoreSystem(); 
         _comboSystem = new ComboSystem();
+        _camera = Camera.main;
        
     }
     void Start()
     {
         _inputSystem.BindAction(KeyCode.Mouse0,DropSlime);
-        _isDropSlime = false;
         _canPlay = false;
     }
 
     void Update()
     {
         if(!_canPlay) return;
-        DragSlime_X();
 
         if(_trigerRemoveSlime)
         {
@@ -51,6 +52,7 @@ class GamePlay : MonoBehaviour
             return;
         }
 
+        DragSlime_X();
         if(_pitCtrl.HadOverflowed)
         {
             CheckGameOverByTimeout(3f);
@@ -58,7 +60,7 @@ class GamePlay : MonoBehaviour
         }
         
         
-        if(!_spawnSystem._canSpawn && _isDropSlime)
+        if(!_spawnSystem._canSpawn && _spawnSystem.SlimeHolder == null)
             waitToSpawn(3f);
 
         _comboSystem.ResetComboByTime(1.5f);
@@ -98,8 +100,16 @@ class GamePlay : MonoBehaviour
         waitToSpawn(0f);
 
     }
-    public void PausePlay() => _canPlay = false;
-    public void ResumePlay() => _canPlay = true;
+    public void PausePlay()
+    {
+        _canPlay = false;
+        _CanDropSlime = false;
+    } 
+    public void ResumePlay()
+    {
+        _canPlay = true;
+        _CanDropSlime = true;
+    } 
     
     public void ResetPlay()
     {
@@ -127,7 +137,7 @@ class GamePlay : MonoBehaviour
     private void ResetVariables()
     {
         _timeDelay = 0f;
-        _isDropSlime = false;
+        _CanDropSlime = true;
         _trigerRemoveSlime = false;
         _canPlay = true;
         IsGameOver = false;
@@ -143,17 +153,19 @@ class GamePlay : MonoBehaviour
         if(_spawnSystem.SlimeHolder != null &&
         _spawnSystem.SlimeHolder.transform.parent == null) return;
         _spawnSystem._canSpawn = true;
-        _isDropSlime = false;
         _timeDelay = 0;
     }
 
     private void DropSlime()
     {
-        if(_spawnSystem.SlimeHolder == null) return;
+        if(IsPointerOverUI() || !_CanDropSlime || _spawnSystem.SlimeHolder == null) return;
         _spawnSystem.SlimeHolder.Unfreeze();
         MoveSlimeToPitContent(_spawnSystem.SlimeHolder);
         _spawnSystem.EmptyHolder();
-        _isDropSlime = true;
+    }
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void MoveSlimeToPitContent(Slime slime)
@@ -206,11 +218,14 @@ class GamePlay : MonoBehaviour
     public void TrigerRemoveSlimesSupport()
     {
         _trigerRemoveSlime = true;
+        _CanDropSlime = false;
+        _removeSlimeAction.OnEnter();
     }
     public void RemoveSlimesSupport()
     {
         _removeSlimeAction.OnAction();
         _trigerRemoveSlime = false;
+        _CanDropSlime = true;
     }
 #endregion
     public void CalScoreByLevel(int lv)

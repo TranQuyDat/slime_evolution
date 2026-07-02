@@ -420,7 +420,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1701948651
+  m_SortingLayerID: 1083458857
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &519420028
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000a7d6860a05014a6e5b33293c15538e9a
+  m_ApplyToSortingLayers: 00000000a7d6860a05014a6e5b33293c15538e9a29459440ff6e79ad
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -875,7 +875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d0f0292ccef0f46b7b131b43c693c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputSystem
-  _camera: {fileID: 0}
+  _camera: {fileID: 519420031}
 --- !u!114 &1476660234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -988,7 +988,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 1
-  m_SortingLayerID: 1009333083
+  m_SortingLayerID: -1384550657
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1486800251
