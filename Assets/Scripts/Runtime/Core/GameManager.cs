@@ -1,7 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
-class GameManager : MonoBehaviour
+ class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     [SerializeField]private InputSystem _inputSystem;
@@ -15,6 +17,7 @@ class GameManager : MonoBehaviour
 
     private SaveSystem _saveSystem;
     private int _hightScore;
+    private Dictionary<CommandType, Action> _commandMap;
     void Awake()
     {
         if (Instance != null)
@@ -26,9 +29,12 @@ class GameManager : MonoBehaviour
         _gamePlay = GetComponentInChildren<GamePlay>();
         _saveSystem = new SaveSystem();
         _saveSystem.Provider = new PlayerPrefsProvider();
+        
+        
     }
     void Start()
     {
+        SetupCommandMap();
         _hightScore = _saveSystem.Load<int>("hightscore");
         _hud.OnCommand += HandleBtnCommand;
         _hud.OnChangeHud += HandleLoadDataHud;
@@ -45,27 +51,26 @@ class GameManager : MonoBehaviour
         
     }
 
+    private void SetupCommandMap()
+    {
+        _commandMap = new Dictionary<CommandType, Action>
+        {
+            { CommandType.Play, () => { _gamePlay.StartPlay(); 
+                                        _hud.SendCommand(CommandType.AddScore,0); } },
+            { CommandType.Pause, _gamePlay.PausePlay },
+            { CommandType.Resume, _gamePlay.ResumePlay },
+            { CommandType.Home, _gamePlay.StopAndClearPlay },
+            { CommandType.Reset, _gamePlay.ResetPlay },
+            { CommandType.Revive, _gamePlay.ReviveSupport },
+            { CommandType.TrigerRemove3Slimes, _gamePlay.TrigerRemoveSlimesSupport },
+            { CommandType.Remove3Slimes, _gamePlay.RemoveSlimesSupport }
+        };
+    }
     private void HandleBtnCommand(CommandType type, object _)
     {
-        switch(type)
-        {
-            case  (CommandType.Play) :
-            _gamePlay.StartPlay();
-            _hud.SendCommand(CommandType.AddScore,0);
-            break;
-            case(CommandType.Pause):
-            _gamePlay.PausePlay();
-            break;
-            case  (CommandType.Resume) :
-            _gamePlay.ResumePlay();
-            break;
-            case  (CommandType.Home) :
-            _gamePlay.StopAndClearPlay();
-            break;
-            case(CommandType.Reset):
-            _gamePlay.ResetPlay();
-            break;
-        }
+        if(_commandMap == null) return;
+        _commandMap.TryGetValue(type, out Action action);
+        action?.Invoke();
     }
     private void HandleLoadDataHud(StateType type)
     {

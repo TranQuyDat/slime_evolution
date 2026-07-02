@@ -82,7 +82,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1850343685
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4666846895406301248, guid: 0381bea07c31212b599198a4075a09df, type: 3}
@@ -184,4 +184,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f9a8025040d229c90024ec5100b7d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeMerge
-  _prefabSlime: {fileID: 5653574659505928494}
