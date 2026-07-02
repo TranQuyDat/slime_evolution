@@ -65,6 +65,7 @@ class PlayPanel : IState
     {
         _PanelSelectSlimes.SetActive(true);
         _btnTrigerRemove3SlimesSupport.gameObject.SetActive(false);
+        _btnPause.interactable = false;
         _hud.SendCommand(CommandType.TrigerRemove3Slimes);
     }
     private void BtnRemove3SlimesSupport()
@@ -72,6 +73,7 @@ class PlayPanel : IState
         _PanelSelectSlimes.SetActive(false);
         _btnTrigerRemove3SlimesSupport.gameObject.SetActive(true);
         _hud.SendCommand(CommandType.Remove3Slimes);
+        _btnPause.interactable = true;
     }
 
 
