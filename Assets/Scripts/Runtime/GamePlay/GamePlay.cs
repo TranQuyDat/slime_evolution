@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 class GamePlay : MonoBehaviour
 {
     [SerializeField] private InputSystem _inputSystem ;
-    [SerializeField] private SpawnSystem _spawnSystem;
+    [SerializeField] private SlimeSpawnManager _SlimeSpawn;
     [SerializeField] private GameObject _pitPrefab;
     [SerializeField] private ComboWindow _comboWindowPrefab;
     [SerializeField] private float _dragThreshold = 0.5f;
@@ -28,6 +28,8 @@ class GamePlay : MonoBehaviour
     private SupportAction _reviveAction;
     private SupportAction _removeSlimeAction;
     private Camera _camera;
+
+    private Slime _slimeHolder;
     void Awake()
     {
         _gameManager = GameManager.Instance;
@@ -59,12 +61,9 @@ class GamePlay : MonoBehaviour
             return;
         }
         
-        
-        if(!_spawnSystem._canSpawn && _spawnSystem.SlimeHolder == null)
-            waitToSpawn(3f);
-
         _comboSystem.ResetComboByTime(1.5f);
-
+        if(_slimeHolder != null) return;
+        waitToSpawn(3f);
     }
 
     public void StartPlay()
@@ -94,7 +93,6 @@ class GamePlay : MonoBehaviour
 
         _comboSystem.OnComboChanged += HandleComboChange;
         _comboSystem.OnComboReset += HandleComboReset;
-        _spawnSystem._canSpawn = true;
         ResetVariables();
         _scoreSystem.SetScore(0);
         waitToSpawn(0f);
@@ -115,7 +113,12 @@ class GamePlay : MonoBehaviour
     {
         IsGameOver = false;
         _scoreSystem.SetScore(0);
-        _spawnSystem.Reset();
+        _SlimeSpawn.Reset();
+        if(_slimeHolder!=null)
+        {
+            _slimeHolder.Destroy();
+            _slimeHolder = null;
+        }
         _pitCtrl.ClearAllContent();
         ResetVariables();
         waitToSpawn(0f);
@@ -125,11 +128,15 @@ class GamePlay : MonoBehaviour
     public void StopAndClearPlay()
     {
         _canPlay = false;
-        _spawnSystem.Reset();
+        _SlimeSpawn.Reset();
         _pitCtrl.ClearAllContent();
         _timeDelay = 0f;
         _pitCtrl.gameObject.SetActive(false);
-        
+        if(_slimeHolder!=null)
+        {
+            _slimeHolder.Destroy();
+            _slimeHolder = null;
+        }
         _comboSystem.OnComboChanged -= HandleComboChange;
         _comboSystem.OnComboReset -= HandleComboReset;
     }
@@ -150,18 +157,18 @@ class GamePlay : MonoBehaviour
             _timeDelay += Time.deltaTime;
             return;
         }
-        if(_spawnSystem.SlimeHolder != null &&
-        _spawnSystem.SlimeHolder.transform.parent == null) return;
-        _spawnSystem._canSpawn = true;
+        if(_slimeHolder != null &&
+        _slimeHolder.transform.parent == null) return;
+        _slimeHolder = _SlimeSpawn.Spawn();
+        _slimeHolder.transform.SetParent(transform,true);
         _timeDelay = 0;
     }
 
     private void DropSlime()
     {
-        if(IsPointerOverUI() || !_CanDropSlime || _spawnSystem.SlimeHolder == null) return;
-        _spawnSystem.SlimeHolder.Unfreeze();
-        MoveSlimeToPitContent(_spawnSystem.SlimeHolder);
-        _spawnSystem.EmptyHolder();
+        if(IsPointerOverUI() || !_CanDropSlime || _slimeHolder == null) return;
+        _slimeHolder.Unfreeze();
+        MoveSlimeToPitContent(_slimeHolder);
     }
     private bool IsPointerOverUI()
     {
@@ -170,25 +177,24 @@ class GamePlay : MonoBehaviour
 
     private void MoveSlimeToPitContent(Slime slime)
     {
-        Collider2D coll = slime.GetComponent<Collider2D>();
+        _slimeHolder = null;
         _pitCtrl.AddToPit(slime.gameObject);
     }
 
     private void DragSlime_X()
     {
-        if(_spawnSystem.SlimeHolder == null) return;
-        Transform slimeobj = _spawnSystem.SlimeHolder.transform;
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 slimePos = slimeobj.position;
+        if(_slimeHolder == null) return;
+        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 slimePos = _slimeHolder.transform.position;
         Vector3 dragVector = mousePos - slimePos;
-        if(dragVector.magnitude > 0.1f)
-        {
-            Vector3 dragDirection = dragVector.normalized;
-            Vector2 pos = mousePos;   
-            pos.x = Mathf.Clamp(pos.x,-_dragThreshold,_dragThreshold);
-            pos.y = slimeobj.position.y;
-            slimeobj.position = pos;
-        }
+
+        if(dragVector.magnitude <= 0.1f)return;
+        
+        Vector2 pos = mousePos;   
+        pos.x = Mathf.Clamp(pos.x,-_dragThreshold,_dragThreshold);
+        pos.y = _slimeHolder.transform.position.y;
+        _slimeHolder.transform.position = pos;
+        
     }
 
     private void CheckGameOverByTimeout(float t)
@@ -207,6 +213,7 @@ class GamePlay : MonoBehaviour
         _gameManager.ShowGameOverHud();
         PausePlay();
     }
+
 # region====>Support Actions<====
     public void ReviveSupport()
     {

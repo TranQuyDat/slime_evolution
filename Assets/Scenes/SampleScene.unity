@@ -861,8 +861,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnSystem
   _slimeDatabase: {fileID: 11400000, guid: 2e8491dd6edf89a3ca9fe7a5f0f84110, type: 2}
-  _canSpawn: 0
-  difficulty: 3
 --- !u!114 &1476660233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1080,7 +1078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay
   _inputSystem: {fileID: 1476660233}
-  _spawnSystem: {fileID: 1476660232}
+  _SlimeSpawn: {fileID: 1476660232}
   _pitPrefab: {fileID: 7926584878437095606, guid: ef8147d0bf68d4b7bba95c214fec0ecd, type: 3}
   _comboWindowPrefab: {fileID: 8800167819447629924, guid: d8b41ece5a8b9c4dfa44dd042cbe7abd, type: 3}
   _dragThreshold: 3.3
