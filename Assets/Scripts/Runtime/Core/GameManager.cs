@@ -8,16 +8,16 @@ using UnityEngine;
     public static GameManager Instance { get; private set; }
     [SerializeField]private InputSystem _inputSystem;
     [SerializeField]private GamePlay _gamePlay;
-
-    public InputSystem InputSystem => _inputSystem;
     [SerializeField] private HudManager _hud;
 
-    public HudManager Hud => _hud;
-    public GamePlay GamePlay => _gamePlay;
-
+    private MonetizationManager _monetizationMngr;
     private SaveSystem _saveSystem;
     private int _hightScore;
     private Dictionary<CommandType, Action> _commandMap;
+
+    public HudManager Hud => _hud;
+    public GamePlay GamePlay => _gamePlay;
+    public InputSystem InputSystem => _inputSystem;
     void Awake()
     {
         if (Instance != null)
@@ -34,6 +34,7 @@ using UnityEngine;
     }
     void Start()
     {
+        _monetizationMngr = MonetizationManager.Instance;
         SetupCommandMap();
         _hightScore = _saveSystem.Load<int>("hightscore");
         _hud.OnCommand += HandleBtnCommand;
@@ -55,14 +56,17 @@ using UnityEngine;
     {
         _commandMap = new Dictionary<CommandType, Action>
         {
-            { CommandType.Play, () => { _gamePlay.StartPlay(); 
-                                        _hud.SendCommand(CommandType.AddScore,0); } },
+            { CommandType.Play, 
+                () => { _gamePlay.StartPlay();
+                        _hud.SendCommand(CommandType.AddScore,0); } },
             { CommandType.Pause, _gamePlay.PausePlay },
             { CommandType.Resume, _gamePlay.ResumePlay },
             { CommandType.Home, _gamePlay.StopAndClearPlay },
             { CommandType.Reset, _gamePlay.ResetPlay },
-            { CommandType.Revive, _gamePlay.ReviveSupport },
-            { CommandType.TrigerRemove3Slimes, _gamePlay.TrigerRemoveSlimesSupport },
+            { CommandType.Revive, 
+                ()=>{ RequestSupportRewardedAd(_gamePlay.ReviveSupport); } },
+            { CommandType.TrigerRemove3Slimes, 
+                ()=>{ RequestSupportRewardedAd(_gamePlay.TrigerRemoveSlimesSupport); } },
             { CommandType.Remove3Slimes, _gamePlay.RemoveSlimesSupport }
         };
     }
@@ -85,6 +89,17 @@ using UnityEngine;
     {
         _hud.SendCommand(CommandType.AddScore,score);
     }
+
+    private void RequestSupportRewardedAd(Action sp)
+    {
+        _gamePlay.PausePlay();
+        _monetizationMngr.ShowAdReward(()=>
+        {
+            sp?.Invoke();
+            _gamePlay.ResumePlay();
+        });
+    }
+
     private void HandleHightScoreChange(int score)
     {
         if(score <= _hightScore) return;
