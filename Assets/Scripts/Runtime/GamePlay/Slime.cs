@@ -17,6 +17,7 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime","Ground"));
 
     public string PoolKey =>"Slime";
+    public Material Material => _sr.material;
 
     void Awake()
     {
