@@ -116,12 +116,10 @@ class GamePlay : MonoBehaviour
     public void PausePlay()
     {
         _canPlay = false;
-        _CanDropSlime = false;
     } 
     public void ResumePlay()
     {
         _canPlay = true;
-        _CanDropSlime = true;
     } 
     
     public void ResetPlay()
@@ -173,7 +171,8 @@ class GamePlay : MonoBehaviour
 
     private void DropSlime()
     {
-        if(IsPointerOverUI() || !_CanDropSlime || _slimeHolder == null) return;
+        if(IsPointerOverUI() || !_CanDropSlime 
+        || _slimeHolder == null || !_canPlay) return;
         _slimeHolder.Unfreeze();
         MoveSlimeToPitContent(_slimeHolder);
     }
@@ -218,6 +217,7 @@ class GamePlay : MonoBehaviour
     public void ReviveSupport()
     {
         _reviveAction.OnAction();
+        _CanDropSlime = true;
         ResetVariables();
         waitToSpawn(0f);
     }
