@@ -40,6 +40,7 @@ class ShuffleBagSpawnSource<T> : IMutableSpawnSource<T>
     public void SetItems(IEnumerable<T> values)
     {
         _items.AddRange(values);
+        StartNewCycle();
     }
 
     private void StartNewCycle()

@@ -26,6 +26,7 @@ class GamePlay : MonoBehaviour
     private SupportAction _removeSlimeAction;
     private Camera _camera;
     private Slime _slimeHolder;
+    private int _highestUnlockedLevel = 0;
     public bool IsGameOver {get;private set;}
     public ScoreSystem ScoreSystem => _scoreSystem;
 
@@ -75,9 +76,10 @@ class GamePlay : MonoBehaviour
 
             CompositeCollider2D compositeCol = pitObj.GetComponent<CompositeCollider2D>();
             float pitSizeY = compositeCol.bounds.size.y/2f;
-            Vector2 pos =  Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0f,10f));
+            Vector2 pos =  _camera.ViewportToWorldPoint(new Vector3(0.5f,0f,10f));
             pos.y += pitSizeY;
             pitObj.transform.position = pos; // set pos for pit
+            Physics2D.SyncTransforms();
         }
         _pitCtrl.gameObject.SetActive(true);
     }
@@ -243,6 +245,7 @@ class GamePlay : MonoBehaviour
         _trigerRemoveSlime = false;
         _canPlay = true;
         IsGameOver = false;
+        _highestUnlockedLevel = 0;
     }
     private void clearRound()
     {
@@ -259,6 +262,11 @@ class GamePlay : MonoBehaviour
     {
         return EventSystem.current.IsPointerOverGameObject();
     }   
+    public void OnSlimeMerged(int newLevel)
+    {   
+        _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);
+        _slimeSpawn.SwapDeck(_highestUnlockedLevel);
+    }
     public void CalScoreByLevel(int lv)
     {
         _comboSystem.AddComboCount();

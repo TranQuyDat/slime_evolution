@@ -14,19 +14,15 @@ public class PitController : MonoBehaviour
     void Awake()
     {
         _compositeColl = GetComponent<CompositeCollider2D>();
-
     }
     void Start()
     {
         _highestContentY = _compositeColl.bounds.min.y;
     }
-
     void Update()
     {
         CheckHeighestContentY();
-    }
-
-    public void AddToPit(GameObject obj)
+    }    public void AddToPit(GameObject obj)
     {
         obj.transform.SetParent(_content,true);
     }

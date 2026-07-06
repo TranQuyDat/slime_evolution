@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 class SlimeMerge : MonoBehaviour
@@ -17,10 +18,12 @@ class SlimeMerge : MonoBehaviour
         _slimePrefab = _SlimeSpawn.SlimeDatabase.SlimePrefab;
         _gamePlay = GameManager.Instance.GamePlay;
     }
+
     void Start()
     {
         _maxLv = _SlimeSpawn.SlimeDatabase.SlimeDatas.Length;
     }
+    
     void OnEnable()
     {
         IsMerging = false;
@@ -28,7 +31,6 @@ class SlimeMerge : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        
         _nextLV = _slime.Data.Lv +1;
         if(_nextLV > _maxLv || IsMerging) return;
         SlimeMerge other = collision.gameObject.GetComponent<SlimeMerge>();
@@ -45,9 +47,10 @@ class SlimeMerge : MonoBehaviour
     private void mergeSlime(SlimeMerge Other)
     {
         if(this.GetInstanceID() > Other.GetInstanceID()) return;
+        Vector2 pos = (transform.position + Other.transform.position)/2f;
         GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab.gameObject,_slimePrefab.PoolKey);
         newSlimeobj.transform.rotation = Quaternion.identity;
-        newSlimeobj.transform.position = transform.position;
+        newSlimeobj.transform.position = pos;
         Slime newSlime = newSlimeobj.GetComponent<Slime>();
        
         SlimeDatabase slimeDatabase = _SlimeSpawn.SlimeDatabase;
@@ -63,6 +66,7 @@ class SlimeMerge : MonoBehaviour
             GameEvents.OnDragonExploded.Invoke(newSlime,
             _gamePlay.CalScoreByLevel);
         _gamePlay.CalScoreByLevel(newSlime.Data.Lv);
+        _gamePlay.OnSlimeMerged(newSlime.Data.Lv);
 
     }
 }

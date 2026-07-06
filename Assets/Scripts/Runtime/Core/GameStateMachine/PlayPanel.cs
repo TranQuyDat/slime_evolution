@@ -15,6 +15,8 @@ class PlayPanel : IState
     [SerializeField]private TextMeshProUGUI _txtRemove3Slimes;
 
     [SerializeField]private GameObject _PanelSelectSlimes;
+
+    private float _timeDelay;
     
     private Sprite _spriteBG;
     void Awake()
@@ -27,6 +29,13 @@ class PlayPanel : IState
     void OnEnable()
     {
         _hud.OnChangeHud +=HandleChangeHud;
+    }
+    void Update()
+    {
+        if (_txtCombo.gameObject.activeSelf)
+        {
+            WaitToHideCombo(1.5f);
+        }
     }
     public override void Enter()
     {
@@ -93,22 +102,24 @@ class PlayPanel : IState
         if(cm != CommandType.UpdateCombo) return;
         int combo = (int)data;
         _txtCombo.text = "X"+combo;
+        _txtCombo.gameObject.SetActive(true);
+        _timeDelay = 0;
     }
+    private void WaitToHideCombo(float t)
+    {
+        _timeDelay += Time.deltaTime;
+        if(_timeDelay < t) return;
+        _timeDelay = 0;
+        _txtCombo.gameObject.SetActive(false);
+    }
+
     private void HandleUpdateScore(CommandType cm,object data)
     {
         if(cm != CommandType.AddScore) return;
         int score  = (int)data;
         _txtScore.text = ""+score;
-        _txtCombo.gameObject.SetActive(true);
-        StartCoroutine(WaitToCloseCombo());
     }
     
-    private IEnumerator WaitToCloseCombo()
-    {
-        yield return new WaitForSeconds(1.5f);
-        _txtCombo.gameObject.SetActive(false);
-    }
-
     private void HandleUpdatePreview(CommandType cm,object data)
     {
         if(cm != CommandType.UpdatePreview) return;
