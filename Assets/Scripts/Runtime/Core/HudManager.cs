@@ -15,7 +15,7 @@ public enum CommandType
     Play,  Pause,  Resume, Reset, Home,
     //game event command
     AddScore,UpdateHightScore,Revive,Remove3Slimes,TrigerRemove3Slimes,
-    UpdateRemoveSlimesText,
+    UpdateRemoveSlimesText,UpdateCombo,UpdatePreview,
 }
 class HudManager : MonoBehaviour
 {

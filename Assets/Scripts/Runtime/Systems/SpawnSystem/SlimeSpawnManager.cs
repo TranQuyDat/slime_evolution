@@ -35,6 +35,12 @@ class SlimeSpawnManager : MonoBehaviour
         newSlime.Freeze();
         return newSlime;
     }
+    public SlimeData PreviewNextSlime()
+    {
+        int id = _bag.PeekNext();
+        SlimeData data = _slimeDatabase.SlimeDatas[id];
+        return data;
+    }
     
     public void Reset()
     {

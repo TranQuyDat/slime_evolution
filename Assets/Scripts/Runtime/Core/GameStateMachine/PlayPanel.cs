@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,9 @@ class PlayPanel : IState
     [SerializeField]private Button _btnPause;
     [SerializeField]private Button _btnTrigerRemove3SlimesSupport;
     [SerializeField]private Button _btnRemove3SlimesSupport;
+    [SerializeField]private Image _ImgPreview;
     [SerializeField]private TextMeshProUGUI _txtScore;
+    [SerializeField]private TextMeshProUGUI _txtCombo;
     [SerializeField]private TextMeshProUGUI _txtHightScore;
     [SerializeField]private TextMeshProUGUI _txtRemove3Slimes;
 
@@ -28,21 +31,27 @@ class PlayPanel : IState
     public override void Enter()
     {
         this.gameObject.SetActive(true);
+        _txtCombo.gameObject.SetActive(false);
         _btnTrigerRemove3SlimesSupport.gameObject.SetActive(true);
         _PanelSelectSlimes.SetActive(false);
+
         _btnPause.onClick.AddListener(BtnPause);
         _btnRemove3SlimesSupport.onClick.AddListener(BtnRemove3SlimesSupport);
         _btnTrigerRemove3SlimesSupport.onClick.AddListener(BtnTrigerRemove3SlimesSupport);
 
         _hud.OnCommand +=HandleUpdateHightScore;
+        _hud.OnCommand +=HandleUpdatePreview;
         _hud.OnCommand +=HandleUpdateScore;
         _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
+        _hud.OnCommand +=HandleUpdateCombo;
     }
 
     public override void Exit()
     {
         _hud.OnCommand -=HandleUpdateHightScore;
+        _hud.OnCommand -=HandleUpdatePreview;
         _hud.OnCommand -=HandleUpdateScore;
+        _hud.OnCommand -=HandleUpdateCombo;
 
         _btnPause.onClick.RemoveListener(BtnPause);
         _btnRemove3SlimesSupport.onClick.RemoveListener(BtnRemove3SlimesSupport);
@@ -53,6 +62,7 @@ class PlayPanel : IState
         if(type != StateType.Menu) return;
         this.gameObject.SetActive(false);
         _hud.OnChangeHud -=HandleChangeHud;
+        _txtCombo.gameObject.SetActive(false);
     }
 
     // buttons
@@ -78,13 +88,34 @@ class PlayPanel : IState
 
 
     //
+    private void HandleUpdateCombo(CommandType cm , object data)
+    {
+        if(cm != CommandType.UpdateCombo) return;
+        int combo = (int)data;
+        _txtCombo.text = "X"+combo;
+    }
     private void HandleUpdateScore(CommandType cm,object data)
     {
         if(cm != CommandType.AddScore) return;
         int score  = (int)data;
         _txtScore.text = ""+score;
+        _txtCombo.gameObject.SetActive(true);
+        StartCoroutine(WaitToCloseCombo());
     }
     
+    private IEnumerator WaitToCloseCombo()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _txtCombo.gameObject.SetActive(false);
+    }
+
+    private void HandleUpdatePreview(CommandType cm,object data)
+    {
+        if(cm != CommandType.UpdatePreview) return;
+        Sprite img = (Sprite)data;
+        _ImgPreview.sprite = img;
+    }
+
     private void HandleUpdateHightScore(CommandType cm,object data)
     {
         if(cm != CommandType.UpdateHightScore) return;

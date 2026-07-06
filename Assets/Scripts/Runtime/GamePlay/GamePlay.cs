@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 class GamePlay : MonoBehaviour
 {
     [SerializeField] private InputSystem _inputSystem ;
-    [SerializeField] private SlimeSpawnManager _SlimeSpawn;
+    [SerializeField] private SlimeSpawnManager _slimeSpawn;
     [SerializeField] private GameObject _pitPrefab;
     [SerializeField] private ComboWindow _comboWindowPrefab;
     [SerializeField] private float _dragThreshold = 0.5f;
@@ -18,18 +18,18 @@ class GamePlay : MonoBehaviour
     private ScoreSystem _scoreSystem;
     private ComboSystem _comboSystem;
     private PitController _pitCtrl;
-    private ComboWindow _CombowindowCtrl;
     private float _timeDelay = 0f;
-    public bool IsGameOver {get;private set;}
     private bool _CanDropSlime;
-    public ScoreSystem ScoreSystem => _scoreSystem;
     private bool _canPlay;
     private bool _trigerRemoveSlime;
     private SupportAction _reviveAction;
     private SupportAction _removeSlimeAction;
     private Camera _camera;
-
     private Slime _slimeHolder;
+    public bool IsGameOver {get;private set;}
+    public ScoreSystem ScoreSystem => _scoreSystem;
+
+#region Initialize
     void Awake()
     {
         _gameManager = GameManager.Instance;
@@ -65,8 +65,7 @@ class GamePlay : MonoBehaviour
         if(_slimeHolder != null) return;
         waitToSpawn(3f);
     }
-
-    public void StartPlay()
+    public void InitializePit()
     {
         if(_pitCtrl == null)
         {
@@ -80,23 +79,39 @@ class GamePlay : MonoBehaviour
             pos.y += pitSizeY;
             pitObj.transform.position = pos; // set pos for pit
         }
-        if(_CombowindowCtrl == null) 
-            _CombowindowCtrl = Instantiate(_comboWindowPrefab,_gameManager.Hud.transform);
         _pitCtrl.gameObject.SetActive(true);
-        _CombowindowCtrl.gameObject.SetActive(false);
-
+    }
+    public void InitializeUI()
+    {
+        _scoreSystem.SetScore(0);
+    }
+    public void InitializeSupport()
+    {
         if(_reviveAction == null)
             _reviveAction = new ReviveAction(_pitCtrl);
         
         if(_removeSlimeAction == null)
             _removeSlimeAction = new RemoveSlimeAction(_pitCtrl,_inputSystem);
-
+    }
+    public void SubscribeEvents()
+    {
         _comboSystem.OnComboChanged += HandleComboChange;
-        _comboSystem.OnComboReset += HandleComboReset;
-        ResetVariables();
-        _scoreSystem.SetScore(0);
-        waitToSpawn(0f);
+    }
+    #endregion
 
+#region Gameplay    
+    public void BeginRound()
+    {
+        InitializePit();
+        InitializeUI();
+        InitializeSupport();
+        SubscribeEvents();
+        ResetVariables();
+    }
+    public void StartPlay()
+    {
+        BeginRound();
+        waitToSpawn(0f);    
     }
     public void PausePlay()
     {
@@ -113,13 +128,7 @@ class GamePlay : MonoBehaviour
     {
         IsGameOver = false;
         _scoreSystem.SetScore(0);
-        _SlimeSpawn.Reset();
-        if(_slimeHolder!=null)
-        {
-            _slimeHolder.Destroy();
-            _slimeHolder = null;
-        }
-        _pitCtrl.ClearAllContent();
+        clearRound();
         ResetVariables();
         waitToSpawn(0f);
         _removeSlimeAction.OnFinish();
@@ -128,28 +137,14 @@ class GamePlay : MonoBehaviour
     public void StopAndClearPlay()
     {
         _canPlay = false;
-        _SlimeSpawn.Reset();
-        _pitCtrl.ClearAllContent();
         _timeDelay = 0f;
         _pitCtrl.gameObject.SetActive(false);
-        if(_slimeHolder!=null)
-        {
-            _slimeHolder.Destroy();
-            _slimeHolder = null;
-        }
+        clearRound();
         _comboSystem.OnComboChanged -= HandleComboChange;
-        _comboSystem.OnComboReset -= HandleComboReset;
     }
+    #endregion
 
-    private void ResetVariables()
-    {
-        _timeDelay = 0f;
-        _CanDropSlime = true;
-        _trigerRemoveSlime = false;
-        _canPlay = true;
-        IsGameOver = false;
-    }
-
+#region Spawn
     private void waitToSpawn(float t = 3f)
     {
         if(_timeDelay < t)
@@ -159,26 +154,28 @@ class GamePlay : MonoBehaviour
         }
         if(_slimeHolder != null &&
         _slimeHolder.transform.parent == null) return;
-        _slimeHolder = _SlimeSpawn.Spawn();
+        _slimeHolder = _slimeSpawn.Spawn();
+        Sprite sprite = _slimeSpawn.PreviewNextSlime().Sprite;
+        _gameManager.UpdatePreviewHud(sprite);
         _slimeHolder.transform.SetParent(transform,true);
         _timeDelay = 0;
-    }
-
-    private void DropSlime()
-    {
-        if(IsPointerOverUI() || !_CanDropSlime || _slimeHolder == null) return;
-        _slimeHolder.Unfreeze();
-        MoveSlimeToPitContent(_slimeHolder);
-    }
-    private bool IsPointerOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void MoveSlimeToPitContent(Slime slime)
     {
         _slimeHolder = null;
         _pitCtrl.AddToPit(slime.gameObject);
+    }
+
+    #endregion
+
+#region Input
+
+    private void DropSlime()
+    {
+        if(IsPointerOverUI() || !_CanDropSlime || _slimeHolder == null) return;
+        _slimeHolder.Unfreeze();
+        MoveSlimeToPitContent(_slimeHolder);
     }
 
     private void DragSlime_X()
@@ -196,7 +193,9 @@ class GamePlay : MonoBehaviour
         _slimeHolder.transform.position = pos;
         
     }
-
+#endregion
+   
+#region GameOver
     private void CheckGameOverByTimeout(float t)
     {
         if(_timeDelay < t)
@@ -213,8 +212,9 @@ class GamePlay : MonoBehaviour
         _gameManager.ShowGameOverHud();
         PausePlay();
     }
+    #endregion
 
-# region====>Support Actions<====
+#region Support Actions
     public void ReviveSupport()
     {
         _reviveAction.OnAction();
@@ -234,6 +234,31 @@ class GamePlay : MonoBehaviour
         _CanDropSlime = true;
     }
 #endregion
+ 
+#region  sub Method
+    private void ResetVariables()
+    {
+        _timeDelay = 0f;
+        _CanDropSlime = true;
+        _trigerRemoveSlime = false;
+        _canPlay = true;
+        IsGameOver = false;
+    }
+    private void clearRound()
+    {
+        _slimeSpawn.Reset();
+        _pitCtrl.ClearAllContent();
+
+        if (_slimeHolder != null)
+        {
+            _slimeHolder.Destroy();
+            _slimeHolder = null;
+        }
+    }
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }   
     public void CalScoreByLevel(int lv)
     {
         _comboSystem.AddComboCount();
@@ -244,10 +269,8 @@ class GamePlay : MonoBehaviour
     }
     private void HandleComboChange(int cb)
     {
-        _CombowindowCtrl.SetCombo(cb);
-        _CombowindowCtrl.show();
+        _gameManager.updateComboHud(cb);
     }
-    private void HandleComboReset() => _CombowindowCtrl.Hide();
 
     void OnDrawGizmosSelected()
     {
@@ -258,4 +281,5 @@ class GamePlay : MonoBehaviour
         pitPos.y = pitCollider.bounds.max.y;
         Gizmos.DrawWireCube(pitPos,new Vector3(_dragThreshold*2, 0,0));
     }
+    #endregion
 }
