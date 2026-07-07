@@ -1,11 +1,12 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 class SlimeMerge : MonoBehaviour
 {
     private GamePlay _gamePlay;
     private Slime _slime;
-    private GameObject _slimePrefab;
-    private SpawnSystem _spawnSystem;
+    private Slime _slimePrefab;
+    private SlimeSpawnManager _SlimeSpawn;
     private int _nextLV;
     private int _maxLv;
     public bool IsMerging {get;set;} = false;  
@@ -13,14 +14,16 @@ class SlimeMerge : MonoBehaviour
     void Awake()
     {
         _slime = GetComponent<Slime>();
-        _spawnSystem = GameManager.Instance.GetComponent<SpawnSystem>();
-        _slimePrefab = _spawnSystem.SlimeDatabase.SlimePrefab;
+        _SlimeSpawn = GameManager.Instance.GetComponent<SlimeSpawnManager>();
+        _slimePrefab = _SlimeSpawn.SlimeDatabase.SlimePrefab;
         _gamePlay = GameManager.Instance.GamePlay;
     }
+
     void Start()
     {
-        _maxLv = _spawnSystem.SlimeDatabase.SlimeDatas.Length;
+        _maxLv = _SlimeSpawn.SlimeDatabase.SlimeDatas.Length;
     }
+    
     void OnEnable()
     {
         IsMerging = false;
@@ -28,7 +31,6 @@ class SlimeMerge : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        
         _nextLV = _slime.Data.Lv +1;
         if(_nextLV > _maxLv || IsMerging) return;
         SlimeMerge other = collision.gameObject.GetComponent<SlimeMerge>();
@@ -45,22 +47,26 @@ class SlimeMerge : MonoBehaviour
     private void mergeSlime(SlimeMerge Other)
     {
         if(this.GetInstanceID() > Other.GetInstanceID()) return;
-        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab,"Slime");
+        Vector2 pos = (transform.position + Other.transform.position)/2f;
+        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab.gameObject,_slimePrefab.PoolKey);
         newSlimeobj.transform.rotation = Quaternion.identity;
-        newSlimeobj.transform.position = transform.position;
+        newSlimeobj.transform.position = pos;
         Slime newSlime = newSlimeobj.GetComponent<Slime>();
        
-        SlimeDatabase slimeDatabase = _spawnSystem.SlimeDatabase;
+        SlimeDatabase slimeDatabase = _SlimeSpawn.SlimeDatabase;
         SlimeData slimeData = slimeDatabase.SlimeDatas[_nextLV];
        
         newSlime.Init(slimeData);
         newSlimeobj.transform.SetParent(transform.parent,true);
-        if(newSlime.Data.Lv == (int)SlimeDatabase.SlimeType.Dragon)
-            GameEvents.OnDragonExploded.Invoke(newSlime);
-        _gamePlay.CalScoreByLevel(newSlime.Data.Lv);
-
         //destroy
         _slime.Destroy();
         Other.Slime.Destroy();
+
+        if(newSlime.Data.Lv == (int)SlimeDatabase.SlimeType.Dragon) 
+            GameEvents.OnDragonExploded.Invoke(newSlime,
+            _gamePlay.CalScoreByLevel);
+        _gamePlay.CalScoreByLevel(newSlime.Data.Lv);
+        _gamePlay.OnSlimeMerged(newSlime.Data.Lv);
+
     }
 }

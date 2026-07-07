@@ -85,6 +85,14 @@ using UnityEngine;
     }
 
     public void ShowGameOverHud() => _hud.ChangeHud(StateType.Over);
+    public void UpdatePreviewHud(Sprite sprite)
+    {
+        _hud.SendCommand(CommandType.UpdatePreview,sprite);
+    }
+    public void updateComboHud(int combo)
+    {
+        _hud.SendCommand(CommandType.UpdateCombo,combo);
+    }
     private void updateCurScoreinHud(int score)
     {
         _hud.SendCommand(CommandType.AddScore,score);

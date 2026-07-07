@@ -46,7 +46,7 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _isDestroying = false;
     }
 
-    private void HandleDragonExploded(Slime dragon)
+    private void HandleDragonExploded(Slime dragon,Action<int> addScore)
     {
         if(_isDestroying) return;
 
@@ -62,6 +62,7 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
         //vfx
 
         //
+        addScore.Invoke(_data.Lv);
         Destroy();
     }
 
