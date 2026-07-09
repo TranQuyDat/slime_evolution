@@ -5,6 +5,7 @@ class GameOverPanel:IState
 {
     [SerializeField]private Button _btnReStart;
     [SerializeField]private Button _btnExit;
+    [SerializeField]private Button _btnRevive;
     void Awake()
     {
         _gameManager = GameManager.Instance;
@@ -15,12 +16,14 @@ class GameOverPanel:IState
         this.gameObject.SetActive(true);
         _btnReStart.onClick.AddListener(BtnRestart);
         _btnExit.onClick.AddListener(BtnExit);
+        _btnRevive.onClick.AddListener(BtnRevive);
     }
 
     public override void Exit()
     {
         _btnReStart.onClick.RemoveListener(BtnRestart);
         _btnExit.onClick.RemoveListener(BtnExit);
+        _btnRevive.onClick.RemoveListener(BtnRevive);
         this.gameObject.SetActive(false);
     }
 
@@ -33,6 +36,10 @@ class GameOverPanel:IState
     {
         _hud.ChangeHud(StateType.Play);
         _hud.SendCommand(CommandType.Reset);
+    }
+    private void BtnRevive()
+    {
+        _hud.SendCommand(CommandType.Revive);
     }
 
 }

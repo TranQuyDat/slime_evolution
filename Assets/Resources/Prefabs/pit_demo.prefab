@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 8173503580370994368}
   - component: {fileID: 7649462391459784980}
   - component: {fileID: 3097356884609164964}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pit_demo
   m_TagString: Untagged
   m_Icon: {fileID: 0}

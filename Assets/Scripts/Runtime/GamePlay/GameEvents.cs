@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public static class GameEvents
+static class GameEvents
 {
-    public static Action<Slime> OnDragonExploded;
+    public static Action<Slime,Action<int>> OnDragonExploded;
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Merge_Audio_Event
   m_EditorClassIdentifier: Assembly-CSharp::SimpleAudioEvent
   _clips:
-  - {fileID: 8300000, guid: 064ccfd898f22178aab403c3464c4dad, type: 3}
+  - {fileID: 8300000, guid: 63002794dd605c47ca4f042a6e89e291, type: 3}
   _volume: 0.2
   _pitchMin: 0.85
   _pitchMax: 1.15

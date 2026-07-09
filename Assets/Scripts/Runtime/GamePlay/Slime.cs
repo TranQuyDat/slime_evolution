@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Slime : MonoBehaviour ,IPoolable,IDestroyable
+class Slime : MonoBehaviour ,IPoolable,IDestroyable
 {
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
@@ -17,12 +17,17 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime","Ground"));
 
     public string PoolKey =>"Slime";
-
+    public Material Material => _sr.material;
+    public SlimeVisual Visual {get; private set;}
+    private BaseAudioEvent _collisionAudioEvent;
+    
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
         _collider = GetComponent<Collider2D>();
+        Visual = GetComponent<SlimeVisual>();
+        _collisionAudioEvent = Resources.Load<BaseAudioEvent>("Events/Collision_Audio_Event");
     }
     void Update()
     {
@@ -45,7 +50,7 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _isDestroying = false;
     }
 
-    private void HandleDragonExploded(Slime dragon)
+    private void HandleDragonExploded(Slime dragon,Action<int> addScore)
     {
         if(_isDestroying) return;
 
@@ -61,6 +66,7 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
         //vfx
 
         //
+        addScore.Invoke(_data.Lv);
         Destroy();
     }
 
@@ -78,6 +84,33 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
     {
         _rb.bodyType = RigidbodyType2D.Kinematic;
         _isFreeze = true;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.relativeVelocity.magnitude < 2f)
+        return;
+
+        // Va chạm với mặt đất
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            _collisionAudioEvent.Play();
+            return;
+        }
+
+        // Va chạm với slime
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Slime"))
+            return;
+
+        if (GetInstanceID() > collision.gameObject.GetInstanceID())
+            return;
+
+        SlimeMerge slimeMerge = collision.gameObject.GetComponent<SlimeMerge>();
+        if (slimeMerge.IsMerging)
+            return;
+
+        _collisionAudioEvent.Play();
+    
     }
 
     public void Destroy()

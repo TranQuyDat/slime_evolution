@@ -10,10 +10,10 @@ class SlimeDatabase : ScriptableObject
         Goat = 6, Pig = 7, Horse = 8, Tiger = 9, Buffalo = 10, Dragon = 11
     }
     [SerializeField]private SlimeData[] _slimeDatas ;
-    [SerializeField]private GameObject _slimePrefab;
+    [SerializeField]private Slime _slimePrefab;
     
     public SlimeData[] SlimeDatas =>_slimeDatas;
-    public GameObject SlimePrefab => _slimePrefab;
+    public Slime SlimePrefab => _slimePrefab;
     void Reset()
     {
         Sprite[] allSprites = Resources.LoadAll<Sprite>("SlimeSprites/Slime12");

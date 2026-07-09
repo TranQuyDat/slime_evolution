@@ -49,6 +49,7 @@ class VfxManager : MonoBehaviour
         }
         obj.gameObject.SetActive(false);
         _vfxPools[prefab].Enqueue(obj);
+        obj.transform.SetParent(transform,true);
     }
 
 

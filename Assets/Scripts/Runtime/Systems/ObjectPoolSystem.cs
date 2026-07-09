@@ -47,6 +47,7 @@ class ObjectPoolSystem :MonoBehaviour
             pool = new Queue<GameObject>();
             _pools.Add(key,pool);
         }
+        if(pool.Contains(obj)) return;
         obj.SetActive(false);
         pool.Enqueue(obj);
     }

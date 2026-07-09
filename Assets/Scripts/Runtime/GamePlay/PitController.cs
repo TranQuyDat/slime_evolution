@@ -9,24 +9,20 @@ public class PitController : MonoBehaviour
     public float TopYpit => _compositeColl.bounds.max.y;
     public float HeighestContentY => _highestContentY;
     public bool HadOverflowed => _highestContentY > TopYpit;
-
+    public Bounds Bounds => _compositeColl.bounds;
 
     void Awake()
     {
         _compositeColl = GetComponent<CompositeCollider2D>();
-
     }
     void Start()
     {
         _highestContentY = _compositeColl.bounds.min.y;
     }
-
     void Update()
     {
         CheckHeighestContentY();
-    }
-
-    public void AddToPit(GameObject obj)
+    }    public void AddToPit(GameObject obj)
     {
         obj.transform.SetParent(_content,true);
     }
@@ -54,6 +50,10 @@ public class PitController : MonoBehaviour
             _highestContentY = hit.collider.bounds.max.y;
 
 
+    }
+    public T[] GetAllContents<T>()
+    {
+        return _content.GetComponentsInChildren<T>();
     }
 
     
