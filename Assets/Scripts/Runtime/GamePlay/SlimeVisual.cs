@@ -39,7 +39,7 @@ class SlimeVisual : MonoBehaviour
     }
     public void PlayDestroyEffect()
     {
-        _seq?.Kill();
+        _seq?.Kill(); 
 
         
     }
