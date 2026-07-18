@@ -27,7 +27,7 @@ class SlimeSpawnManager : MonoBehaviour
     private int[] DeckNomal()
     => new[]
     {
-        0,0,0,0,0,
+        0,0,0,0,
         1,1,1,1,
         2,2,2,
         3,3
@@ -36,9 +36,8 @@ class SlimeSpawnManager : MonoBehaviour
     => new[]
     {
         0,0,0,
-        1,1,1,1,
-        2,2,2,
-        3,3,3,
+        1,1,1,
+        3,3,
         4,4
     };
 #endregion

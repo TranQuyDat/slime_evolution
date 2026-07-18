@@ -25,6 +25,7 @@ class GamePlay : MonoBehaviour
     private SupportAction _reviveAction;
     private SupportAction _removeSlimeAction;
     private Camera _camera;
+    private CameraShake _cametaShake;
     private Slime _slimeHolder;
     private int _highestUnlockedLevel = 0;
     public bool IsGameOver {get;private set;}
@@ -37,6 +38,7 @@ class GamePlay : MonoBehaviour
         _scoreSystem = new ScoreSystem(); 
         _comboSystem = new ComboSystem();
         _camera = Camera.main;
+        _cametaShake = _camera.GetComponent<CameraShake>();
        
     }
     void Start()
@@ -58,6 +60,8 @@ class GamePlay : MonoBehaviour
         DragSlime_X();
         if(_pitCtrl.HadOverflowed)
         {
+            if(!_cametaShake.IsShaking)
+                _cametaShake.Shake(1.5f,0.2f);
             CheckGameOverByTimeout(3f);
             return;
         }

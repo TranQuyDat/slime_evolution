@@ -14,10 +14,10 @@ public class PitController : MonoBehaviour
     void Awake()
     {
         _compositeColl = GetComponent<CompositeCollider2D>();
+        _highestContentY = _compositeColl.bounds.min.y;
     }
     void Start()
     {
-        _highestContentY = _compositeColl.bounds.min.y;
     }
     void Update()
     {
