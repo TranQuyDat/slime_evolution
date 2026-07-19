@@ -37,6 +37,40 @@ class SlimeVisual : MonoBehaviour
         });
 
     }
+
+    public void PlayStretch(float speed , Vector3 originScale)
+    {
+        if(speed < 2f) return;
+        
+        float strength = Mathf.InverseLerp(2f,12f,speed);
+        float stretchy = Mathf.Lerp(originScale.x+0.05f,originScale.x+0.15f,strength);
+        float stretchx = Mathf.Lerp(originScale.y-0.05f,originScale.x-0.15f,strength);
+
+        _seq?.Kill();
+        _seq = DOTween.Sequence();
+        Tween tw1 = transform.DOScale(new Vector3(stretchx,stretchy,1),0.08f).SetEase(Ease.OutQuad);
+        Tween tw2 = transform.DOScale(originScale,0.12f).SetEase(Ease.OutBack);
+        _seq.Append(tw1);
+        _seq.Append(tw2);
+
+        
+    }
+    public void PlaySquash(float speed , Vector3 originScale)
+    {
+        if(speed < 2f) return;
+        
+        float strength = Mathf.InverseLerp(2f,12f,speed);
+        float squashx = Mathf.Lerp(originScale.x+0.05f,originScale.x+0.15f,strength);
+        float squashy = Mathf.Lerp(originScale.y-0.05f,originScale.x-0.15f,strength);
+
+        _seq.Kill();
+        _seq  = DOTween.Sequence();
+        Tween tw1 = transform.DOScale(new Vector3(squashx,squashy,1),0.08f).SetEase(Ease.OutQuad);
+        Tween tw2 = transform.DOScale(originScale,0.12f).SetEase(Ease.OutBack);
+        _seq.Append(tw1);
+        _seq.Append(tw2);
+    }
+
     public void PlayDestroyEffect()
     {
         _seq?.Kill(); 

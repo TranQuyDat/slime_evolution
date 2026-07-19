@@ -16,9 +16,6 @@ public class PitController : MonoBehaviour
         _compositeColl = GetComponent<CompositeCollider2D>();
         _highestContentY = _compositeColl.bounds.min.y;
     }
-    void Start()
-    {
-    }
     void Update()
     {
         CheckHeighestContentY();

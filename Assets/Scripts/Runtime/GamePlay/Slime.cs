@@ -20,6 +20,7 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public Material Material => _sr.material;
     public SlimeVisual Visual {get; private set;}
     private BaseAudioEvent _collisionAudioEvent;
+    private Vector3 _originScale;
     
     void Awake()
     {
@@ -28,9 +29,11 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _collider = GetComponent<Collider2D>();
         Visual = GetComponent<SlimeVisual>();
         _collisionAudioEvent = Resources.Load<BaseAudioEvent>("Events/Collision_Audio_Event");
+        
     }
     void Update()
     {
+        Squash_Stretch();
     }
     void LateUpdate()
     {
@@ -42,12 +45,27 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _data = data;
         _sr.sprite = data.Sprite;
         scaleSlime(data.Scale);
+        _originScale = transform.localScale;
     }
 
     void OnEnable()
     {
         GameEvents.OnDragonExploded += HandleDragonExploded;
         _isDestroying = false;
+    }
+
+    private void Squash_Stretch()
+    {
+        if(_rb.linearVelocity.y > 0.2f)
+        {
+            float v = _rb.linearVelocity.magnitude;
+            Visual.PlaySquash(v,_originScale);
+        }
+        if(_rb.linearVelocity.y < -5f)
+        {
+            float v = _rb.linearVelocity.magnitude;
+            Visual.PlayStretch(v,_originScale);
+        }
     }
 
     private void HandleDragonExploded(Slime dragon,Action<int> addScore)
