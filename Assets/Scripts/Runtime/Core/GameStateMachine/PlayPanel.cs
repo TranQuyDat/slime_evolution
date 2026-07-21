@@ -1,5 +1,7 @@
 using System.Collections;
 using TMPro;
+using Unity.Android.Gradle.Manifest;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +13,7 @@ class PlayPanel : IState
     [SerializeField]private Image _ImgPreview;
     [SerializeField]private TextMeshProUGUI _txtScore;
     [SerializeField]private TextMeshProUGUI _txtCombo;
+    [SerializeField]private FloatingScore _prefabFloatingScore;
     [SerializeField]private TextMeshProUGUI _txtHightScore;
     [SerializeField]private TextMeshProUGUI _txtRemove3Slimes;
 
@@ -53,6 +56,7 @@ class PlayPanel : IState
         _hud.OnCommand +=HandleUpdateScore;
         _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand +=HandleUpdateCombo;
+        _hud.OnCommand +=HandleFloatingScore;
     }
 
     public override void Exit()
@@ -111,6 +115,16 @@ class PlayPanel : IState
         if(_timeDelay < t) return;
         _timeDelay = 0;
         _txtCombo.gameObject.SetActive(false);
+    }
+
+    public void HandleFloatingScore(CommandType cm ,object  data)
+    {
+        if(cm != CommandType.FloatingScore) return;
+        var (score, pos) = ((int score,Vector2 pos))data;
+        FloatingScore floatingScore = ObjectPoolSystem.Instance.
+        Order<FloatingScore>(_prefabFloatingScore,_prefabFloatingScore.PoolKey);
+        floatingScore.transform.SetParent(transform,false);
+        floatingScore.run(score,pos);
     }
 
     private void HandleUpdateScore(CommandType cm,object data)

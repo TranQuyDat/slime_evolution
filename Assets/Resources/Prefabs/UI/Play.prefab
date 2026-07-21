@@ -1563,6 +1563,7 @@ MonoBehaviour:
   _ImgPreview: {fileID: 4324871144871774145}
   _txtScore: {fileID: 3302200226224150909}
   _txtCombo: {fileID: 5884821832034652202}
+  _prefabFloatingScore: {fileID: 7614181366668065543, guid: 81d3e00e1e79fb76082fbbb0e67815db, type: 3}
   _txtHightScore: {fileID: 5240910764038495741}
   _txtRemove3Slimes: {fileID: 7484250961402859857}
   _PanelSelectSlimes: {fileID: 5891972683288076051}

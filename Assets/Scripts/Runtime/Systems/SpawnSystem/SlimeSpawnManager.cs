@@ -45,11 +45,10 @@ class SlimeSpawnManager : MonoBehaviour
     public Slime Spawn()
     {
         Slime slimePrefab =  _slimeDatabase.SlimePrefab;
-        GameObject obj = _objectPoolSys.Order(slimePrefab.gameObject,slimePrefab.PoolKey); 
-        obj.transform.position = _camera.ViewportToWorldPoint(new Vector2(0.5f,0.8f));
-        obj.transform.rotation = Quaternion.identity;
+        Slime newSlime = _objectPoolSys.Order<Slime>(slimePrefab,slimePrefab.PoolKey); 
+        newSlime.transform.position = _camera.ViewportToWorldPoint(new Vector2(0.5f,0.8f));
+        newSlime.transform.rotation = Quaternion.identity;
 
-        Slime newSlime = obj.GetComponent<Slime>();
         int id = _bag.GetNext();
         SlimeData data = _slimeDatabase.SlimeDatas[id];
         newSlime.Init(data);

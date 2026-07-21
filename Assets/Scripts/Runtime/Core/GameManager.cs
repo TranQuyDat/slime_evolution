@@ -70,6 +70,11 @@ using UnityEngine;
             { CommandType.Remove3Slimes, _gamePlay.RemoveSlimesSupport }
         };
     }
+
+    public void RunFloatingScore( (int,Vector2) data )
+    {
+        _hud.SendCommand(CommandType.FloatingScore,data);
+    }
     private void HandleBtnCommand(CommandType type, object _)
     {
         if(_commandMap == null) return;

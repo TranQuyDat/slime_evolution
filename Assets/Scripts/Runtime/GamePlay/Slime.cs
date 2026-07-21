@@ -21,6 +21,7 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public SlimeVisual Visual {get; private set;}
     private BaseAudioEvent _collisionAudioEvent;
     private Vector3 _originScale;
+    private Delay _delay = new();
     
     void Awake()
     {
@@ -78,12 +79,14 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
             //dragon vfx explosion
 
             //
+            _delay.WaitSeconds(0.08f);
             Destroy();
             return;
         }
         //vfx
 
         //
+        _delay.WaitSeconds(0.08f);
         addScore.Invoke(_data.Lv);
         Destroy();
     }
@@ -135,6 +138,6 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     {
         _isDestroying = true;
         GameEvents.OnDragonExploded -= HandleDragonExploded;
-        ObjectPoolSystem.Instance.Cancel(gameObject,PoolKey);
+        ObjectPoolSystem.Instance.Cancel<Slime>(this,PoolKey);
     }
 }

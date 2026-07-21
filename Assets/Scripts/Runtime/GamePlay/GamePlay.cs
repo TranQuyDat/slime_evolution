@@ -271,13 +271,14 @@ class GamePlay : MonoBehaviour
         _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);
         _slimeSpawn.SwapDeck(_highestUnlockedLevel);
     }
-    public void CalScoreByLevel(int lv)
+    public void CalScoreByLevel(int lv,Vector2 pos)
     {
         _comboSystem.AddComboCount();
 
         int score = ((lv+1)*(lv+2))/2;
         score = score * _comboSystem.ComBoCount;
         _scoreSystem.AddScore(score);
+        _gameManager.RunFloatingScore((score,pos));
     }
     private void HandleComboChange(int cb)
     {

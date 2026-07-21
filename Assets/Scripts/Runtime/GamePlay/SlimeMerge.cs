@@ -13,13 +13,14 @@ class SlimeMerge : MonoBehaviour
     public Slime Slime => _slime;
 
     private BaseAudioEvent _mergeAudioEvent;
+    private Delay _delay;
     void Awake()
     {
         _slime = GetComponent<Slime>();
         _SlimeSpawn = GameManager.Instance.GetComponent<SlimeSpawnManager>();
         _slimePrefab = _SlimeSpawn.SlimeDatabase.SlimePrefab;
         _gamePlay = GameManager.Instance.GamePlay;
-
+        _delay = new();
         _mergeAudioEvent= Resources.Load<BaseAudioEvent>("Events/Merge_Audio_Event");
     }
 
@@ -52,16 +53,17 @@ class SlimeMerge : MonoBehaviour
     {
         if(this.GetInstanceID() > Other.GetInstanceID()) return;
         Vector2 pos = (transform.position + Other.transform.position)/2f;
-        GameObject newSlimeobj = ObjectPoolSystem.Instance.Order(_slimePrefab.gameObject,_slimePrefab.PoolKey);
-        newSlimeobj.transform.rotation = Quaternion.identity;
-        newSlimeobj.transform.position = pos;
-        Slime newSlime = newSlimeobj.GetComponent<Slime>();
+        _delay.WaitSeconds(0.04f);
+        Slime newSlime = ObjectPoolSystem.Instance.Order<Slime>(_slimePrefab,
+        _slimePrefab.PoolKey);
+        newSlime.transform.rotation = Quaternion.identity;
+        newSlime.transform.position = pos;
        
         SlimeDatabase slimeDatabase = _SlimeSpawn.SlimeDatabase;
         SlimeData slimeData = slimeDatabase.SlimeDatas[_nextLV];
        
         newSlime.Init(slimeData);
-        newSlimeobj.transform.SetParent(transform.parent,true);
+        newSlime.transform.SetParent(transform.parent,true);
         //sound
         _mergeAudioEvent.Play();
         //Vfx
@@ -72,8 +74,8 @@ class SlimeMerge : MonoBehaviour
 
         if(newSlime.Data.Lv == (int)SlimeDatabase.SlimeType.Dragon) 
             GameEvents.OnDragonExploded.Invoke(newSlime,
-            _gamePlay.CalScoreByLevel);
-        _gamePlay.CalScoreByLevel(newSlime.Data.Lv);
+            (int s)=>_gamePlay.CalScoreByLevel(s,pos));
+        _gamePlay.CalScoreByLevel(newSlime.Data.Lv,pos);
         _gamePlay.OnSlimeMerged(newSlime.Data.Lv);
 
     }
