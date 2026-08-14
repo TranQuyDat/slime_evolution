@@ -1,21 +1,46 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 class SlimeVisual : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Slime _slime;
-    private BaseVfxEvent _mergeVfxEvent;
+    private SimpleVfxEvent _mergeVfxEvent;
+    private SimpleVfxEvent _explosionVfxEvent;
+    private TargetMoveVfxEvent _slimeScoreCollectVfxEvent;
+    
 
     private Sequence _seq;
     void Awake()
     {
-        
-        _mergeVfxEvent =Resources.Load<BaseVfxEvent>("Events/Merge_Vfx_Event");
+        _mergeVfxEvent =Resources.Load<SimpleVfxEvent>("Events/Merge_Vfx_Event");
+        _explosionVfxEvent =Resources.Load<SimpleVfxEvent>("Events/Explosion_Vfx_Event");
+        _slimeScoreCollectVfxEvent = Resources.Load<TargetMoveVfxEvent>("Events/Slime_Score_Collect_Vfx_Event");
     }
     void OnDisable()
     {
         _seq?.Kill();
+    }
+    [ContextMenu("TestPlayExplosion")]
+    public void PlayExplosion(float duration,Action oncomplete = null)
+    {
+        transform.DOShakePosition(
+            duration: duration,
+            strength: 0.08f,
+            vibrato: 15,
+            randomness: 60f,
+            fadeOut: false
+        ).OnComplete(() =>
+        {
+            Vector3 pos = transform.TransformPoint(new Vector3(0,0.5f,0));
+            _explosionVfxEvent.Play(new()
+            {
+                Position = pos
+            });
+            oncomplete?.Invoke();
+        });
     }
     public void PlayMergeEffect()
     {
@@ -30,12 +55,47 @@ class SlimeVisual : MonoBehaviour
         {
             _mergeVfxEvent.Play(new()
             {
-            Position = transform.TransformPoint(new Vector3(0,0.5f,0)),
-            Speed = 1f,
-            Scale = Vector2.one* _slime.Data.Scale,
+                Position = transform.TransformPoint(new Vector3(0,0.5f,0)),
+                Speed = 1f,
+                Scale = Vector2.one* _slime.Data.Scale,
             });
         });
 
+    }
+
+    [ContextMenu("TestPlayScoreCollectEffect")]
+    public void TestPlayScoreCollectEffect()
+    {
+        PlayScoreCollectEffect(_slime.Destroy);
+    }
+    public void PlayScoreCollectEffect(Action onComplete = null)
+    {
+        transform.DOKill();
+
+        Vector3 originScale = transform.localScale;
+
+        SpriteRenderer sr = _slime.Sr;
+
+        DOTween.Sequence()
+            .Append(
+                transform.DOScale(originScale * 1.5f, 0.35f)
+                    .SetEase(Ease.OutSine)
+            )
+            .OnComplete(() =>
+            {
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1f);
+                transform.localScale = originScale;
+                // vfx bụi phép bay 
+                _slimeScoreCollectVfxEvent.Play(new()
+                {
+                    Position = transform.position,
+                    Speed = 1f,
+                    Scale = Vector2.one * _slime.Data.Scale,
+                });
+
+                onComplete?.Invoke();
+            });
+        
     }
 
     public void PlayStretch(float speed , Vector3 originScale)

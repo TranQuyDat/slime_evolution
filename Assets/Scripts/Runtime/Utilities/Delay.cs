@@ -5,7 +5,7 @@ using UnityEngine;
 public class Delay 
 {
     private CancellationTokenSource _cts ;
-    public async void WaitSeconds(float seconds)
+    public async Task WaitSeconds(float seconds)
     {
         _cts?.Cancel();
         _cts = new();
@@ -17,7 +17,7 @@ public class Delay
         {
         }
     }
-    public async void WaitMinute(float minutes)
+    public async Task WaitMinute(float minutes)
     {
         _cts?.Cancel();
         _cts = new();

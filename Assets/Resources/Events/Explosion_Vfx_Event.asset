@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e65a28f8942c09d4918cf536dbf21fa, type: 3}
-  m_Name: Merge_Vfx_Event
-  m_EditorClassIdentifier: Assembly-CSharp::SympleVfxEvent
-  _prefab: {fileID: 2629902984985666114, guid: 0cc724349a6cead498bc44c1bdfeff22, type: 3}
+  m_Name: Explosion_Vfx_Event
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleVfxEvent
+  _prefab: {fileID: 4153701977400783786, guid: e0c01a6a28f7a3ae39b71ca5acff4930, type: 3}
   _defaultContext:
     OverrideDuration: 0
-    OverridePosition: 1
+    OverridePosition: 0
     OverrideScale: 1
     OverrideSpeed: 1
     OverrideColor: 0

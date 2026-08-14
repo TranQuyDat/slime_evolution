@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -36,6 +37,7 @@ class SlimeMerge : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if(_slime.IsDestroying || _gamePlay.IsGameOver) return;
         _nextLV = _slime.Data.Lv +1;
         if(_nextLV > _maxLv || IsMerging) return;
         SlimeMerge other = collision.gameObject.GetComponent<SlimeMerge>();
@@ -49,11 +51,11 @@ class SlimeMerge : MonoBehaviour
         }
     }
 
-    private void mergeSlime(SlimeMerge Other)
+    private async void mergeSlime(SlimeMerge Other)
     {
         if(this.GetInstanceID() > Other.GetInstanceID()) return;
         Vector2 pos = (transform.position + Other.transform.position)/2f;
-        _delay.WaitSeconds(0.04f);
+        await _delay.WaitSeconds(0.04f);
         Slime newSlime = ObjectPoolSystem.Instance.Order<Slime>(_slimePrefab,
         _slimePrefab.PoolKey);
         newSlime.transform.rotation = Quaternion.identity;

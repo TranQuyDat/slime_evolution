@@ -198,3 +198,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeVisual
   _slime: {fileID: 6796450217456170652}
+  _scoreUiId: 54414

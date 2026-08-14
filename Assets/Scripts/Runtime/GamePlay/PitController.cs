@@ -42,7 +42,7 @@ public class PitController : MonoBehaviour
         RaycastHit2D hit  = Physics2D.BoxCast(topPitpos,new Vector2(size.x,0.1f),0,Vector2.down,dis,LayerMask.GetMask("Slime"));
         if(hit.collider == null) return;
         Slime slime = hit.collider.GetComponent<Slime>();
-        
+        if(slime.IsDestroying) return;
         if(slime !=null && slime.IsTouching) 
             _highestContentY = hit.collider.bounds.max.y;
 

@@ -1,0 +1,769 @@
+fileFormatVersion: 2
+guid: 24f93163900656d03b751d2d311c6321
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -556663896244417668
+    second: Group 3_0
+  - first:
+      213: -7082658115272840673
+    second: Group 3_1
+  - first:
+      213: 1228409297129094648
+    second: Group 3_2
+  - first:
+      213: -6502149291590768785
+    second: Group 3_3
+  - first:
+      213: -6724558696562457890
+    second: Group 3_4
+  - first:
+      213: 7063090476369010955
+    second: Group 3_5
+  - first:
+      213: -5946938159899694180
+    second: Group 3_6
+  - first:
+      213: 254139545706975972
+    second: Group 3_7
+  - first:
+      213: 7085621619132375593
+    second: Group 3_8
+  - first:
+      213: -7192031295277558791
+    second: Group 3_9
+  - first:
+      213: -4401238673869820032
+    second: Group 3_10
+  - first:
+      213: 6617591004646136767
+    second: Group 3_11
+  - first:
+      213: 1394201695045500753
+    second: Group 3_12
+  - first:
+      213: 6360695908799093865
+    second: Group 3_13
+  - first:
+      213: 1805245218259642891
+    second: Group 3_14
+  - first:
+      213: -7713187971764867573
+    second: Group 3_15
+  - first:
+      213: 4336350482329263211
+    second: Group 3_16
+  - first:
+      213: -7375933620690216098
+    second: Group 3_17
+  - first:
+      213: 674333464442244341
+    second: Group 3_18
+  - first:
+      213: 7051779604142125627
+    second: Group 3_19
+  - first:
+      213: 5656932333759561404
+    second: Group 3_20
+  - first:
+      213: 7625797787948126763
+    second: Group 3_21
+  - first:
+      213: 842167854803647934
+    second: Group 3_22
+  - first:
+      213: 789871387029955825
+    second: Group 3_23
+  - first:
+      213: -8207476255547232848
+    second: Group 3_24
+  - first:
+      213: 43589298422009073
+    second: Group 3_25
+  - first:
+      213: 4657927760707497290
+    second: Group 3_26
+  - first:
+      213: -854657545987841082
+    second: Group 3_27
+  - first:
+      213: -1938423256403871776
+    second: Group 3_28
+  - first:
+      213: 2353249851959664912
+    second: Group 3_29
+  - first:
+      213: -2020556572136112790
+    second: Group 3_30
+  - first:
+      213: -6162810454246781453
+    second: Group 3_31
+  - first:
+      213: -2576191292787614188
+    second: Group 3_32
+  - first:
+      213: -9139371965630850855
+    second: Group 3_33
+  - first:
+      213: -5950123271505792645
+    second: Group 3_34
+  - first:
+      213: -1187151841925974575
+    second: Group 3_35
+  - first:
+      213: -189682869682739827
+    second: Group 3_36
+  - first:
+      213: -9042699068566725514
+    second: Group 3_37
+  - first:
+      213: -2418513523831278922
+    second: Group 3_38
+  - first:
+      213: -3721715854094419601
+    second: Group 3_39
+  - first:
+      213: 1018993502975985604
+    second: Group 3_40
+  - first:
+      213: -5442730906209235188
+    second: Group 3_41
+  - first:
+      213: -7754852811041059346
+    second: Group 3_42
+  - first:
+      213: -939308419282195959
+    second: Group 3_43
+  - first:
+      213: 8474944552630515122
+    second: Group 3_44
+  - first:
+      213: -727850033129741295
+    second: Group 3_45
+  - first:
+      213: -3435516905797072114
+    second: Group 3_46
+  - first:
+      213: 6566010661488570261
+    second: Group 3_47
+  - first:
+      213: -92328449426775171
+    second: Group 3_48
+  - first:
+      213: -922258515562970299
+    second: Group 3_49
+  - first:
+      213: -8268217242685479139
+    second: Group 3_50
+  - first:
+      213: 8379266046184112723
+    second: Group 3_51
+  - first:
+      213: -275748257386673063
+    second: Group 3_52
+  - first:
+      213: -3605294874350934268
+    second: Group 3_53
+  - first:
+      213: -716422603429886070
+    second: Group 3_54
+  - first:
+      213: -8360422504210905181
+    second: Group 3_55
+  - first:
+      213: -6645158344437997338
+    second: Group 3_56
+  - first:
+      213: -8134225366390962541
+    second: Group 3_57
+  - first:
+      213: -4081632051809484551
+    second: Group 3_58
+  - first:
+      213: 1537744331888601345
+    second: Group 3_59
+  - first:
+      213: -1728909815827541586
+    second: Group 3_60
+  - first:
+      213: 1437900736004956103
+    second: Group 3_61
+  - first:
+      213: 3572844538235309931
+    second: Group 3_62
+  - first:
+      213: 3598148287268111089
+    second: Group 3_63
+  - first:
+      213: -5695053836373046164
+    second: Group 3_64
+  - first:
+      213: -3775943293088665977
+    second: Group 3_65
+  - first:
+      213: -6310071955101990303
+    second: Group 3_66
+  - first:
+      213: -3648252836988894703
+    second: Group 3_67
+  - first:
+      213: 7170326591915665875
+    second: Group 3_68
+  - first:
+      213: -1871193539455273658
+    second: Group 3_69
+  - first:
+      213: 8005441226814963858
+    second: Group 3_70
+  - first:
+      213: 2542859214978086136
+    second: Group 3_71
+  - first:
+      213: 128495611032169384
+    second: Group 3_72
+  - first:
+      213: -1144669918446996114
+    second: Group 3_73
+  - first:
+      213: 5207199311994954733
+    second: Group 3_74
+  - first:
+      213: -1114994246059368323
+    second: Group 3_75
+  - first:
+      213: -3333309741815095524
+    second: Group 3_76
+  - first:
+      213: 7604697881222067864
+    second: Group 3_77
+  - first:
+      213: -6683538261328910618
+    second: Group 3_78
+  - first:
+      213: 7279898763858097361
+    second: Group 3_79
+  - first:
+      213: -8878455433419345246
+    second: Group 3_80
+  - first:
+      213: 2816282135727799579
+    second: Group 3_81
+  - first:
+      213: -8632827258857365452
+    second: Group 3_82
+  - first:
+      213: 4354671842481010346
+    second: Group 3_83
+  - first:
+      213: 5759696830868272734
+    second: Group 3_84
+  - first:
+      213: 843824192331487237
+    second: Group 3_85
+  - first:
+      213: -2931965809306735008
+    second: Group 3_86
+  - first:
+      213: 7517504902631609969
+    second: Group 3_87
+  - first:
+      213: 3530293106436602529
+    second: Group 3_88
+  - first:
+      213: -6959743933929399046
+    second: Group 3_89
+  - first:
+      213: 6944906671502677165
+    second: Group 3_90
+  - first:
+      213: -5007339129510575875
+    second: Group 3_91
+  - first:
+      213: 4878282582649092522
+    second: Group 3_92
+  - first:
+      213: -2278931523305794524
+    second: Group 3_93
+  - first:
+      213: 2061694582187584583
+    second: Group 3_94
+  - first:
+      213: -625869738279321874
+    second: Group 3_95
+  - first:
+      213: -5993898201267119213
+    second: Group 3_96
+  - first:
+      213: 7510713112402704665
+    second: Group 3_97
+  - first:
+      213: 6836048333360952492
+    second: Group 3_98
+  - first:
+      213: -5913453809512719147
+    second: Group 3_99
+  - first:
+      213: -4190589061737650994
+    second: Group 3_100
+  - first:
+      213: 609775448326171297
+    second: Group 3_101
+  - first:
+      213: -3711718987865138442
+    second: Group 3_102
+  - first:
+      213: -5574889036994288202
+    second: Group 3_103
+  - first:
+      213: -5260309555569313199
+    second: Group 3_104
+  - first:
+      213: -6358901073243552044
+    second: Group 3_105
+  - first:
+      213: 6923588063501436848
+    second: Group 3_106
+  - first:
+      213: -8526101925810237494
+    second: Group 3_107
+  - first:
+      213: 5550121321572854079
+    second: Group 3_108
+  - first:
+      213: -9207049181706747924
+    second: Group 3_109
+  - first:
+      213: -1105046558137926862
+    second: Group 3_110
+  - first:
+      213: 6089579198822192478
+    second: Group 3_111
+  - first:
+      213: 8242053480013076484
+    second: Group 3_112
+  - first:
+      213: -7282997414877603675
+    second: Group 3_113
+  - first:
+      213: -3501779572778067804
+    second: Group 3_114
+  - first:
+      213: -5241396103902111651
+    second: Group 3_115
+  - first:
+      213: 880098553620354451
+    second: Group 3_116
+  - first:
+      213: -1264225846478225274
+    second: Group 3_117
+  - first:
+      213: -3990597002216912954
+    second: Group 3_118
+  - first:
+      213: -6337741003931544594
+    second: Group 3_119
+  - first:
+      213: 5989517109435750120
+    second: Group 3_120
+  - first:
+      213: -173801311592393314
+    second: Group 3_121
+  - first:
+      213: 4321627613060910644
+    second: Group 3_122
+  - first:
+      213: 782553938202133558
+    second: Group 3_123
+  - first:
+      213: -1972453357803143995
+    second: Group 3_124
+  - first:
+      213: 6567012376677013160
+    second: Group 3_125
+  - first:
+      213: -100372578505439505
+    second: Group 3_126
+  - first:
+      213: -2960574177744221908
+    second: Group 3_127
+  - first:
+      213: 4733345545037085120
+    second: Group 3_128
+  - first:
+      213: -7128856889311066794
+    second: Group 3_129
+  - first:
+      213: 40058759511457393
+    second: Group 3_130
+  - first:
+      213: 8793033907380294156
+    second: Group 3_131
+  - first:
+      213: -6369638786511452625
+    second: Group 3_132
+  - first:
+      213: -5843665770480571587
+    second: Group 3_133
+  - first:
+      213: 3937404641656555988
+    second: Group 3_134
+  - first:
+      213: 4389497800093416124
+    second: Group 3_135
+  - first:
+      213: 2974999474627829835
+    second: Group 3_136
+  - first:
+      213: 2387774435917466558
+    second: Group 3_137
+  - first:
+      213: 570481134646900909
+    second: Group 3_138
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Group 3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1044
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5086233, y: 0.53018165}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7b011db2255648f0800000000000000
+      internalID: -556663896244417668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_1
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1044
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.53091204, y: 0.52757025}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1aef9d38f755bd90800000000000000
+      internalID: -7082658115272840673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_2
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1044
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5535116, y: 0.5359669}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fdba225fbf2c0110800000000000000
+      internalID: 1228409297129094648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 532
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5128159, y: 0.51708794}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f67ac2e4ba9b3c5a0800000000000000
+      internalID: -6502149291590768785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 532
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5331328, y: 0.5205108}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed281246e719da2a0800000000000000
+      internalID: -6724558696562457890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_5
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 532
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5416174, y: 0.5199764}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b016b6ccd53250260800000000000000
+      internalID: 7063090476369010955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 19
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5228964, y: 0.5045794}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9ba6f5704b387da0800000000000000
+      internalID: -5946938159899694180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_7
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 20
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5555879, y: 0.5030882}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e25e310292e68300800000000000000
+      internalID: 254139545706975972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Group 3_8
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 20
+        width: 512
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5247059, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 922a635425f255260800000000000000
+      internalID: 7085621619132375593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 0177c4f22ea0ff1b7adeeafee9018f28
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":512.0,"y":512.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Group 3_0: -556663896244417668
+      Group 3_1: -7082658115272840673
+      Group 3_2: 1228409297129094648
+      Group 3_3: -6502149291590768785
+      Group 3_4: -6724558696562457890
+      Group 3_5: 7063090476369010955
+      Group 3_6: -5946938159899694180
+      Group 3_7: 254139545706975972
+      Group 3_8: 7085621619132375593
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

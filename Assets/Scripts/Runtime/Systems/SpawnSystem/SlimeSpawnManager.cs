@@ -14,9 +14,14 @@ class SlimeSpawnManager : MonoBehaviour
     {
         _camera = Camera.main;
         _objectPoolSys = ObjectPoolSystem.Instance;
-        _bag = new ShuffleBagSpawnSource<int>(DeckEasy());
+        _bag = new ShuffleBagSpawnSource<int>(DeckDemo());
     }
 #region Decks
+    private int[] DeckDemo()
+    => new []
+    {
+      8,9,10,10 
+    };
     private int[] DeckEasy()
     => new [] 
     {
@@ -42,7 +47,7 @@ class SlimeSpawnManager : MonoBehaviour
     };
 #endregion
 
-    public Slime Spawn()
+    public virtual Slime Spawn()
     {
         Slime slimePrefab =  _slimeDatabase.SlimePrefab;
         Slime newSlime = _objectPoolSys.Order<Slime>(slimePrefab,slimePrefab.PoolKey); 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using System.Linq;
 public enum StateType
 {
     Menu = 0,
@@ -19,20 +20,30 @@ public enum CommandType
 }
 class HudManager : MonoBehaviour
 {
+    public static HudManager Instance { get; private set; }
     [SerializeField]private GameStateDatabase _gameStatedatabase;
     [SerializeField]private Image _bg;
     private StateMachine _stateMachine;
+    private UIElement[] _uiElems;
     private SortedList<StateType,IState> _uiStates;
     public event Action<StateType> OnChangeHud ;
-    public event Action<CommandType,object> OnCommand ;  
+    public event Action<CommandType,object> OnCommand ;
+
+    void Awake()
+    {
+        Instance = this;
+
+    }
 
     void Start()
     {
+        FetchAndSortUIElements();
         _uiStates = new SortedList<StateType, IState>();
         _stateMachine = new StateMachine();
         Init();
         ChangeHud(StateType.Menu);
     }
+
 
     public void ChangeHud(StateType type)
     { 
@@ -41,7 +52,7 @@ class HudManager : MonoBehaviour
             GameObject obj = Instantiate(_gameStatedatabase.Uis[(int)type],transform);
             s = obj.GetComponent<IState>();
             _uiStates[type] = s;
-            
+            FetchAndSortUIElements();
         }
         _stateMachine.ChangeState(s);
         OnChangeHud?.Invoke(type);
@@ -62,6 +73,29 @@ class HudManager : MonoBehaviour
     public void SendCommand(CommandType cm,object data = null)
     {
         OnCommand?.Invoke(cm,data);
+    }
+
+    public GameObject GetUiByNameElement(string nameElement)
+    {
+        
+        int left = 0;
+        int right = _uiElems.Length - 1;
+        while (left <= right)
+        {
+            int mid = (right + left) / 2;
+            int cmp = string.Compare(_uiElems[mid].CustomName, nameElement, StringComparison.OrdinalIgnoreCase);
+            if(cmp == 0) return _uiElems[mid].gameObject;
+            if(cmp < 0) left = mid+1;
+            else right = mid-1;
+        }
+        return null;
+    }
+
+    public void FetchAndSortUIElements()
+    {
+        _uiElems = transform.GetComponentsInChildren<UIElement>(true)
+            .OrderBy(t => t.CustomName)
+            .ToArray();
     }
 
     public void SetBackGround(Sprite sprite) => _bg.sprite = sprite;

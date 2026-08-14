@@ -1,56 +1,60 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
-
-class VfxManager : MonoBehaviour
+public class VfxManager : MonoBehaviour
 {
     public static VfxManager Instance;
-    private Dictionary<ParticleSystem,Queue<ParticleSystem>> _vfxPools;
+
+    private readonly Dictionary<ParticleSystem, Queue<ParticleSystem>> _pools = new();
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-        _vfxPools = new Dictionary<ParticleSystem, Queue<ParticleSystem>>();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
     }
 
-    public ParticleSystem Get( ParticleSystem prefab)
+    public ParticleSystem Get(ParticleSystem prefab)
     {
-        if (!_vfxPools.TryGetValue(prefab, out var pool))
+        if (!_pools.TryGetValue(prefab, out var pool))
         {
             pool = new Queue<ParticleSystem>();
-            _vfxPools.Add(prefab, pool);
+            _pools[prefab] = pool;
         }
 
         if (pool.Count > 0)
         {
-            var ps = pool.Dequeue();
-            ps.gameObject.SetActive(true);
-            return ps;
+            var instance = pool.Dequeue();
+            instance.gameObject.SetActive(true);
+            return instance;
         }
 
-        ParticleSystem instance = Instantiate(prefab, transform);
-
-        return instance;
-    }
-    public void Release(ParticleSystem prefab , ParticleSystem obj)
-    {
-        StartCoroutine(ReleaseWhenFinish(prefab,obj));
+        return Instantiate(prefab, transform);
     }
 
-    private IEnumerator  ReleaseWhenFinish( ParticleSystem prefab , ParticleSystem obj)
+    public void Release(ParticleSystem prefab, ParticleSystem instance)
     {
-        while (obj!= null && obj.IsAlive(true))
+        if (instance == null) return;
+        StartCoroutine(ReturnToPool(prefab, instance));
+    }
+
+    private IEnumerator ReturnToPool(ParticleSystem prefab, ParticleSystem instance)
+    {
+        while (instance != null && instance.IsAlive(true))
         {
             yield return null;
         }
-        obj.gameObject.SetActive(false);
-        _vfxPools[prefab].Enqueue(obj);
-        obj.transform.SetParent(transform,true);
+
+        if (instance == null) yield break;
+
+        instance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        instance.gameObject.SetActive(false);
+        instance.transform.SetParent(transform, true);
+        _pools[prefab].Enqueue(instance);
     }
-
-
 }

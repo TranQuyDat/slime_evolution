@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 class Slime : MonoBehaviour ,IPoolable,IDestroyable
@@ -14,14 +15,17 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 
     public bool IsFreeZe => _isFreeze;
     public SlimeData Data => _data;
-    public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime","Ground"));
-
+    public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime"));
     public string PoolKey =>"Slime";
     public Material Material => _sr.material;
+    public SpriteRenderer Sr => _sr;
     public SlimeVisual Visual {get; private set;}
+    public bool IsDestroying => _isDestroying;
+
     private BaseAudioEvent _collisionAudioEvent;
     private Vector3 _originScale;
     private Delay _delay = new();
+    private bool _isInPit; 
     
     void Awake()
     {
@@ -51,6 +55,8 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 
     void OnEnable()
     {
+        var pit  = GetComponentInParent<PitController>();
+        _isInPit = pit !=null;
         GameEvents.OnDragonExploded += HandleDragonExploded;
         _isDestroying = false;
     }
@@ -69,26 +75,24 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
         }
     }
 
-    private void HandleDragonExploded(Slime dragon,Action<int> addScore)
+    private async void HandleDragonExploded(Slime dragon,Action<int> addScore)
     {
-        if(_isDestroying) return;
+        if(_isDestroying || _isInPit) return;
 
         _isDestroying = true; 
         if(dragon == this)
         {
             //dragon vfx explosion
-
-            //
-            _delay.WaitSeconds(0.08f);
-            Destroy();
+            Visual.PlayExplosion(0.8f,() =>
+            {
+                Destroy();
+            });
             return;
         }
-        //vfx
-
-        //
-        _delay.WaitSeconds(0.08f);
+        await _delay.WaitSeconds(0.8f);
         addScore.Invoke(_data.Lv);
-        Destroy();
+        Visual.PlayScoreCollectEffect(Destroy);
+        
     }
 
     private void scaleSlime(float scale)
