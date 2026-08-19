@@ -67,7 +67,9 @@ using UnityEngine;
                 ()=>{ RequestSupportRewardedAd(_gamePlay.ReviveSupport); } },
             { CommandType.TrigerRemove3Slimes, 
                 ()=>{ RequestSupportRewardedAd(_gamePlay.TrigerRemoveSlimesSupport); } },
-            { CommandType.Remove3Slimes, _gamePlay.RemoveSlimesSupport }
+            { CommandType.Remove3Slimes,()=> _gamePlay.RemoveSlimesSupport(
+                ()=>_hud.SendCommand(CommandType.CancleRemoveSlime)) },
+            { CommandType.CancleRemoveSlime, _gamePlay.CancleSlimeSupport },
         };
     }
 

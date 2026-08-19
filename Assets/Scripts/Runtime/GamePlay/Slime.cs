@@ -21,6 +21,8 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public SpriteRenderer Sr => _sr;
     public SlimeVisual Visual {get; private set;}
     public bool IsDestroying => _isDestroying;
+    public SlimeMerge SlimeMerge {get; private set;}
+    public Collider2D Collider => _collider;
 
     private BaseAudioEvent _collisionAudioEvent;
     private Vector3 _originScale;
@@ -33,6 +35,7 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _sr = GetComponent<SpriteRenderer>();
         _collider = GetComponent<Collider2D>();
         Visual = GetComponent<SlimeVisual>();
+        SlimeMerge = GetComponent<SlimeMerge>();
         _collisionAudioEvent = Resources.Load<BaseAudioEvent>("Events/Collision_Audio_Event");
         
     }

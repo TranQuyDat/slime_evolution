@@ -58,7 +58,8 @@ class GamePlay : MonoBehaviour
         }
 
         DragSlime_X();
-        if(_pitCtrl.HadOverflowed)
+        Slime slimeAbove = _pitCtrl.GetSlimeAbove();
+        if(_pitCtrl.HadOverflowed && slimeAbove !=null && !slimeAbove.SlimeMerge.IsMerging)
         {
             if(!_cametaShake.IsShaking)
                 _cametaShake.Shake(1.5f,0.2f);
@@ -80,7 +81,7 @@ class GamePlay : MonoBehaviour
 
             CompositeCollider2D compositeCol = pitObj.GetComponent<CompositeCollider2D>();
             float pitSizeY = compositeCol.bounds.size.y/2f;
-            Vector2 pos =  _camera.ViewportToWorldPoint(new Vector3(0.5f,0f,10f));
+            Vector2 pos =  _camera.ViewportToWorldPoint(new Vector3(0.5f,0.1f,10f));
             pos.y += pitSizeY;
             pitObj.transform.position = pos; // set pos for pit
             Physics2D.SyncTransforms();
@@ -233,9 +234,18 @@ class GamePlay : MonoBehaviour
         _CanDropSlime = false;
         _removeSlimeAction.OnEnter();
     }
-    public void RemoveSlimesSupport()
+    public void RemoveSlimesSupport(Action Oncomplete = null)
     {
-        _removeSlimeAction.OnAction();
+        _removeSlimeAction.OnAction(() =>
+        {
+            _trigerRemoveSlime = false;
+            _CanDropSlime = true;
+            Oncomplete?.Invoke();
+        });
+    }
+    public void CancleSlimeSupport()
+    {
+        _removeSlimeAction.OnFinish();
         _trigerRemoveSlime = false;
         _CanDropSlime = true;
     }

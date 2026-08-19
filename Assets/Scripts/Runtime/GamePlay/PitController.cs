@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PitController : MonoBehaviour
+class PitController : MonoBehaviour
 {
     [SerializeField] private Transform _content;
     private CompositeCollider2D _compositeColl;
@@ -19,7 +19,8 @@ public class PitController : MonoBehaviour
     void Update()
     {
         CheckHeighestContentY();
-    }    public void AddToPit(GameObject obj)
+    }    
+    public void AddToPit(GameObject obj)
     {
         obj.transform.SetParent(_content,true);
     }
@@ -35,22 +36,39 @@ public class PitController : MonoBehaviour
 
     private void CheckHeighestContentY()
     {
-        Vector3 topPitpos = transform.position;
-        topPitpos.y = TopYpit;
-        Vector2 size = _compositeColl.bounds.size;
-        float dis = (TopYpit-_compositeColl.bounds.min.y);
-        RaycastHit2D hit  = Physics2D.BoxCast(topPitpos,new Vector2(size.x,0.1f),0,Vector2.down,dis,LayerMask.GetMask("Slime"));
-        if(hit.collider == null) return;
-        Slime slime = hit.collider.GetComponent<Slime>();
-        if(slime.IsDestroying) return;
+        Slime slime = GetSlimeAbove();
+        if(slime == null && _highestContentY != _compositeColl.bounds.min.y)
+        {   
+            _highestContentY = _compositeColl.bounds.min.y;
+            return;
+        }
+        if(slime == null) return;
         if(slime !=null && slime.IsTouching) 
-            _highestContentY = hit.collider.bounds.max.y;
+            _highestContentY = slime.Collider.bounds.max.y;
 
 
     }
     public T[] GetAllContents<T>()
     {
         return _content.GetComponentsInChildren<T>();
+    }
+
+    public Slime GetSlimeAbove()
+    {
+        Vector3 topPitpos = transform.position;
+        topPitpos.y = TopYpit;
+        Vector2 size = _compositeColl.bounds.size;
+        float dis = (TopYpit-_compositeColl.bounds.min.y);
+        RaycastHit2D hit = Physics2D.BoxCast(
+            topPitpos,
+            new Vector2(size.x, 0.1f),
+            0,
+            Vector2.down,
+            dis,
+            LayerMask.GetMask("Slime")
+        );
+
+        return hit.collider?.GetComponentInParent<Slime>();
     }
 
     

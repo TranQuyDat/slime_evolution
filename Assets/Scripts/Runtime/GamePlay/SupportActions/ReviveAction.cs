@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,9 +17,9 @@ class ReviveAction : SupportAction
 
     public override void OnEnter(){}
 
-    public override void OnAction()
+    public override void OnAction(Action Oncomplete)
     {
-         List<Slime> slimes =  _pitCtrl.GetAllContents<Slime>().ToList();
+        List<Slime> slimes =  _pitCtrl.GetAllContents<Slime>().ToList();
         slimes.Sort((a, b) => a.transform.position.y.
         CompareTo(b.transform.position.y));
         int count = slimes.Count/2;
@@ -28,6 +29,7 @@ class ReviveAction : SupportAction
             slimes[i].Destroy();  
         }
         _gameManager.Hud.ChangeHud(StateType.Play);
+        Oncomplete?.Invoke();
 
     }
 

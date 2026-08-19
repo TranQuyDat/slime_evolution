@@ -6,10 +6,9 @@ class MenuPanel :  IState
 {
     [SerializeField]private TextMeshProUGUI _txtHightScore;
     [SerializeField]private Button _btnPlay;
-    private Sprite _SpriteBG;
+    [SerializeField]private Sprite _SpriteBG;
     void Awake()
     {
-        _SpriteBG = Resources.Load<Sprite>("SlimeSprites/bgMenu");
         _gameManager = GameManager.Instance;
         _hud = GameManager.Instance.Hud;
         _hud.SetBackGround(_SpriteBG);

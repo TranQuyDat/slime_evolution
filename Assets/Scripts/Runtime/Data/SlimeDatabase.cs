@@ -17,7 +17,7 @@ class SlimeDatabase : ScriptableObject
     void Reset()
     {
         _slimePrefab = Resources.Load<Slime>("Prefabs/Slime_demo");
-        Sprite[] allSprites = Resources.LoadAll<Sprite>("SlimeSprites/Slime12");
+        Sprite[] allSprites = Resources.LoadAll<Sprite>("Img/Slime12");
         float[] scales = { 
             0.6f,
             0.8f,

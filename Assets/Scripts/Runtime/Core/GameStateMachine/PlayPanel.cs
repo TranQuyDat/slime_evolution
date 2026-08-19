@@ -9,6 +9,7 @@ class PlayPanel : IState
 {
     [SerializeField]private Button _btnPause;
     [SerializeField]private Button _btnTrigerRemove3SlimesSupport;
+    [SerializeField]private Button _btnCancleRemoveSlime;
     [SerializeField]private Button _btnRemove3SlimesSupport;
     [SerializeField]private Image _ImgPreview;
     [SerializeField]private TextMeshProUGUI _txtScore;
@@ -18,13 +19,12 @@ class PlayPanel : IState
     [SerializeField]private TextMeshProUGUI _txtRemove3Slimes;
 
     [SerializeField]private GameObject _PanelSelectSlimes;
+    [SerializeField]private Sprite _spriteBG;
 
     private float _timeDelay;
     
-    private Sprite _spriteBG;
     void Awake()
     {
-        _spriteBG = Resources.Load<Sprite>("SlimeSprites/bgPlay");
         _gameManager = GameManager.Instance;
         _hud = GameManager.Instance.Hud;
         _hud.SetBackGround(_spriteBG);
@@ -50,13 +50,15 @@ class PlayPanel : IState
         _btnPause.onClick.AddListener(BtnPause);
         _btnRemove3SlimesSupport.onClick.AddListener(BtnRemove3SlimesSupport);
         _btnTrigerRemove3SlimesSupport.onClick.AddListener(BtnTrigerRemove3SlimesSupport);
+        _btnCancleRemoveSlime. onClick.AddListener(BtnCancleSelectSlimePanel);
 
         _hud.OnCommand +=HandleUpdateHightScore;
         _hud.OnCommand +=HandleUpdatePreview;
         _hud.OnCommand +=HandleUpdateScore;
-        _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand +=HandleUpdateCombo;
+        _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand +=HandleFloatingScore;
+        _hud.OnCommand += HandleCancelSelectSlimePanel;
     }
 
     public override void Exit()
@@ -65,10 +67,14 @@ class PlayPanel : IState
         _hud.OnCommand -=HandleUpdatePreview;
         _hud.OnCommand -=HandleUpdateScore;
         _hud.OnCommand -=HandleUpdateCombo;
+        _hud.OnCommand -=HandleUpdateRemove3SlimesSupport;
+        _hud.OnCommand -=HandleFloatingScore;
+        _hud.OnCommand -= HandleCancelSelectSlimePanel;
 
-        _btnPause.onClick.RemoveListener(BtnPause);
-        _btnRemove3SlimesSupport.onClick.RemoveListener(BtnRemove3SlimesSupport);
-        _btnTrigerRemove3SlimesSupport.onClick.RemoveListener(BtnTrigerRemove3SlimesSupport);
+        _btnPause.onClick.RemoveAllListeners();
+        _btnRemove3SlimesSupport.onClick.RemoveAllListeners();
+        _btnTrigerRemove3SlimesSupport.onClick.RemoveAllListeners();
+        _btnCancleRemoveSlime.onClick.RemoveAllListeners();
     }
     private void HandleChangeHud(StateType type)
     {
@@ -93,14 +99,22 @@ class PlayPanel : IState
     }
     private void BtnRemove3SlimesSupport()
     {
-        _PanelSelectSlimes.SetActive(false);
-        _btnTrigerRemove3SlimesSupport.gameObject.SetActive(true);
         _hud.SendCommand(CommandType.Remove3Slimes);
-        _btnPause.interactable = true;
+    }
+    private void BtnCancleSelectSlimePanel()
+    {
+        _hud.SendCommand(CommandType.CancleRemoveSlime);
     }
 
 
     //
+    private void HandleCancelSelectSlimePanel(CommandType type ,object _)
+    {
+        if(type != CommandType.CancleRemoveSlime) return;
+        _PanelSelectSlimes.SetActive(false);
+        _btnTrigerRemove3SlimesSupport.gameObject.SetActive(true);
+        _btnPause.interactable = true;
+    }
     private void HandleUpdateCombo(CommandType cm , object data)
     {
         if(cm != CommandType.UpdateCombo) return;
@@ -152,7 +166,7 @@ class PlayPanel : IState
     {
         if(cm != CommandType.UpdateRemoveSlimesText) return;
         int count = (int)data;
-        _txtRemove3Slimes.text = ""+count+"/3";
+        _txtRemove3Slimes.text = "Selected: "+count+"/3";
     }
 
 

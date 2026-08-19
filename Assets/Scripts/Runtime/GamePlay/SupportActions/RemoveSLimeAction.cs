@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.Android.Gradle;
 using UnityEngine;
 
 class RemoveSlimeAction : SupportAction
@@ -53,11 +55,10 @@ class RemoveSlimeAction : SupportAction
         _gameManager.Hud.SendCommand(CommandType.UpdateRemoveSlimesText,0);
     }
 
-    public override void OnAction()
+    public override void OnAction(Action Oncomplete = null)
     {
         if(_slimesToRemove.Count == 0)
-        { 
-            OnFinish();
+        {
             return;
         }
         foreach(Slime slime in _slimesToRemove)
@@ -65,7 +66,9 @@ class RemoveSlimeAction : SupportAction
             UnHighlightSlime(slime);
             slime.Destroy();
         }
+        Oncomplete?.Invoke();
         OnFinish();
+
     }
     public override void OnFinish()
     {
