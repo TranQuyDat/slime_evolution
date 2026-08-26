@@ -1014,6 +1014,7 @@ MonoBehaviour:
   _inputSystem: {fileID: 1476660233}
   _gamePlay: {fileID: 0}
   _hud: {fileID: 1486800254}
+  _bgmAudioEvent: {fileID: 11400000, guid: 8a83dc6741c54edaa8c419a92e87d22c, type: 2}
 --- !u!4 &1476660235
 Transform:
   m_ObjectHideFlags: 0
@@ -1159,6 +1160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HudManager
   _gameStatedatabase: {fileID: 11400000, guid: ae81a7f32562cb16a83bd4d4d4e29211, type: 2}
   _bg: {fileID: 458393344}
+  _mutedButtonAlpha: 0.45
 --- !u!1 &1667411378
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,6 +1258,7 @@ MonoBehaviour:
   _pitPrefab: {fileID: 7926584878437095606, guid: ef8147d0bf68d4b7bba95c214fec0ecd, type: 3}
   _comboWindowPrefab: {fileID: 8800167819447629924, guid: d8b41ece5a8b9c4dfa44dd042cbe7abd, type: 3}
   _dragThreshold: 3.3
+  _dragSmoothTime: 0.04
 --- !u!114 &1760433139
 MonoBehaviour:
   m_ObjectHideFlags: 0

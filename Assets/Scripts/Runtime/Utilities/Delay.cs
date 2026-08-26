@@ -1,33 +1,42 @@
+using System;
 using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class Delay 
 {
-    private CancellationTokenSource _cts ;
-    public async Task WaitSeconds(float seconds)
+    private CancellationTokenSource _cts;
+
+    public UniTask WaitSeconds(float seconds)
     {
-        _cts?.Cancel();
-        _cts = new();
-        try
-        {
-            await Task.Delay((int)(seconds * 1000), _cts.Token);
-        }
-        catch (TaskCanceledException)
-        {
-        }
-    }
-    public async Task WaitMinute(float minutes)
-    {
-        _cts?.Cancel();
-        _cts = new();
-        try
-        {
-            await Task.Delay((int)(minutes * 60 * 1000), _cts.Token);
-        }
-        catch (TaskCanceledException)
-        {
-        }
+        return Wait(TimeSpan.FromSeconds(Math.Max(0f, seconds)));
     }
 
+    public UniTask WaitMinute(float minutes)
+    {
+        return Wait(TimeSpan.FromMinutes(Math.Max(0f, minutes)));
+    }
+
+    public void Cancel()
+    {
+        _cts?.Cancel();
+    }
+
+    private async UniTask Wait(TimeSpan duration)
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = new CancellationTokenSource();
+
+        try
+        {
+            await UniTask.Delay(
+                duration,
+                DelayType.DeltaTime,
+                PlayerLoopTiming.Update,
+                _cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
 }

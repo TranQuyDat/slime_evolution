@@ -9,6 +9,7 @@ using UnityEngine;
     [SerializeField]private InputSystem _inputSystem;
     [SerializeField]private GamePlay _gamePlay;
     [SerializeField] private HudManager _hud;
+    [SerializeField]private SimpleAudioEvent _bgmAudioEvent;
 
     private MonetizationManager _monetizationMngr;
     private SaveSystem _saveSystem;
@@ -35,12 +36,15 @@ using UnityEngine;
     void Start()
     {
         _monetizationMngr = MonetizationManager.Instance;
+
         SetupCommandMap();
         _hightScore = _saveSystem.Load<int>("hightscore");
         _hud.OnCommand += HandleBtnCommand;
         _hud.OnChangeHud += HandleLoadDataHud;
         _gamePlay.ScoreSystem.OnChangeScore += HandleHightScoreChange;
         _gamePlay.ScoreSystem.OnChangeScore += updateCurScoreinHud;
+
+        _bgmAudioEvent.Play();
     }
 
     void OnDestroy()
@@ -95,6 +99,16 @@ using UnityEngine;
     public void UpdatePreviewHud(Sprite sprite)
     {
         _hud.SendCommand(CommandType.UpdatePreview,sprite);
+    }
+    public void FlyPreviewToSpawn(
+        Vector3 spawnPosition,
+        Sprite sprite,
+        float slimeScale,
+        Action onComplete)
+    {
+        _hud.SendCommand(
+            CommandType.FlyPreviewToSpawn,
+            (spawnPosition, sprite, slimeScale, onComplete));
     }
     public void updateComboHud(int combo)
     {

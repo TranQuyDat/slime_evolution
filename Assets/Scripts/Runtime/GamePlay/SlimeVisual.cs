@@ -1,7 +1,6 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 class SlimeVisual : MonoBehaviour
 {
@@ -24,25 +23,56 @@ class SlimeVisual : MonoBehaviour
         _seq?.Kill();
     }
     [ContextMenu("TestPlayExplosion")]
-    public void PlayExplosion(float duration,Action oncomplete = null)
+    public Sequence PlayExplosion(float duration, Action oncomplete = null)
     {
-        transform.DOShakePosition(
-            duration: duration,
-            strength: 0.08f,
-            vibrato: 15,
-            randomness: 60f,
-            fadeOut: false
-        ).OnComplete(() =>
-        {
-            Vector3 pos = transform.TransformPoint(new Vector3(0,0.5f,0));
-            _explosionVfxEvent.Play(new()
+        _seq?.Kill();
+        _slime.Freeze();
+        _slime.Collider.enabled = false;
+
+        Vector3 originScale = new Vector3(
+            _slime.Data.Scale,
+            _slime.Data.Scale,
+            1f);
+        transform.localScale = originScale;
+
+        PitController _pit = GetComponentInParent<PitController>();
+        Vector3 pitCenter = _pit.Center;
+        pitCenter.z = transform.position.z;
+
+        float chargeDuration = Mathf.Max(0.12f, duration * 0.25f);
+        float inflateDuration = Mathf.Max(0.2f, duration * 0.35f);
+
+        _seq = DOTween.Sequence()
+            .Append(transform.DOShakePosition(
+                chargeDuration, 0.06f, 14, 55f, false, true))
+            .Append(transform.DOMove(pitCenter, 0.18f).SetEase(Ease.InCubic))
+            .AppendInterval(0.05f)
+            .Append(transform.DOScale(originScale * 1.2f, inflateDuration * 0.4f)
+                .SetEase(Ease.OutSine))
+            .Append(transform.DOScale(
+                new Vector3(originScale.x * 1.38f, originScale.y * 1.28f, 1f),
+                inflateDuration * 0.25f).SetEase(Ease.InOutSine))
+            .Append(transform.DOScale(originScale * 1.5f, inflateDuration * 0.35f)
+                .SetEase(Ease.InSine))
+            .Join(transform.DOShakePosition(
+                inflateDuration * 0.35f, 0.035f, 12, 45f, false, true))
+            .AppendCallback(() =>
             {
-                Position = pos
-            });
-            oncomplete?.Invoke();
-        });
+                _explosionVfxEvent.Play(new VFXContext
+                {
+                    Position = transform.position,
+                    Scale = originScale * 1.5f,
+                    OverridePosition = true,
+                    OverrideScale = true
+                });
+            })
+            .Append(transform.DOScale(originScale * 1.7f, 0.06f).SetEase(Ease.OutQuad))
+            .Append(transform.DOScale(Vector3.zero, 0.08f).SetEase(Ease.InBack))
+            .OnComplete(() => oncomplete?.Invoke());
+
+        return _seq;
     }
-    public void PlayMergeEffect()
+    public Sequence PlayMergeEffect()
     {
         _seq?.Kill();
 
@@ -61,6 +91,7 @@ class SlimeVisual : MonoBehaviour
             });
         });
 
+        return _seq;
     }
 
     [ContextMenu("TestPlayScoreCollectEffect")]
@@ -68,7 +99,7 @@ class SlimeVisual : MonoBehaviour
     {
         PlayScoreCollectEffect(_slime.Destroy);
     }
-    public void PlayScoreCollectEffect(Action onComplete = null)
+    public Sequence PlayScoreCollectEffect(Action onComplete = null)
     {
         transform.DOKill();
 
@@ -76,7 +107,7 @@ class SlimeVisual : MonoBehaviour
 
         SpriteRenderer sr = _slime.Sr;
 
-        DOTween.Sequence()
+        _seq = DOTween.Sequence()
             .Append(
                 transform.DOScale(originScale * 1.5f, 0.35f)
                     .SetEase(Ease.OutSine)
@@ -95,12 +126,13 @@ class SlimeVisual : MonoBehaviour
 
                 onComplete?.Invoke();
             });
-        
+
+        return _seq;
     }
 
-    public void PlayStretch(float speed , Vector3 originScale)
+    public Sequence PlayStretch(float speed , Vector3 originScale)
     {
-        if(speed < 2f) return;
+        if(speed < 2f) return null;
         
         float strength = Mathf.InverseLerp(2f,12f,speed);
         float stretchy = Mathf.Lerp(originScale.x+0.05f,originScale.x+0.15f,strength);
@@ -113,34 +145,50 @@ class SlimeVisual : MonoBehaviour
         _seq.Append(tw1);
         _seq.Append(tw2);
 
-        
+        return _seq;
     }
-    public void PlaySquash(float speed , Vector3 originScale)
+    public Sequence PlaySquash(float speed , Vector3 originScale)
     {
-        if(speed < 2f) return;
+        if(speed < 2f) return null;
         
         float strength = Mathf.InverseLerp(2f,12f,speed);
         float squashx = Mathf.Lerp(originScale.x+0.05f,originScale.x+0.15f,strength);
         float squashy = Mathf.Lerp(originScale.y-0.05f,originScale.x-0.15f,strength);
 
-        _seq.Kill();
+        _seq?.Kill();
         _seq  = DOTween.Sequence();
         Tween tw1 = transform.DOScale(new Vector3(squashx,squashy,1),0.08f).SetEase(Ease.OutQuad);
         Tween tw2 = transform.DOScale(originScale,0.12f).SetEase(Ease.OutBack);
         _seq.Append(tw1);
         _seq.Append(tw2);
+        return _seq;
     }
 
-    public void PlayDestroyEffect()
+    public Sequence PlayDestroyEffect()
     {
         _seq?.Kill(); 
-
-        
+        _seq = DOTween.Sequence();
+        return _seq;
     }
-    public void PlaySpawnEffect()
+    public Sequence PlaySpawnEffect(Action onComplete = null)
     {
         _seq?.Kill();
+        Vector3 targetScale = Vector3.one * _slime.Data.Scale;
+        targetScale.z = 1f;
+        Vector3 startScale = new Vector3(
+            targetScale.x * 0.7f,
+            targetScale.y * 0.7f,
+            1f);
+        Vector3 overshootScale = new Vector3(
+            targetScale.x * 1.12f,
+            targetScale.y * 1.12f,
+            1f);
+        transform.localScale = startScale;
 
-        
+        _seq = DOTween.Sequence()
+            .Append(transform.DOScale(overshootScale, 0.16f).SetEase(Ease.OutBack))
+            .Append(transform.DOScale(targetScale, 0.09f).SetEase(Ease.OutQuad))
+            .OnComplete(() => onComplete?.Invoke());
+        return _seq;
     }
 }

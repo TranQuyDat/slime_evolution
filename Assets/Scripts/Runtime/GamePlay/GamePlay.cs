@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,14 +14,21 @@ class GamePlay : MonoBehaviour
     [SerializeField] private GameObject _pitPrefab;
     [SerializeField] private ComboWindow _comboWindowPrefab;
     [SerializeField] private float _dragThreshold = 0.5f;
+    [SerializeField] private float _dragSmoothTime = 0.04f;
 
     private GameManager _gameManager;
     private ScoreSystem _scoreSystem;
     private ComboSystem _comboSystem;
     private PitController _pitCtrl;
     private float _timeDelay = 0f;
+    private float _spawnReadyTime;
+    private bool _isSpawnTimerRunning;
+    private float _dragVelocityX;
     private bool _CanDropSlime;
+    private bool _canControlSpawnedSlime;
+    private bool _isSpawnPopupPlaying;
     private bool _canPlay;
+    private bool _isSpawning;
     private bool _trigerRemoveSlime;
     private SupportAction _reviveAction;
     private SupportAction _removeSlimeAction;
@@ -28,6 +36,7 @@ class GamePlay : MonoBehaviour
     private CameraShake _cametaShake;
     private Slime _slimeHolder;
     private int _highestUnlockedLevel = 0;
+    private int _spawnRequestVersion;
     public bool IsGameOver {get;private set;}
     public ScoreSystem ScoreSystem => _scoreSystem;
 
@@ -69,7 +78,7 @@ class GamePlay : MonoBehaviour
         
         _comboSystem.ResetComboByTime(1.5f);
         if(_slimeHolder != null) return;
-        waitToSpawn(3f);
+        waitToSpawn(1f);
     }
     public void InitializePit()
     {
@@ -118,7 +127,13 @@ class GamePlay : MonoBehaviour
     public void StartPlay()
     {
         BeginRound();
-        waitToSpawn(0f);    
+        RefreshPreview();
+        _canPlay = false;
+        _pitCtrl.FxShowPit().OnComplete(() =>
+        {
+            _canPlay = true;
+            waitToSpawn(0f);
+        });
     }
     public void PausePlay()
     {
@@ -127,6 +142,7 @@ class GamePlay : MonoBehaviour
     public void ResumePlay()
     {
         _canPlay = true;
+        RefreshPreview();
     } 
     
     public void ResetPlay()
@@ -135,14 +151,18 @@ class GamePlay : MonoBehaviour
         _scoreSystem.SetScore(0);
         clearRound();
         ResetVariables();
+        RefreshPreview();
         waitToSpawn(0f);
         _removeSlimeAction.OnFinish();
     }
 
     public void StopAndClearPlay()
     {
+        _spawnRequestVersion++;
         _canPlay = false;
         _timeDelay = 0f;
+        _spawnReadyTime = 0f;
+        _isSpawnTimerRunning = false;
         _pitCtrl.gameObject.SetActive(false);
         clearRound();
         _comboSystem.OnComboChanged -= HandleComboChange;
@@ -152,18 +172,55 @@ class GamePlay : MonoBehaviour
 #region Spawn
     private void waitToSpawn(float t = 3f)
     {
-        if(_timeDelay < t)
-        { 
-            _timeDelay += Time.deltaTime;
-            return;
+        if (_isSpawning) return;
+
+        if (!_isSpawnTimerRunning)
+        {
+            _spawnReadyTime = Time.time + Mathf.Max(0f, t);
+            _isSpawnTimerRunning = true;
         }
+
+        if (Time.time < _spawnReadyTime) return;
+
         if(_slimeHolder != null &&
         _slimeHolder.transform.parent == null) return;
-        _slimeHolder = _slimeSpawn.Spawn();
-        Sprite sprite = _slimeSpawn.PreviewNextSlime().Sprite;
-        _gameManager.UpdatePreviewHud(sprite);
-        _slimeHolder.transform.SetParent(transform,true);
-        _timeDelay = 0;
+
+        _isSpawnTimerRunning = false;
+        _isSpawning = true;
+        int requestVersion = _spawnRequestVersion;
+        Vector3 spawnPosition = GetMouseSpawnPosition();
+        SlimeData spawnData = _slimeSpawn.TakeNextSlimeData();
+
+        _gameManager.FlyPreviewToSpawn(
+            spawnPosition,
+            spawnData.Sprite,
+            spawnData.Scale,
+            () =>
+            {
+                if (requestVersion != _spawnRequestVersion)
+                {
+                    _isSpawning = false;
+                    return;
+                }
+
+                _slimeHolder = _slimeSpawn.Spawn(spawnData, spawnPosition);
+                _slimeHolder.transform.SetParent(transform,true);
+                _dragVelocityX = 0f;
+                _canControlSpawnedSlime = true;
+                _isSpawnPopupPlaying = true;
+                Slime spawnedSlime = _slimeHolder;
+                spawnedSlime.Visual.PlaySpawnEffect(() =>
+                {
+                    if (_slimeHolder == spawnedSlime)
+                        _isSpawnPopupPlaying = false;
+                });
+
+                Sprite nextSprite = _slimeSpawn.PreviewNextSlime().Sprite;
+                _gameManager.UpdatePreviewHud(nextSprite);
+
+                _timeDelay = 0f;
+                _isSpawning = false;
+            });
     }
 
     private void MoveSlimeToPitContent(Slime slime)
@@ -172,13 +229,27 @@ class GamePlay : MonoBehaviour
         _pitCtrl.AddToPit(slime.gameObject);
     }
 
+    private void RefreshPreview()
+    {
+        _gameManager.UpdatePreviewHud(_slimeSpawn.PreviewNextSlime().Sprite);
+    }
+
+    private Vector3 GetMouseSpawnPosition()
+    {
+        Vector3 position = _slimeSpawn.GetSpawnPosition();
+        float mouseX = _camera.ScreenToWorldPoint(Input.mousePosition).x;
+        position.x = Mathf.Clamp(mouseX, -_dragThreshold, _dragThreshold);
+        return position;
+    }
+
     #endregion
 
 #region Input
 
     private void DropSlime()
     {
-        if(IsPointerOverUI() || !_CanDropSlime 
+        if(IsPointerOverUI() || !_CanDropSlime || !_canControlSpawnedSlime
+        || _isSpawnPopupPlaying
         || _slimeHolder == null || !_canPlay) return;
         _slimeHolder.Unfreeze();
         MoveSlimeToPitContent(_slimeHolder);
@@ -186,18 +257,24 @@ class GamePlay : MonoBehaviour
 
     private void DragSlime_X()
     {
-        if(_slimeHolder == null) return;
+        if(_slimeHolder == null || !_canControlSpawnedSlime) return;
         Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         Vector3 slimePos = _slimeHolder.transform.position;
-        Vector3 dragVector = mousePos - slimePos;
+        float targetX = Mathf.Clamp(
+            mousePos.x,
+            -_dragThreshold,
+            _dragThreshold);
 
-        if(dragVector.magnitude <= 0.1f)return;
-        
-        Vector2 pos = mousePos;   
-        pos.x = Mathf.Clamp(pos.x,-_dragThreshold,_dragThreshold);
-        pos.y = _slimeHolder.transform.position.y;
-        _slimeHolder.transform.position = pos;
-        
+        if (Mathf.Abs(targetX - slimePos.x) <= 0.001f) return;
+
+        slimePos.x = _dragSmoothTime <= 0f
+            ? targetX
+            : Mathf.SmoothDamp(
+                slimePos.x,
+                targetX,
+                ref _dragVelocityX,
+                _dragSmoothTime);
+        _slimeHolder.transform.position = slimePos;
     }
 #endregion
    
@@ -225,6 +302,8 @@ class GamePlay : MonoBehaviour
     {
         _reviveAction.OnAction();
         _CanDropSlime = true;
+        _canControlSpawnedSlime = false;
+        _isSpawnPopupPlaying = false;
         ResetVariables();
         waitToSpawn(0f);
     }
@@ -254,8 +333,14 @@ class GamePlay : MonoBehaviour
 #region  sub Method
     private void ResetVariables()
     {
+        _spawnRequestVersion++;
         _timeDelay = 0f;
+        _spawnReadyTime = 0f;
+        _isSpawnTimerRunning = false;
+        _dragVelocityX = 0f;
         _CanDropSlime = true;
+        _canControlSpawnedSlime = false;
+        _isSpawning = false;
         _trigerRemoveSlime = false;
         _canPlay = true;
         IsGameOver = false;
@@ -279,8 +364,17 @@ class GamePlay : MonoBehaviour
     public void OnSlimeMerged(int newLevel)
     {   
         _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);
-        _slimeSpawn.SwapDeck(_highestUnlockedLevel);
+        if (_slimeSpawn.SwapDeck(_highestUnlockedLevel))
+            RefreshPreview();
     }
+
+    public Slime[] GetSlimesInPit()
+    {
+        return _pitCtrl == null
+            ? Array.Empty<Slime>()
+            : _pitCtrl.GetAllContents<Slime>();
+    }
+
     public void CalScoreByLevel(int lv,Vector2 pos)
     {
         _comboSystem.AddComboCount();

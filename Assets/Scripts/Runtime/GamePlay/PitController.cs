@@ -1,8 +1,13 @@
+using DG.Tweening;
 using UnityEngine;
 
 class PitController : MonoBehaviour
 {
     [SerializeField] private Transform _content;
+    [Header("Transition")]
+    [SerializeField] private float _transitionStartY = -300f;
+    [SerializeField] private float _transitionDuration = 0.65f;
+
     private CompositeCollider2D _compositeColl;
     public float _highestContentY;
 
@@ -10,6 +15,7 @@ class PitController : MonoBehaviour
     public float HeighestContentY => _highestContentY;
     public bool HadOverflowed => _highestContentY > TopYpit;
     public Bounds Bounds => _compositeColl.bounds;
+    public Vector3 Center => _compositeColl.bounds.center;
 
     void Awake()
     {
@@ -23,6 +29,20 @@ class PitController : MonoBehaviour
     public void AddToPit(GameObject obj)
     {
         obj.transform.SetParent(_content,true);
+    }
+
+    public Sequence FxShowPit()
+    {
+        DOTween.Kill(transform);
+
+        Vector3 targetPosition = transform.position;
+        Vector3 startPosition = targetPosition;
+        startPosition.y = _transitionStartY;
+        transform.position = startPosition;
+
+        return DOTween.Sequence()
+            .Append(transform.DOMoveY(targetPosition.y, _transitionDuration)
+                .SetEase(Ease.OutBack, 1.08f));
     }
 
     public void ClearAllContent()

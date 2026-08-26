@@ -6,7 +6,7 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 {
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
-    private Collider2D _collider;
+    private CapsuleCollider2D _collider;
     private SlimeData _data;
     private bool _isFreeze;
     private bool _isDestroying;
@@ -33,7 +33,7 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     {
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
-        _collider = GetComponent<Collider2D>();
+        _collider = GetComponent<CapsuleCollider2D>();
         Visual = GetComponent<SlimeVisual>();
         SlimeMerge = GetComponent<SlimeMerge>();
         _collisionAudioEvent = Resources.Load<BaseAudioEvent>("Events/Collision_Audio_Event");
@@ -51,9 +51,28 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public void Init(SlimeData data)
     {
         _data = data;
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+        _collider.enabled = true;
         _sr.sprite = data.Sprite;
+        FitColliderToSprite();
         scaleSlime(data.Scale);
         _originScale = transform.localScale;
+    }
+
+    private void FitColliderToSprite()
+    {
+        if (_sr.sprite == null || _collider == null) return;
+
+        Bounds bounds = _sr.sprite.bounds;
+        Vector2 size = bounds.size;
+        _collider.offset = bounds.center;
+        _collider.size = new Vector2(
+            Mathf.Max(size.x, 0.01f),
+            Mathf.Max(size.y, 0.01f));
+        _collider.direction = size.x >= size.y
+            ? CapsuleDirection2D.Horizontal
+            : CapsuleDirection2D.Vertical;
     }
 
     void OnEnable()
@@ -66,6 +85,8 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 
     private void Squash_Stretch()
     {
+        if (_isDestroying) return;
+
         if(_rb.linearVelocity.y > 0.2f)
         {
             float v = _rb.linearVelocity.magnitude;
@@ -110,6 +131,8 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     }
     public void Freeze()
     {
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
         _rb.bodyType = RigidbodyType2D.Kinematic;
         _isFreeze = true;
     }

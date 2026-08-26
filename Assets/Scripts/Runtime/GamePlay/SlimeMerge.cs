@@ -39,23 +39,23 @@ class SlimeMerge : MonoBehaviour
     {
         if(_slime.IsDestroying || _gamePlay.IsGameOver) return;
         _nextLV = _slime.Data.Lv +1;
-        if(_nextLV > _maxLv || IsMerging) return;
+        if(_nextLV >= _maxLv || IsMerging) return;
         SlimeMerge other = collision.gameObject.GetComponent<SlimeMerge>();
-        if(other != null && !other.IsMerging && 
-           other.Slime.Data.Lv == _slime.Data.Lv)
-        {
-            IsMerging = true;
-            other.IsMerging = true;
-            // merge
-            mergeSlime(other);
-        }
+        if(other == null || other.IsMerging ||
+           other.Slime.Data.Lv != _slime.Data.Lv) return;
+
+        // Chỉ object có instance ID nhỏ hơn chịu trách nhiệm merge.
+        // Phải kiểm tra trước khi đánh dấu IsMerging để tránh cả hai cùng bị khóa.
+        if(GetInstanceID() > other.GetInstanceID()) return;
+
+        IsMerging = true;
+        other.IsMerging = true;
+        mergeSlime(other);
     }
 
     private async void mergeSlime(SlimeMerge Other)
     {
-        if(this.GetInstanceID() > Other.GetInstanceID()) return;
         Vector2 pos = (transform.position + Other.transform.position)/2f;
-        await _delay.WaitSeconds(0.04f);
         Slime newSlime = ObjectPoolSystem.Instance.Order<Slime>(_slimePrefab,
         _slimePrefab.PoolKey);
         newSlime.transform.rotation = Quaternion.identity;
@@ -65,6 +65,7 @@ class SlimeMerge : MonoBehaviour
         SlimeData slimeData = slimeDatabase.SlimeDatas[_nextLV];
        
         newSlime.Init(slimeData);
+        newSlime.Unfreeze();
         newSlime.transform.SetParent(transform.parent,true);
         //sound
         _mergeAudioEvent.Play();

@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: aef63bf42e3d732229b06b564b67c944
+guid: a4feb36c2fccbaf6c9f5364999a29a3f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6647356966407000967
-    second: btn_Ads_Remove3Sime 1_0
+      213: 9215388580239286378
+    second: Frame 16 (1)_0
+  - first:
+      213: -2314005566038565321
+    second: Frame 16 (1)_1
+  - first:
+      213: 3252692333649028604
+    second: Frame 16 (1)_2
+  - first:
+      213: 4952426290225982684
+    second: Frame 16 (1)_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +55,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -126,13 +135,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: btn_Ads_Remove3Sime 1_0
+      name: Frame 16 (1)_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 261
-        height: 118
+        y: 4
+        width: 87
+        height: 130
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +150,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 78358e511f7204c50800000000000000
-      internalID: 6647356966407000967
+      spriteID: a60aa58a613a3ef70800000000000000
+      internalID: 9215388580239286378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Frame 16 (1)_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 22
+        width: 15
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73e9ef3a23003efd0800000000000000
+      internalID: -2314005566038565321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Frame 16 (1)_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 9
+        width: 16
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf569c6a172e32d20800000000000000
+      internalID: 3252692333649028604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Frame 16 (1)_3
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 1
+        width: 15
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdca93dc87d8ab440800000000000000
+      internalID: 4952426290225982684
       vertices: []
       indices: 
       edges: []
@@ -151,7 +226,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +236,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      btn_Ads_Remove3Sime 1_0: 6647356966407000967
+      Frame 16 (1)_0: 9215388580239286378
+      Frame 16 (1)_1: -2314005566038565321
+      Frame 16 (1)_2: 3252692333649028604
+      Frame 16 (1)_3: 4952426290225982684
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
