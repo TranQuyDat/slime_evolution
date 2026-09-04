@@ -71,6 +71,12 @@ class RemoveSlimeAction : SupportAction
     }
     public override void OnFinish()
     {
+        foreach (Slime slime in _slimesToRemove)
+            UnHighlightSlime(slime);
+
+        if (_hoveredSlime != null)
+            UnHighlightSlime(_hoveredSlime);
+
         _hoveredSlime = null;
         _slimesToRemove.Clear();
         _inputSystem.UnbindAction(KeyCode.Mouse0,HandleBindRemoveAddSlime);

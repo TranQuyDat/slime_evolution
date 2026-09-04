@@ -27,7 +27,6 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
     private BaseAudioEvent _collisionAudioEvent;
     private Vector3 _originScale;
     private Delay _delay = new();
-    private bool _isInPit; 
     
     void Awake()
     {
@@ -77,8 +76,6 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 
     void OnEnable()
     {
-        var pit  = GetComponentInParent<PitController>();
-        _isInPit = pit !=null;
         GameEvents.OnDragonExploded += HandleDragonExploded;
         _isDestroying = false;
     }
@@ -101,7 +98,10 @@ class Slime : MonoBehaviour ,IPoolable,IDestroyable
 
     private async void HandleDragonExploded(Slime dragon,Action<int> addScore)
     {
-        if(_isDestroying || _isInPit) return;
+        // Slime đang được giữ nằm dưới GamePlay, không nằm trong PitController.
+        // Chỉ slime đã được thả vào nồi mới chịu ảnh hưởng của vụ nổ.
+        if (_isDestroying || GetComponentInParent<PitController>() == null)
+            return;
 
         _isDestroying = true; 
         if(dragon == this)

@@ -57,16 +57,9 @@ class PitController : MonoBehaviour
     private void CheckHeighestContentY()
     {
         Slime slime = GetSlimeAbove();
-        if(slime == null && _highestContentY != _compositeColl.bounds.min.y)
-        {   
-            _highestContentY = _compositeColl.bounds.min.y;
-            return;
-        }
-        if(slime == null) return;
-        if(slime !=null && slime.IsTouching) 
-            _highestContentY = slime.Collider.bounds.max.y;
-
-
+        _highestContentY = slime == null
+            ? _compositeColl.bounds.min.y
+            : slime.Collider.bounds.max.y;
     }
     public T[] GetAllContents<T>()
     {
@@ -75,20 +68,23 @@ class PitController : MonoBehaviour
 
     public Slime GetSlimeAbove()
     {
-        Vector3 topPitpos = transform.position;
-        topPitpos.y = TopYpit;
-        Vector2 size = _compositeColl.bounds.size;
-        float dis = (TopYpit-_compositeColl.bounds.min.y);
-        RaycastHit2D hit = Physics2D.BoxCast(
-            topPitpos,
-            new Vector2(size.x, 0.1f),
-            0,
-            Vector2.down,
-            dis,
-            LayerMask.GetMask("Slime")
-        );
+        Slime highestSlime = null;
+        float highestY = float.NegativeInfinity;
 
-        return hit.collider?.GetComponentInParent<Slime>();
+        foreach (Slime slime in _content.GetComponentsInChildren<Slime>())
+        {
+            if (slime == null || slime.IsDestroying || !slime.Collider.enabled ||
+                !slime.IsTouching)
+                continue;
+
+            float slimeTopY = slime.Collider.bounds.max.y;
+            if (slimeTopY <= highestY) continue;
+
+            highestY = slimeTopY;
+            highestSlime = slime;
+        }
+
+        return highestSlime;
     }
 
     

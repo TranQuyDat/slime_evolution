@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CrazyGames;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
@@ -30,10 +31,33 @@ using UnityEngine;
         _gamePlay = GetComponentInChildren<GamePlay>();
         _saveSystem = new SaveSystem();
         _saveSystem.Provider = new PlayerPrefsProvider();
-        
-        
     }
-    void Start()
+
+    async void Start()
+    {
+        await InitializeSaveProvider();
+        InitializeGame();
+    }
+
+    private async System.Threading.Tasks.Task InitializeSaveProvider()
+    {
+#if UNITY_EDITOR || UNITY_WEBGL
+        if (!CrazySDK.IsAvailable) return;
+
+        try
+        {
+            await CrazySDK.InitAsync();
+            _saveSystem.Provider = new CrazyGamesSaveProvider();
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning(
+                $"CrazyGames save is unavailable. Using PlayerPrefs instead. {exception.Message}");
+        }
+#endif
+    }
+
+    private void InitializeGame()
     {
         _monetizationMngr = MonetizationManager.Instance;
 
@@ -45,6 +69,7 @@ using UnityEngine;
         _gamePlay.ScoreSystem.OnChangeScore += updateCurScoreinHud;
 
         _bgmAudioEvent.Play();
+        _hud.SendCommand(CommandType.UpdateHightScore, _hightScore);
     }
 
     void OnDestroy()

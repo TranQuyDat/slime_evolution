@@ -137,11 +137,9 @@ class PlayPanel : IState
             _btnPause.interactable = false;
 
             Transform selectionTitle = FindSelectionTitle();
-            Slime[] slimes = _gameManager.GamePlay.GetSlimesInPit();
             _selectionSequence = _transition.FxShowSelection(
                 selectionTitle,
                 _txtRemove3Slimes.transform,
-                slimes,
                 _btnCancleRemoveSlime,
                 _btnRemove3SlimesSupport);
 
@@ -431,13 +429,10 @@ class PlayPanelTransition : UItransitionBase
     public Sequence FxShowSelection(
         Transform title,
         Transform subtitle,
-        Slime[] slimes,
         Button cancel,
         Button remove)
     {
         const float titleDuration = 0.25f;
-        const float slimeDuration = 0.22f;
-        const float slimeStagger = 0.06f;
 
         cancel.interactable = false;
         remove.interactable = false;
@@ -447,21 +442,7 @@ class PlayPanelTransition : UItransitionBase
             .Insert(0.08f, FxSlideFade(
                 subtitle, Vector3.up * 25f, titleDuration, Ease.OutQuad));
 
-        float slimeStart = 0.16f;
-        for (int i = 0; i < slimes.Length; i++)
-        {
-            if (slimes[i] == null) continue;
-
-            Transform slime = slimes[i].transform;
-            DOTween.Kill(slime);
-            Vector3 targetScale = slime.localScale;
-            slime.localScale = Vector3.zero;
-
-            sequence.Insert(slimeStart + i * slimeStagger,
-                slime.DOScale(targetScale, slimeDuration).SetEase(Ease.OutBack));
-        }
-
-        float buttonsStart = slimeStart + slimes.Length * slimeStagger + slimeDuration;
+        float buttonsStart = 0.28f;
         sequence.Insert(buttonsStart, FxScaleFade(cancel.transform, 0.85f, 0.2f));
         sequence.Insert(buttonsStart + 0.1f,
             FxScaleFade(remove.transform, 0.85f, 0.2f));

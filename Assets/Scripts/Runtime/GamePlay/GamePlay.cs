@@ -68,13 +68,18 @@ class GamePlay : MonoBehaviour
 
         DragSlime_X();
         Slime slimeAbove = _pitCtrl.GetSlimeAbove();
-        if(_pitCtrl.HadOverflowed && slimeAbove !=null && !slimeAbove.SlimeMerge.IsMerging)
+        bool hasOverflowed = slimeAbove != null &&
+            slimeAbove.Collider.bounds.max.y > _pitCtrl.TopYpit;
+        if(hasOverflowed && !slimeAbove.SlimeMerge.IsMerging)
         {
             if(!_cametaShake.IsShaking)
                 _cametaShake.Shake(1.5f,0.2f);
             CheckGameOverByTimeout(3f);
             return;
         }
+
+        // Chỉ Game Over khi slime nằm trên ngưỡng liên tục đủ thời gian.
+        _timeDelay = 0f;
         
         _comboSystem.ResetComboByTime(1.5f);
         if(_slimeHolder != null) return;
