@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-class PausePanel : IState
+class PausePanel : UIStateBase
 {
     [SerializeField]private Button _btnPlay;
     [SerializeField]private Button _btnReset;

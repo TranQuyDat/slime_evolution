@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6796450217456170652}
   - component: {fileID: -8940842764062524191}
   - component: {fileID: 6222598318907034315}
+  - component: {fileID: 7341059124961034682}
   m_Layer: 6
   m_Name: Slime_demo
   m_TagString: Untagged
@@ -86,7 +87,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5255588241266657465, guid: 0381bea07c31212b599198a4075a09df, type: 3}
+  m_Sprite: {fileID: 4917756665049490726, guid: 0381bea07c31212b599198a4075a09df, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -157,8 +158,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.015758632, y: 0.46248534}
-  m_Size: {x: 1.2591966, y: 0.89568526}
+  m_Offset: {x: -0.01458932, y: 0.4303194}
+  m_Size: {x: 1.1344031, y: 0.82699484}
   m_Direction: 1
 --- !u!114 &6796450217456170652
 MonoBehaviour:
@@ -198,4 +199,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeVisual
   _slime: {fileID: 6796450217456170652}
-  _scoreUiId: 54414
+  _squashWidth: 1
+  _squashHeight: 0.72
+  _stretchWidth: 0.88
+  _stretchHeight: 1.18
+  _deformResponse: 20
+--- !u!114 &7341059124961034682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5653574659505928494}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13fe6b1607a45c2878efc039cfecda4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeColliderMapper
+  _database: {fileID: 11400000, guid: 2e8491dd6edf89a3ca9fe7a5f0f84110, type: 2}
+  _level: 11

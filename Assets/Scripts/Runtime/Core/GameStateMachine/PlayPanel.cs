@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-class PlayPanel : IState
+class PlayPanel : UIStateBase
 {
     [SerializeField]private Button _btnPause;
     [SerializeField] private Button _btnMute;
@@ -95,12 +95,13 @@ class PlayPanel : IState
         _hud.OnCommand -= HandleCancelSelectSlimePanel;
         _hud.OnCommand -= HandleFlyPreviewToSpawn;
 
-        _btnPause.onClick.RemoveAllListeners();
+        _btnPause.onClick.RemoveListener(BtnPause);
         if (_btnMute != null)
             _btnMute.onClick.RemoveListener(BtnMute);
-        _btnRemove3SlimesSupport.onClick.RemoveAllListeners();
-        _btnTrigerRemove3SlimesSupport.onClick.RemoveAllListeners();
-        _btnCancleRemoveSlime.onClick.RemoveAllListeners();
+        _btnRemove3SlimesSupport.onClick.RemoveListener(BtnRemove3SlimesSupport);
+        _btnTrigerRemove3SlimesSupport.onClick.RemoveListener(
+            BtnTrigerRemove3SlimesSupport);
+        _btnCancleRemoveSlime.onClick.RemoveListener(BtnCancleSelectSlimePanel);
     }
     private void HandleChangeHud(StateType type)
     {

@@ -29,7 +29,7 @@ class HudManager : MonoBehaviour
     [SerializeField] private float _mutedButtonAlpha = 0.45f;
     private StateMachine _stateMachine;
     private UIElement[] _uiElems;
-    private SortedList<StateType,IState> _uiStates;
+    private SortedList<StateType, UIStateBase> _uiStates;
     public event Action<StateType> OnChangeHud ;
     public event Action<CommandType,object> OnCommand ;
 
@@ -42,7 +42,7 @@ class HudManager : MonoBehaviour
     void Start()
     {
         FetchAndSortUIElements();
-        _uiStates = new SortedList<StateType, IState>();
+        _uiStates = new SortedList<StateType, UIStateBase>();
         _stateMachine = new StateMachine();
         Init();
         ChangeHud(StateType.Menu);
@@ -51,10 +51,10 @@ class HudManager : MonoBehaviour
 
     public void ChangeHud(StateType type)
     { 
-        if(!_uiStates.TryGetValue(type,out IState s) || s==null)
+        if(!_uiStates.TryGetValue(type,out UIStateBase s) || s==null)
         {
             GameObject obj = Instantiate(_gameStatedatabase.Uis[(int)type],transform);
-            s = obj.GetComponent<IState>();
+            s = obj.GetComponent<UIStateBase>();
             _uiStates[type] = s;
             FetchAndSortUIElements();
         }
@@ -69,7 +69,7 @@ class HudManager : MonoBehaviour
         {
             if(Enum.TryParse(t.name,true,out StateType type))
             {
-                IState s = t.GetComponent<IState>();
+                UIStateBase s = t.GetComponent<UIStateBase>();
                 _uiStates[type] = s;
             }
         }

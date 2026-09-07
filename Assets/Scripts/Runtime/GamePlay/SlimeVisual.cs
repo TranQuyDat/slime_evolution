@@ -6,6 +6,12 @@ class SlimeVisual : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Slime _slime;
+    [Header("Squash & Stretch")]
+    [SerializeField] private float _squashWidth = 1.28f;
+    [SerializeField] private float _squashHeight = 0.72f;
+    [SerializeField] private float _stretchWidth = 0.88f;
+    [SerializeField] private float _stretchHeight = 1.18f;
+    [SerializeField] private float _deformResponse = 20f;
     private SimpleVfxEvent _mergeVfxEvent;
     private SimpleVfxEvent _explosionVfxEvent;
     private TargetMoveVfxEvent _slimeScoreCollectVfxEvent;
@@ -130,38 +136,33 @@ class SlimeVisual : MonoBehaviour
         return _seq;
     }
 
-    public Sequence PlayStretch(float speed , Vector3 originScale)
+    public void UpdateSquashStretch(float velocityY, Vector3 originScale)
     {
-        if(speed < 2f) return null;
-        
-        float strength = Mathf.InverseLerp(2f,12f,speed);
-        float stretchy = Mathf.Lerp(originScale.x+0.05f,originScale.x+0.15f,strength);
-        float stretchx = Mathf.Lerp(originScale.y-0.05f,originScale.x-0.15f,strength);
+        if (_seq != null && _seq.IsActive()) return;
 
-        _seq?.Kill();
-        _seq = DOTween.Sequence();
-        Tween tw1 = transform.DOScale(new Vector3(stretchx,stretchy,1),0.08f).SetEase(Ease.OutQuad);
-        Tween tw2 = transform.DOScale(originScale,0.12f).SetEase(Ease.OutBack);
-        _seq.Append(tw1);
-        _seq.Append(tw2);
+        Vector3 targetScale = originScale;
 
-        return _seq;
-    }
-    public Sequence PlaySquash(float speed , Vector3 originScale)
-    {
-        if(speed < 2f) return null;
-        
-        float strength = Mathf.InverseLerp(2f,12f,speed);
-        float squashx = Mathf.Lerp(originScale.x+0.05f,originScale.x+0.15f,strength);
-        float squashy = Mathf.Lerp(originScale.y-0.05f,originScale.x-0.15f,strength);
+        if (velocityY > 0.2f)
+        {
+            // Bay lên: bè ngang và thấp xuống.
+            float strength = Mathf.Sqrt(
+                Mathf.InverseLerp(0.2f, 5f, velocityY));
+            targetScale.x *= Mathf.Lerp(1f, _squashWidth, strength);
+            targetScale.y *= Mathf.Lerp(1f, _squashHeight, strength);
+        }
+        else if (velocityY < -0.2f)
+        {
+            // Rơi xuống: hẹp ngang và dài theo chiều dọc.
+            float strength = Mathf.InverseLerp(0.5f, 12f, -velocityY);
+            targetScale.x *= Mathf.Lerp(1f, _stretchWidth, strength);
+            targetScale.y *= Mathf.Lerp(1f, _stretchHeight, strength);
+        }
 
-        _seq?.Kill();
-        _seq  = DOTween.Sequence();
-        Tween tw1 = transform.DOScale(new Vector3(squashx,squashy,1),0.08f).SetEase(Ease.OutQuad);
-        Tween tw2 = transform.DOScale(originScale,0.12f).SetEase(Ease.OutBack);
-        _seq.Append(tw1);
-        _seq.Append(tw2);
-        return _seq;
+        float blend = 1f - Mathf.Exp(-_deformResponse * Time.deltaTime);
+        transform.localScale = Vector3.Lerp(
+            transform.localScale,
+            targetScale,
+            blend);
     }
 
     public Sequence PlayDestroyEffect()

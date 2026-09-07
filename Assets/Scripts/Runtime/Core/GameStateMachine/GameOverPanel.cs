@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-class GameOverPanel:IState
+class GameOverPanel : UIStateBase
 {
     [SerializeField]private Button _btnReStart;
     [SerializeField]private Button _btnExit;

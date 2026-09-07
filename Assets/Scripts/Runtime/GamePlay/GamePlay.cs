@@ -5,7 +5,6 @@ using System.Linq;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 class GamePlay : MonoBehaviour
 {
@@ -31,7 +30,7 @@ class GamePlay : MonoBehaviour
     private bool _isSpawning;
     private bool _trigerRemoveSlime;
     private SupportAction _reviveAction;
-    private SupportAction _removeSlimeAction;
+    private RemoveSlimeAction _removeSlimeAction;
     private Camera _camera;
     private CameraShake _cametaShake;
     private Slime _slimeHolder;
@@ -52,7 +51,6 @@ class GamePlay : MonoBehaviour
     }
     void Start()
     {
-        _inputSystem.BindAction(KeyCode.Mouse0,DropSlime);
         _canPlay = false;
     }
 
@@ -112,7 +110,7 @@ class GamePlay : MonoBehaviour
             _reviveAction = new ReviveAction(_pitCtrl);
         
         if(_removeSlimeAction == null)
-            _removeSlimeAction = new RemoveSlimeAction(_pitCtrl,_inputSystem);
+            _removeSlimeAction = new RemoveSlimeAction(_inputSystem);
     }
     public void SubscribeEvents()
     {
@@ -193,7 +191,7 @@ class GamePlay : MonoBehaviour
         _isSpawnTimerRunning = false;
         _isSpawning = true;
         int requestVersion = _spawnRequestVersion;
-        Vector3 spawnPosition = GetMouseSpawnPosition();
+        Vector3 spawnPosition = GetPointerSpawnPosition();
         SlimeData spawnData = _slimeSpawn.TakeNextSlimeData();
 
         _gameManager.FlyPreviewToSpawn(
@@ -239,11 +237,14 @@ class GamePlay : MonoBehaviour
         _gameManager.UpdatePreviewHud(_slimeSpawn.PreviewNextSlime().Sprite);
     }
 
-    private Vector3 GetMouseSpawnPosition()
+    private Vector3 GetPointerSpawnPosition()
     {
         Vector3 position = _slimeSpawn.GetSpawnPosition();
-        float mouseX = _camera.ScreenToWorldPoint(Input.mousePosition).x;
-        position.x = Mathf.Clamp(mouseX, -_dragThreshold, _dragThreshold);
+        if (_inputSystem.TryGetPointerPosition(out Vector2 pointerPosition))
+        {
+            float pointerX = _camera.ScreenToWorldPoint(pointerPosition).x;
+            position.x = Mathf.Clamp(pointerX, -_dragThreshold, _dragThreshold);
+        }
         return position;
     }
 
@@ -251,9 +252,17 @@ class GamePlay : MonoBehaviour
 
 #region Input
 
+    public void HandlePrimaryInput()
+    {
+        if (_trigerRemoveSlime)
+            _removeSlimeAction.HandleInput();
+        else
+            DropSlime();
+    }
+
     private void DropSlime()
     {
-        if(IsPointerOverUI() || !_CanDropSlime || !_canControlSpawnedSlime
+        if(_inputSystem.IsPointerOverUI() || !_CanDropSlime || !_canControlSpawnedSlime
         || _isSpawnPopupPlaying
         || _slimeHolder == null || !_canPlay) return;
         _slimeHolder.Unfreeze();
@@ -263,7 +272,9 @@ class GamePlay : MonoBehaviour
     private void DragSlime_X()
     {
         if(_slimeHolder == null || !_canControlSpawnedSlime) return;
-        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        if (!_inputSystem.TryGetPointerPosition(out Vector2 pointerPosition)) return;
+
+        Vector3 mousePos = _camera.ScreenToWorldPoint(pointerPosition);
         Vector3 slimePos = _slimeHolder.transform.position;
         float targetX = Mathf.Clamp(
             mousePos.x,
@@ -306,10 +317,17 @@ class GamePlay : MonoBehaviour
     public void ReviveSupport()
     {
         _reviveAction.OnAction();
-        _CanDropSlime = true;
-        _canControlSpawnedSlime = false;
-        _isSpawnPopupPlaying = false;
         ResetVariables();
+
+        if (_slimeHolder != null && _slimeHolder.gameObject.activeInHierarchy)
+        {
+            _slimeHolder.Freeze();
+            _canControlSpawnedSlime = true;
+            _isSpawnPopupPlaying = false;
+            return;
+        }
+
+        _slimeHolder = null;
         waitToSpawn(0f);
     }
     public void TrigerRemoveSlimesSupport()
@@ -362,10 +380,6 @@ class GamePlay : MonoBehaviour
             _slimeHolder = null;
         }
     }
-    private bool IsPointerOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }   
     public void OnSlimeMerged(int newLevel)
     {   
         _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);

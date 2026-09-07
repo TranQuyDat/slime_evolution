@@ -1,14 +1,18 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 class PitController : MonoBehaviour
 {
     [SerializeField] private Transform _content;
+    [Header("Out Of Bounds")]
+    [SerializeField] private float _despawnOffsetBelowBottom = 2f;
     [Header("Transition")]
     [SerializeField] private float _transitionStartY = -300f;
     [SerializeField] private float _transitionDuration = 0.65f;
 
     private CompositeCollider2D _compositeColl;
+    private readonly List<Slime> _slimeBuffer = new();
     public float _highestContentY;
 
     public float TopYpit => _compositeColl.bounds.max.y;
@@ -16,16 +20,14 @@ class PitController : MonoBehaviour
     public bool HadOverflowed => _highestContentY > TopYpit;
     public Bounds Bounds => _compositeColl.bounds;
     public Vector3 Center => _compositeColl.bounds.center;
+    public float DespawnY =>
+        _compositeColl.bounds.min.y - _despawnOffsetBelowBottom;
 
     void Awake()
     {
         _compositeColl = GetComponent<CompositeCollider2D>();
         _highestContentY = _compositeColl.bounds.min.y;
     }
-    void Update()
-    {
-        CheckHeighestContentY();
-    }    
     public void AddToPit(GameObject obj)
     {
         obj.transform.SetParent(_content,true);
@@ -54,13 +56,6 @@ class PitController : MonoBehaviour
         _highestContentY = _compositeColl.bounds.min.y;
     }
 
-    private void CheckHeighestContentY()
-    {
-        Slime slime = GetSlimeAbove();
-        _highestContentY = slime == null
-            ? _compositeColl.bounds.min.y
-            : slime.Collider.bounds.max.y;
-    }
     public T[] GetAllContents<T>()
     {
         return _content.GetComponentsInChildren<T>();
@@ -71,7 +66,10 @@ class PitController : MonoBehaviour
         Slime highestSlime = null;
         float highestY = float.NegativeInfinity;
 
-        foreach (Slime slime in _content.GetComponentsInChildren<Slime>())
+        _slimeBuffer.Clear();
+        _content.GetComponentsInChildren(false, _slimeBuffer);
+
+        foreach (Slime slime in _slimeBuffer)
         {
             if (slime == null || slime.IsDestroying || !slime.Collider.enabled ||
                 !slime.IsTouching)
@@ -84,6 +82,9 @@ class PitController : MonoBehaviour
             highestSlime = slime;
         }
 
+        _highestContentY = highestSlime == null
+            ? _compositeColl.bounds.min.y
+            : highestY;
         return highestSlime;
     }
 
@@ -107,6 +108,14 @@ class PitController : MonoBehaviour
         float dis = (TopYpit-_compositeColl.bounds.min.y);
         end.y -= dis;
         Gizmos.DrawLine(start,end);
+
+        Gizmos.color = Color.yellow;
+        float halfWidth = _compositeColl.bounds.extents.x;
+        Vector3 despawnLeft = new Vector3(
+            _compositeColl.bounds.center.x - halfWidth, DespawnY, 0f);
+        Vector3 despawnRight = new Vector3(
+            _compositeColl.bounds.center.x + halfWidth, DespawnY, 0f);
+        Gizmos.DrawLine(despawnLeft, despawnRight);
     }
 
 }

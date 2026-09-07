@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-class MenuPanel :  IState
+class MenuPanel : UIStateBase
 {
     [SerializeField]private TextMeshProUGUI _txtHightScore;
     [SerializeField]private Button _btnPlay;

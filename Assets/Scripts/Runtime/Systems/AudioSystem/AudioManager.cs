@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +10,7 @@ class AudioManager : MonoBehaviour
     [SerializeField]private AudioSource _bgmSource;
 
     private Queue<AudioSource> _sfxSources;
+    private readonly List<AudioSource> _playingSfx = new();
     private bool _isMuted;
     public bool IsMuted => _isMuted;
 
@@ -20,6 +20,21 @@ class AudioManager : MonoBehaviour
         else Destroy(gameObject);
         _sfxSources = new Queue<AudioSource>();
         SetMuted(PlayerPrefs.GetInt(MuteKey, 0) == 1, false);
+    }
+
+    void Update()
+    {
+        for (int i = _playingSfx.Count - 1; i >= 0; i--)
+        {
+            AudioSource source = _playingSfx[i];
+            if (source != null && source.isPlaying) continue;
+
+            _playingSfx.RemoveAt(i);
+            if (source == null) continue;
+
+            source.gameObject.SetActive(false);
+            _sfxSources.Enqueue(source);
+        }
     }
 
     public void ToggleMute() => SetMuted(!_isMuted);
@@ -56,16 +71,8 @@ class AudioManager : MonoBehaviour
 
     public void StopSfxUntilFinish(AudioSource source)
     {
-        StartCoroutine(StopSfx(source));
-    }
-    private IEnumerator StopSfx(AudioSource source)
-    {
-        while (source != null && source.isPlaying)
-        {
-            yield return null; 
-        }
-        source.gameObject.SetActive(false);
-        _sfxSources.Enqueue(source);
+        if (source != null && !_playingSfx.Contains(source))
+            _playingSfx.Add(source);
     }
 
 }

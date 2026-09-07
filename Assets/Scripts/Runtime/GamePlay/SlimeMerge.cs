@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -53,7 +52,7 @@ class SlimeMerge : MonoBehaviour
         mergeSlime(other);
     }
 
-    private async void mergeSlime(SlimeMerge Other)
+    private void mergeSlime(SlimeMerge Other)
     {
         Vector2 pos = (transform.position + Other.transform.position)/2f;
         Slime newSlime = ObjectPoolSystem.Instance.Order<Slime>(_slimePrefab,

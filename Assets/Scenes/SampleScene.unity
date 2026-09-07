@@ -904,6 +904,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6713914411708573558, guid: b1ff6d968b440744195f4bddcf6e86bb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -103.30005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6713914411708573558, guid: b1ff6d968b440744195f4bddcf6e86bb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -97.90015
+      objectReference: {fileID: 0}
     - target: {fileID: 7255266747065413779, guid: b1ff6d968b440744195f4bddcf6e86bb, type: 3}
       propertyPath: m_Name
       value: Menu
@@ -999,6 +1007,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputSystem
   _camera: {fileID: 519420031}
+  _bindings:
+  - _input:
+      m_Name: Input
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 09738569-8d5e-42e8-a7c9-e7a40f4d4d7d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 43667169-81d9-40fd-b7d6-ddc39ad8ecf9
+        m_Path: <Mouse>/leftButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Input
+        m_Flags: 0
+      - m_Name: 
+        m_Id: ea97ea11-a7c9-4d89-be1e-4bffb94a10a8
+        m_Path: <Touchscreen>/Press
+        m_Interactions: Press(behavior=1)
+        m_Processors: 
+        m_Groups: 
+        m_Action: Input
+        m_Flags: 0
+      m_Flags: 0
+    _onInput:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1760433138}
+          m_TargetAssemblyTypeName: GamePlay, Assembly-CSharp
+          m_MethodName: HandlePrimaryInput
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    _ignoreWhenOverUI: 0
 --- !u!114 &1476660234
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,37 +16,73 @@ MonoBehaviour:
   - _lv: 0
     _sprite: {fileID: 5255588241266657465, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 0.6
+    _colliderSize: {x: 1.0364314, y: 0.7755168}
+    _colliderOffset: {x: 0.0011034507, y: 0.4141203}
+    _colliderDirection: 1
   - _lv: 1
     _sprite: {fileID: -3836151945384074853, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 0.8
+    _colliderSize: {x: 1.1067811, y: 0.8253501}
+    _colliderOffset: {x: -0.0076900804, y: 0.43903503}
+    _colliderDirection: 1
   - _lv: 2
     _sprite: {fileID: -2716392305719525076, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1
+    _colliderSize: {x: 1.068677, y: 0.8106965}
+    _colliderOffset: {x: -0.009155938, y: 0.43170702}
+    _colliderDirection: 1
   - _lv: 3
     _sprite: {fileID: -2911233865420959080, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.2
+    _colliderSize: {x: 1.1712701, y: 0.85173833}
+    _colliderOffset: {x: 0.0011028592, y: 0.4522249}
+    _colliderDirection: 1
   - _lv: 4
     _sprite: {fileID: -4351205224039999626, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.4
+    _colliderSize: {x: 1.1712701, y: 0.85173833}
+    _colliderOffset: {x: 0.0011028592, y: 0.4522249}
+    _colliderDirection: 1
   - _lv: 5
     _sprite: {fileID: -6147647869968507339, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.6
+    _colliderSize: {x: 1.0921363, y: 0.99247515}
+    _colliderOffset: {x: -0.0062221866, y: 0.52110654}
+    _colliderDirection: 1
   - _lv: 6
     _sprite: {fileID: 4793449427321452695, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 1.8
+    _colliderSize: {x: 1.1390363, y: 0.84298855}
+    _colliderOffset: {x: -0.006222434, y: 0.44636104}
+    _colliderDirection: 1
   - _lv: 7
     _sprite: {fileID: -4666846895406301248, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2
+    _colliderSize: {x: 1.0909177, y: 0.8269511}
+    _colliderOffset: {x: -0.0035489278, y: 0.438341}
+    _colliderDirection: 1
   - _lv: 8
     _sprite: {fileID: -356368168108567297, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2.3
+    _colliderSize: {x: 0.9392394, y: 0.85102654}
+    _colliderOffset: {x: 0.09367914, y: 0.44235006}
+    _colliderDirection: 1
   - _lv: 9
     _sprite: {fileID: 4359992070850022443, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2.6
+    _colliderSize: {x: 1.1210309, y: 0.8857949}
+    _colliderOffset: {x: -0.007905132, y: 0.45437914}
+    _colliderDirection: 1
   - _lv: 10
     _sprite: {fileID: 341434392134410815, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 2.9
+    _colliderSize: {x: 1.1263808, y: 0.83768123}
+    _colliderOffset: {x: 0.0027878801, y: 0.43031916}
+    _colliderDirection: 1
   - _lv: 11
     _sprite: {fileID: 4917756665049490726, guid: 0381bea07c31212b599198a4075a09df, type: 3}
     _scale: 3.3
+    _colliderSize: {x: 1.1344031, y: 0.82699484}
+    _colliderOffset: {x: -0.01458932, y: 0.4303194}
+    _colliderDirection: 1
   _slimePrefab: {fileID: 6796450217456170652, guid: e7e8ef174e4a3966f8ef9b852cc04f28, type: 3}
