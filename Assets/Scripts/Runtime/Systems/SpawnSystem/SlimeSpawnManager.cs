@@ -27,7 +27,7 @@ class SlimeSpawnManager : MonoBehaviour
     private int[] DeckNomal()
     => new[]
     {
-        0,0,0,0,0,
+        0,0,0,0,
         1,1,1,1,
         2,2,2,
         3,3
@@ -36,34 +36,52 @@ class SlimeSpawnManager : MonoBehaviour
     => new[]
     {
         0,0,0,
-        1,1,1,1,
-        2,2,2,
-        3,3,3,
+        1,1,1,
+        3,3,
         4,4
     };
 #endregion
 
-    public Slime Spawn()
+    public virtual Slime Spawn()
+    {
+        return Spawn(TakeNextSlimeData());
+    }
+
+    public Slime Spawn(SlimeData data)
+    {
+        return Spawn(data, GetSpawnPosition());
+    }
+
+    public Slime Spawn(SlimeData data, Vector3 position)
     {
         Slime slimePrefab =  _slimeDatabase.SlimePrefab;
-        GameObject obj = _objectPoolSys.Order(slimePrefab.gameObject,slimePrefab.PoolKey); 
-        obj.transform.position = _camera.ViewportToWorldPoint(new Vector2(0.5f,0.8f));
-        obj.transform.rotation = Quaternion.identity;
+        Slime newSlime = _objectPoolSys.Order<Slime>(slimePrefab,slimePrefab.PoolKey); 
+        newSlime.transform.position = position;
+        newSlime.transform.rotation = Quaternion.identity;
 
-        Slime newSlime = obj.GetComponent<Slime>();
-        int id = _bag.GetNext();
-        SlimeData data = _slimeDatabase.SlimeDatas[id];
         newSlime.Init(data);
         newSlime.Freeze();
         return newSlime;
     }
 
-    public void SwapDeck(int highestSlimeLevel)
+    public SlimeData TakeNextSlimeData()
+    {
+        return _slimeDatabase.SlimeDatas[_bag.GetNext()];
+    }
+
+    public Vector3 GetSpawnPosition()
+    {
+        Vector3 position = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.8f, 0f));
+        position.z = 0f;
+        return position;
+    }
+
+    public bool SwapDeck(int highestSlimeLevel)
     {
         int deckIndex = Mathf.Clamp(highestSlimeLevel / 4, 0, 2);
 
         if (deckIndex == _currentDeckIndex)
-            return;
+            return false;
 
         _currentDeckIndex = deckIndex;
 
@@ -75,6 +93,7 @@ class SlimeSpawnManager : MonoBehaviour
         };
         _bag.SetItems(deck);
         print($"Swap to Deck : {deckIndex}");
+        return true;
     }
 
     public SlimeData PreviewNextSlime()

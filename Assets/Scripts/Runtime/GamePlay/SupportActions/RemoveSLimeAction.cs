@@ -1,128 +1,144 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 class RemoveSlimeAction : SupportAction
 {
-    private PitController _pitCtrl;
-    private InputSystem _inputSystem;
-    private GameManager _gameManager;
-    private List<Slime> _slimesToRemove;
+    private const int MaxSlimesToRemove = 3;
+
+    private readonly InputSystem _inputSystem;
+    private readonly GameManager _gameManager;
+    private readonly List<Slime> _selectedSlimes = new List<Slime>();
+    private readonly Camera _camera;
+    private readonly int _slimeLayerMask;
     private Slime _hoveredSlime;
-    private const int MaxSlimes_To_Remove = 3;
-    private Camera _camera;
-    bool IsSlimeHoverInRemoveList => _slimesToRemove.Contains(_hoveredSlime);
-    public RemoveSlimeAction(PitController pitCtrl,InputSystem inputSystem)
+
+    public RemoveSlimeAction(InputSystem inputSystem)
     {
         _gameManager = GameManager.Instance;
-        _pitCtrl = pitCtrl;
         _inputSystem = inputSystem;
-        _slimesToRemove = new List<Slime>();
         _camera = Camera.main;
+        _slimeLayerMask = LayerMask.GetMask("Slime");
     }
+
     public override void OnUpdate()
     {
-        if(!IsMouseInPit()) return;
+        if (_inputSystem.IsUsingTouch) return;
 
-        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-        
-        if(_inputSystem.TryRaycastMouse2D<Slime>(mousePos,out Slime slime,LayerMask.GetMask("Slime")))
-        {
-            if(_hoveredSlime != null && _hoveredSlime != slime 
-            && !IsSlimeHoverInRemoveList)
-            {
-                UnHighlightSlime(_hoveredSlime);
-            }
-            _hoveredSlime = slime;
-            HighlightSlime(slime);
-        }
-        else if(_hoveredSlime != null && !IsSlimeHoverInRemoveList)
-        {
-            UnHighlightSlime(_hoveredSlime);
-            _hoveredSlime = null;
-        }
-        else if(slime == null && _hoveredSlime != null)
-        {
-            _hoveredSlime = null;
-        }
+        Slime currentHover = GetSlimeUnderPointer();
+        if (currentHover == _hoveredSlime) return;
+
+        if (_hoveredSlime != null && !_selectedSlimes.Contains(_hoveredSlime))
+            SetHighlight(_hoveredSlime, false);
+
+        _hoveredSlime = currentHover;
+        SetHighlight(_hoveredSlime, true);
     }
 
     public override void OnEnter()
     {
-        _inputSystem.BindAction(KeyCode.Mouse0,HandleBindRemoveAddSlime);
-        _gameManager.Hud.SendCommand(CommandType.UpdateRemoveSlimesText,0);
+        SetHighlight(_hoveredSlime, false);
+        _hoveredSlime = null;
+        ClearSelection();
+        UpdateSelectionCount();
     }
 
-    public override void OnAction()
+    public void HandleInput()
     {
-        if(_slimesToRemove.Count == 0)
-        { 
-            OnFinish();
+        if (_inputSystem.IsPointerOverUI() ||
+            !_inputSystem.TryGetPointerPosition(out Vector2 pointerPosition))
+        {
             return;
         }
-        foreach(Slime slime in _slimesToRemove)
+
+        Slime slime = GetSlimeUnderPointer(pointerPosition);
+        if (slime == null) return;
+
+        ToggleSelection(slime);
+    }
+
+    public override void OnAction(Action onComplete = null)
+    {
+        if (_selectedSlimes.Count == 0) return;
+
+        for (int i = 0; i < _selectedSlimes.Count; i++)
         {
-            UnHighlightSlime(slime);
+            Slime slime = _selectedSlimes[i];
+            SetHighlight(slime, false);
             slime.Destroy();
         }
-        OnFinish();
+
+        _selectedSlimes.Clear();
+        SetHighlight(_hoveredSlime, false);
+        _hoveredSlime = null;
+        UpdateSelectionCount();
+        onComplete?.Invoke();
     }
+
     public override void OnFinish()
     {
+        ClearSelection();
+        SetHighlight(_hoveredSlime, false);
         _hoveredSlime = null;
-        _slimesToRemove.Clear();
-        _inputSystem.UnbindAction(KeyCode.Mouse0,HandleBindRemoveAddSlime);
-        
+        UpdateSelectionCount();
     }
 
-    private bool IsMouseInPit()
+    private void ToggleSelection(Slime slime)
     {
-        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-        return _pitCtrl.Bounds.Contains(mousePos);
-    }
-
-    private void HandleBindRemoveAddSlime()
-    {
-        if(_hoveredSlime == null ) return;
-        if (!IsSlimeHoverInRemoveList)
+        int index = _selectedSlimes.IndexOf(slime);
+        if (index >= 0)
         {
-            AddSlimeToRemovalList();
+            _selectedSlimes.RemoveAt(index);
+            bool keepHover = !_inputSystem.IsUsingTouch &&
+                             slime == _hoveredSlime;
+            SetHighlight(slime, keepHover);
         }
-        else
+        else if (_selectedSlimes.Count < MaxSlimesToRemove)
         {
-            RemoveSlimeFromRemovalList();
+            _selectedSlimes.Add(slime);
+            SetHighlight(slime, true);
         }
+
+        UpdateSelectionCount();
     }
 
-    private void AddSlimeToRemovalList()
+    private void ClearSelection()
     {
-        if(_slimesToRemove.Count >= MaxSlimes_To_Remove)
-        {
-            _hoveredSlime = null;
-            return;
-        }
-        _slimesToRemove.Add(_hoveredSlime);
-        _gameManager.Hud.SendCommand(CommandType.UpdateRemoveSlimesText,
-        _slimesToRemove.Count);
+        for (int i = 0; i < _selectedSlimes.Count; i++)
+            SetHighlight(_selectedSlimes[i], false);
 
+        _selectedSlimes.Clear();
     }
-    private void RemoveSlimeFromRemovalList()
-    {
-        if(_hoveredSlime)
-        _slimesToRemove.Remove(_hoveredSlime);
-        _gameManager.Hud.SendCommand(CommandType.UpdateRemoveSlimesText,
-        _slimesToRemove.Count);
 
-    }
-    private void HighlightSlime(Slime slime)
+    private void UpdateSelectionCount()
     {
-        if(slime == null) return;
-        slime.Material.SetFloat("_UseOutline", 1f);
+        _gameManager.Hud.SendCommand(
+            CommandType.UpdateRemoveSlimesText,
+            _selectedSlimes.Count);
     }
-    private void UnHighlightSlime(Slime slime)
+
+    private Slime GetSlimeUnderPointer()
     {
-        if(slime == null) return;
-        slime.Material.SetFloat("_UseOutline", 0f);
+        return _inputSystem.TryGetPointerPosition(out Vector2 pointerPosition)
+            ? GetSlimeUnderPointer(pointerPosition)
+            : null;
+    }
+
+    private Slime GetSlimeUnderPointer(Vector2 pointerPosition)
+    {
+        Vector3 worldPosition = _camera.ScreenToWorldPoint(pointerPosition);
+        worldPosition.z = 0f;
+
+        _inputSystem.TryRaycast2D(
+            worldPosition,
+            out Slime slime,
+            _slimeLayerMask);
+        return slime;
+    }
+
+    private static void SetHighlight(Slime slime, bool enabled)
+    {
+        if (slime == null) return;
+        slime.Material.SetFloat("_UseOutline", enabled ? 1f : 0f);
     }
 }

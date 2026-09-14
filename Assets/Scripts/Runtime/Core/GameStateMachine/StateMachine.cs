@@ -3,9 +3,9 @@ using UnityEngine;
 
 class StateMachine
 {
-    private IState _curState;
+    private UIStateBase _curState;
 
-    public void ChangeState(IState newState)
+    public void ChangeState(UIStateBase newState)
     {
         _curState?.Exit();
         _curState = newState;

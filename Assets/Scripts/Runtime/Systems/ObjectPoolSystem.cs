@@ -4,7 +4,7 @@ using UnityEngine;
 class ObjectPoolSystem :MonoBehaviour
 {
     public static ObjectPoolSystem Instance {get; private set;}
-    private Dictionary<string,Queue<GameObject>> _pools = new Dictionary<string, Queue<GameObject>>();
+    private Dictionary<string,Queue<Component>> _pools = new Dictionary<string, Queue<Component>>();
 
     void Awake()
     {
@@ -21,34 +21,34 @@ class ObjectPoolSystem :MonoBehaviour
     /// 1. Key = "" => IPoolable.PoolKey
     /// 2. IPoolable.PoolKey = null => prefab.name  
     /// </param>
-    public GameObject Order(GameObject prefab,string key)
+    public T Order<T>(T prefab,string key) where T : Component
     {
-        GameObject newObj ;
+        T newObj ;
         if (!_pools.TryGetValue(key,out var pool))
         {
-            pool = new Queue<GameObject>();
+            pool = new Queue<Component>();
             _pools.Add(key,pool);
             newObj = Instantiate(prefab);
         }
         else if(pool.Count > 0)
-            newObj = pool.Dequeue();
+            newObj = (T)pool.Dequeue();
         else newObj = Instantiate(prefab);
 
         newObj.name = prefab.name;
-        newObj.SetActive(true);
+        newObj.gameObject.SetActive(true);
         return newObj;
 
     }
 
-    public void Cancel(GameObject obj,string key)
+    public void Cancel<T>(T obj,string key) where T : Component
     {
         if (!_pools.TryGetValue(key,out var pool))
         {
-            pool = new Queue<GameObject>();
+            pool = new Queue<Component>();
             _pools.Add(key,pool);
         }
         if(pool.Contains(obj)) return;
-        obj.SetActive(false);
+        obj.gameObject.SetActive(false);
         pool.Enqueue(obj);
     }
 }

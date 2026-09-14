@@ -1,32 +1,57 @@
 using System;
 using UnityEngine;
 
-public class Slime : MonoBehaviour ,IPoolable,IDestroyable
+class Slime : MonoBehaviour ,IPoolable,IDestroyable
 {
+    private static int SlimeLayerMask ;
+
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
-    private Collider2D _collider;
+    private CapsuleCollider2D _collider;
     private SlimeData _data;
     private bool _isFreeze;
     private bool _isDestroying;
+    private PitController _pit;
 
     [SerializeField] private int DisPLayLevel;
 
     public bool IsFreeZe => _isFreeze;
     public SlimeData Data => _data;
-    public bool IsTouching => _rb.IsTouchingLayers(LayerMask.GetMask("Slime","Ground"));
-
+    public bool IsTouching => _rb.IsTouchingLayers(SlimeLayerMask);
     public string PoolKey =>"Slime";
     public Material Material => _sr.material;
+    public SpriteRenderer Sr => _sr;
+    public SlimeVisual Visual {get; private set;}
+    public bool IsDestroying => _isDestroying;
+    public SlimeMerge SlimeMerge {get; private set;}
+    public Collider2D Collider => _collider;
 
+    private BaseAudioEvent _collisionAudioEvent;
+    private Vector3 _originScale;
+    private Delay _delay = new();
+    
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
-        _collider = GetComponent<Collider2D>();
+        _collider = GetComponent<CapsuleCollider2D>();
+        Visual = GetComponent<SlimeVisual>();
+        SlimeMerge = GetComponent<SlimeMerge>();
+        _collisionAudioEvent = Resources.Load<BaseAudioEvent>("Events/Collision_Audio_Event");
+        SlimeLayerMask = LayerMask.GetMask("Slime");
+        
     }
     void Update()
     {
+        Squash_Stretch();
+    }
+    void FixedUpdate()
+    {
+        if (_isDestroying || _pit == null) return;
+
+        // Chỉ despawn khi toàn bộ collider đã rơi qua ngưỡng dưới nồi.
+        if (_collider.bounds.max.y < _pit.DespawnY)
+            Destroy();
     }
     void LateUpdate()
     {
@@ -36,8 +61,35 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
     public void Init(SlimeData data)
     {
         _data = data;
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+        _collider.enabled = true;
         _sr.sprite = data.Sprite;
+        ApplyColliderData(data);
         scaleSlime(data.Scale);
+        _originScale = transform.localScale;
+    }
+
+    private void ApplyColliderData(SlimeData data)
+    {
+        if (_sr.sprite == null || _collider == null) return;
+
+        Bounds spriteBounds = _sr.sprite.bounds;
+        Vector2 size = data.HasColliderData
+            ? data.ColliderSize
+            : spriteBounds.size;
+
+        _collider.offset = data.HasColliderData
+            ? data.ColliderOffset
+            : spriteBounds.center;
+        _collider.size = new Vector2(
+            Mathf.Max(size.x, 0.01f),
+            Mathf.Max(size.y, 0.01f));
+        _collider.direction = data.HasColliderData
+            ? data.ColliderDirection
+            : size.x >= size.y
+                ? CapsuleDirection2D.Horizontal
+                : CapsuleDirection2D.Vertical;
     }
 
     void OnEnable()
@@ -46,24 +98,38 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
         _isDestroying = false;
     }
 
-    private void HandleDragonExploded(Slime dragon,Action<int> addScore)
+    void OnTransformParentChanged()
     {
-        if(_isDestroying) return;
+        _pit = GetComponentInParent<PitController>();
+    }
+
+    private void Squash_Stretch()
+    {
+        if (_isDestroying) return;
+        Visual.UpdateSquashStretch(_rb.linearVelocity.y, _originScale);
+    }
+
+    private async void HandleDragonExploded(Slime dragon,Action<int> addScore)
+    {
+        // Slime đang được giữ nằm dưới GamePlay, không nằm trong PitController.
+        // Chỉ slime đã được thả vào nồi mới chịu ảnh hưởng của vụ nổ.
+        if (_isDestroying || GetComponentInParent<PitController>() == null)
+            return;
 
         _isDestroying = true; 
         if(dragon == this)
         {
             //dragon vfx explosion
-
-            //
-            Destroy();
+            Visual.PlayExplosion(0.8f,() =>
+            {
+                Destroy();
+            });
             return;
         }
-        //vfx
-
-        //
+        await _delay.WaitSeconds(0.8f);
         addScore.Invoke(_data.Lv);
-        Destroy();
+        Visual.PlayScoreCollectEffect(Destroy);
+        
     }
 
     private void scaleSlime(float scale)
@@ -78,14 +144,43 @@ public class Slime : MonoBehaviour ,IPoolable,IDestroyable
     }
     public void Freeze()
     {
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
         _rb.bodyType = RigidbodyType2D.Kinematic;
         _isFreeze = true;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.relativeVelocity.magnitude < 2f)
+        return;
+
+        // Va chạm với mặt đất
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            _collisionAudioEvent.Play();
+            return;
+        }
+
+        // Va chạm với slime
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Slime"))
+            return;
+
+        if (GetInstanceID() > collision.gameObject.GetInstanceID())
+            return;
+
+        SlimeMerge slimeMerge = collision.gameObject.GetComponent<SlimeMerge>();
+        if (slimeMerge.IsMerging)
+            return;
+
+        _collisionAudioEvent.Play();
+    
     }
 
     public void Destroy()
     {
         _isDestroying = true;
         GameEvents.OnDragonExploded -= HandleDragonExploded;
-        ObjectPoolSystem.Instance.Cancel(gameObject,PoolKey);
+        ObjectPoolSystem.Instance.Cancel<Slime>(this,PoolKey);
     }
 }

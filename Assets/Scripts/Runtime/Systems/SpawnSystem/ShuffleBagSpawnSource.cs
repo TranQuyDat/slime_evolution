@@ -14,12 +14,15 @@ class ShuffleBagSpawnSource<T> : IMutableSpawnSource<T>
 
     public T GetNext()
     {
-        int index = _index++;
-        if(_index >= _items.Count) StartNewCycle();
+        T item = _items[_index];
 
-        return _items[index];
+        _index++;
+
+        if (_index >= _items.Count)
+            StartNewCycle();
+
+        return item;
     }
-
 
     public T PeekNext()
     {
@@ -39,6 +42,7 @@ class ShuffleBagSpawnSource<T> : IMutableSpawnSource<T>
 
     public void SetItems(IEnumerable<T> values)
     {
+        _items.Clear();
         _items.AddRange(values);
         StartNewCycle();
     }

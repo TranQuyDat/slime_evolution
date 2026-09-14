@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-using System.Threading.Tasks;
 
 class MonetizationManager : MonoBehaviour
 {
@@ -48,18 +47,30 @@ class MonetizationManager : MonoBehaviour
 
     public void ShowAdReward(Action OnComplete)
     {
-        _AdProvider?.ShowRewarded(OnComplete);
+        if (_AdProvider == null || !_AdProvider.IsReady())
+        {
+            OnComplete?.Invoke();
+            return;
+        }
+
+        _AdProvider.ShowRewarded(OnComplete);
     }
     public void ShowAdMidGame(Action OnComplete = null)
     {
-        _AdProvider?.ShowAdMidGame(OnComplete);
+        if (_AdProvider == null || !_AdProvider.IsReady())
+        {
+            OnComplete?.Invoke();
+            return;
+        }
+
+        _AdProvider.ShowAdMidGame(OnComplete);
     }
 
     public void HideBannerAd()
     {
         _AdProvider?.HideBanner();
     }
-    public async void ShowBannerAd()
+    public void ShowBannerAd()
     {
         _AdProvider?.ShowBanner();
     }

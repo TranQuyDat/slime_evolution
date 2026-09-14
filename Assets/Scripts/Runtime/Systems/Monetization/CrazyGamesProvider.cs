@@ -1,11 +1,10 @@
 using System;
-using System.Threading.Tasks;
 using CrazyGames;
 using UnityEngine;
 [CreateAssetMenu(fileName ="CrazyGamesProvider",menuName ="Ads/CrazyGamesProvider")]
 class CrazyGamesProvider : AdProviBase
 {
-    public bool IsReady()
+    public override bool IsReady()
     {
         return CrazySDK.IsAvailable && CrazySDK.IsInitialized;
     }
@@ -38,25 +37,53 @@ class CrazyGamesProvider : AdProviBase
 
     public override void ShowRewarded(Action onRewardSuccess = null)
     {
-        if(!IsReady()) return;
+        if(!IsReady())
+        {
+            onRewardSuccess?.Invoke();
+            return;
+        }
+
+        bool callbackInvoked = false;
+        void CompleteOnce()
+        {
+            if (callbackInvoked) return;
+            callbackInvoked = true;
+            onRewardSuccess?.Invoke();
+        }
+
         CrazySDK.Ad.RequestAd(CrazyAdType.Rewarded,default,
         adError:(error)=>
         {
             Debug.LogError(error);
+            CompleteOnce();
         },
-        adFinished:onRewardSuccess
+        adFinished:CompleteOnce
         );
     }
 
     public override void ShowAdMidGame(Action onSuccess)
     {
-        if(!IsReady()) return;
+        if(!IsReady())
+        {
+            onSuccess?.Invoke();
+            return;
+        }
+
+        bool callbackInvoked = false;
+        void CompleteOnce()
+        {
+            if (callbackInvoked) return;
+            callbackInvoked = true;
+            onSuccess?.Invoke();
+        }
+
         CrazySDK.Ad.RequestAd(CrazyAdType.Midgame,default,
         adError:(error)=>
         {
             Debug.LogError(error);
+            CompleteOnce();
         },
-        adFinished:onSuccess
+        adFinished:CompleteOnce
         );
     }
 }
