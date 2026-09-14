@@ -14,14 +14,9 @@ class SlimeSpawnManager : MonoBehaviour
     {
         _camera = Camera.main;
         _objectPoolSys = ObjectPoolSystem.Instance;
-        _bag = new ShuffleBagSpawnSource<int>(DeckDemo());
+        _bag = new ShuffleBagSpawnSource<int>(DeckEasy());
     }
 #region Decks
-    private int[] DeckDemo()
-    => new []
-    {
-      8,9,10,10 
-    };
     private int[] DeckEasy()
     => new [] 
     {

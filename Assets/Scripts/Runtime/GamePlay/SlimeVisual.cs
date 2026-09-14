@@ -67,7 +67,7 @@ class SlimeVisual : MonoBehaviour
                 _explosionVfxEvent.Play(new VFXContext
                 {
                     Position = transform.position,
-                    Scale = originScale * 1.5f,
+                    Scale =  Vector2.one * 1.2f,
                     OverridePosition = true,
                     OverrideScale = true
                 });
