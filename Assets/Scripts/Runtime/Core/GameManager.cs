@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CrazyGames;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
@@ -31,30 +30,13 @@ using UnityEngine;
         _gamePlay = GetComponentInChildren<GamePlay>();
         _saveSystem = new SaveSystem();
         _saveSystem.Provider = new PlayerPrefsProvider();
+        _monetizationMngr = FindFirstObjectByType<MonetizationManager>();
+        _monetizationMngr?.ShowAd();
     }
 
-    async void Start()
+    void Start()
     {
-        await InitializeSaveProvider();
         InitializeGame();
-    }
-
-    private async System.Threading.Tasks.Task InitializeSaveProvider()
-    {
-#if UNITY_EDITOR || UNITY_WEBGL
-        if (!CrazySDK.IsAvailable) return;
-
-        try
-        {
-            await CrazySDK.InitAsync();
-            _saveSystem.Provider = new CrazyGamesSaveProvider();
-        }
-        catch (Exception exception)
-        {
-            Debug.LogWarning(
-                $"CrazyGames save is unavailable. Using PlayerPrefs instead. {exception.Message}");
-        }
-#endif
     }
 
     private void InitializeGame()
@@ -93,9 +75,9 @@ using UnityEngine;
             { CommandType.Home, _gamePlay.StopAndClearPlay },
             { CommandType.Reset, _gamePlay.ResetPlay },
             { CommandType.Revive, 
-                ()=>{ RequestSupportRewardedAd(_gamePlay.ReviveSupport); } },
+                ()=>{ RequestSupportAd(_gamePlay.ReviveSupport); } },
             { CommandType.TrigerRemove3Slimes, 
-                ()=>{ RequestSupportRewardedAd(_gamePlay.TrigerRemoveSlimesSupport); } },
+                ()=>{ RequestSupportAd(_gamePlay.TrigerRemoveSlimesSupport); } },
             { CommandType.Remove3Slimes,()=> _gamePlay.RemoveSlimesSupport(
                 ()=>_hud.SendCommand(CommandType.CancleRemoveSlime)) },
             { CommandType.CancleRemoveSlime, _gamePlay.CancleSlimeSupport },
@@ -144,12 +126,12 @@ using UnityEngine;
         _hud.SendCommand(CommandType.AddScore,score);
     }
 
-    private void RequestSupportRewardedAd(Action sp)
+    private void RequestSupportAd(Action onComplete)
     {
         _gamePlay.PausePlay();
-        _monetizationMngr.ShowAdReward(()=>
+        _monetizationMngr.ShowAd(() =>
         {
-            sp?.Invoke();
+            onComplete?.Invoke();
             _gamePlay.ResumePlay();
         });
     }

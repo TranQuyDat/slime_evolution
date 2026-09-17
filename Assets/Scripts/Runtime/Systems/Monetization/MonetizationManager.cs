@@ -1,77 +1,60 @@
-using UnityEngine;
 using System;
-using UnityEngine.UI;
+using UnityEngine;
+using UnityEngine.Serialization;
 
+[DefaultExecutionOrder(-2)]
 class MonetizationManager : MonoBehaviour
 {
-    public static MonetizationManager Instance;
-    [Header("Setting Sdk")]
-    [SerializeField]private AdProviBase _AdProvider;
-    [SerializeField]private Button _btnHideBanners;
-    [SerializeField]private HudManager _hud;
+    public static MonetizationManager Instance { get; private set; }
 
-    void Awake()
-    {
-        if(Instance == null) Instance = this;
-        else Destroy(gameObject);
-        _hud = GameManager.Instance.Hud;
-    }
-    void Start()
-    {
-        InitalizeSdk();
-        _hud.OnChangeHud += HanldechangeHud;
-    }
+    [FormerlySerializedAs("_AdProvider")]
+    [SerializeField] private AdProviderBase _adProvider;
+    [SerializeField] private HudManager _hud;
 
-    private void InitalizeSdk()
+    private void Awake()
     {
-        if(_AdProvider == null) return;
-        _AdProvider.Initialize(() =>
+        if (Instance != null)
         {
-            Debug.Log($"{_AdProvider.GetType().Name} is ready.");
-            ShowBannerAd();
-
-        });
-    }
-
-    private void HanldechangeHud(StateType type)
-    {
-        if(_AdProvider == null) return;
-        if(type == StateType.Play || type == StateType.Pause)
-        {
-            HideBannerAd();
-            return;
-        } 
-        if(!_AdProvider.IsBannerInvisible) return;
-        ShowBannerAd();
-    }
-
-    public void ShowAdReward(Action OnComplete)
-    {
-        if (_AdProvider == null || !_AdProvider.IsReady())
-        {
-            OnComplete?.Invoke();
+            Destroy(gameObject);
             return;
         }
 
-        _AdProvider.ShowRewarded(OnComplete);
+        Instance = this;
+        _adProvider?.Initialize(() =>
+            Debug.Log($"{_adProvider.GetType().Name} initialized."));
     }
-    public void ShowAdMidGame(Action OnComplete = null)
+
+    private void Start()
     {
-        if (_AdProvider == null || !_AdProvider.IsReady())
+        if (_hud == null)
+            _hud = GameManager.Instance.Hud;
+
+        _hud.OnChangeHud += HandleChangeHud;
+    }
+
+    private void OnDestroy()
+    {
+        if (_hud != null)
+            _hud.OnChangeHud -= HandleChangeHud;
+
+        if (Instance == this)
+            Instance = null;
+    }
+
+    private void HandleChangeHud(StateType type)
+    {
+        if (type == StateType.Play)
+            ShowAd();
+    }
+
+    public void ShowAd(Action onComplete = null)
+    {
+        if (_adProvider == null)
         {
-            OnComplete?.Invoke();
+            onComplete?.Invoke();
             return;
         }
 
-        _AdProvider.ShowAdMidGame(OnComplete);
-    }
-
-    public void HideBannerAd()
-    {
-        _AdProvider?.HideBanner();
-    }
-    public void ShowBannerAd()
-    {
-        _AdProvider?.ShowBanner();
+        _adProvider.ShowAd(onComplete);
     }
 }
