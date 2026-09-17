@@ -37,7 +37,6 @@ using UnityEngine;
     void Start()
     {
         InitializeGame();
-        _monetizationMngr?.ShowAd();
     }
 
     private void InitializeGame()
