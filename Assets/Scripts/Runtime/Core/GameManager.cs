@@ -31,12 +31,13 @@ using UnityEngine;
         _saveSystem = new SaveSystem();
         _saveSystem.Provider = new PlayerPrefsProvider();
         _monetizationMngr = FindFirstObjectByType<MonetizationManager>();
-        _monetizationMngr?.ShowAd();
+        
     }
 
     void Start()
     {
         InitializeGame();
+        _monetizationMngr?.ShowAd();
     }
 
     private void InitializeGame()
