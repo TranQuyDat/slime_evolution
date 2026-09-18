@@ -107,6 +107,10 @@ using UnityEngine;
     {
         _hud.SendCommand(CommandType.UpdatePreview,sprite);
     }
+    public void UpdateProgressHud(int value)
+    {
+        _hud.SendCommand(CommandType.UpdateProgress, value);
+    }
     public void FlyPreviewToSpawn(
         Vector3 spawnPosition,
         Sprite sprite,

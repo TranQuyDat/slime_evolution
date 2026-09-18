@@ -35,6 +35,7 @@ class GamePlay : MonoBehaviour
     private CameraShake _cametaShake;
     private Slime _slimeHolder;
     private int _highestUnlockedLevel = 0;
+    private int _highestPitLevelValue;
     private int _spawnRequestVersion;
     public bool IsGameOver {get;private set;}
     public ScoreSystem ScoreSystem => _scoreSystem;
@@ -103,6 +104,7 @@ class GamePlay : MonoBehaviour
     public void InitializeUI()
     {
         _scoreSystem.SetScore(0);
+        ResetProgress();
     }
     public void InitializeSupport()
     {
@@ -151,7 +153,7 @@ class GamePlay : MonoBehaviour
     public void ResetPlay()
     {
         IsGameOver = false;
-        _scoreSystem.SetScore(0);
+        InitializeUI();
         clearRound();
         ResetVariables();
         RefreshPreview();
@@ -230,6 +232,7 @@ class GamePlay : MonoBehaviour
     {
         _slimeHolder = null;
         _pitCtrl.AddToPit(slime.gameObject);
+        UpdateProgress(slime.Data.Lv);
     }
 
     private void RefreshPreview()
@@ -316,7 +319,7 @@ class GamePlay : MonoBehaviour
 #region Support Actions
     public void ReviveSupport()
     {
-        _reviveAction.OnAction();
+        _reviveAction.OnAction(RefreshProgressFromPit);
         ResetVariables();
 
         if (_slimeHolder != null && _slimeHolder.gameObject.activeInHierarchy)
@@ -340,6 +343,7 @@ class GamePlay : MonoBehaviour
     {
         _removeSlimeAction.OnAction(() =>
         {
+            RefreshProgressFromPit();
             _trigerRemoveSlime = false;
             _CanDropSlime = true;
             Oncomplete?.Invoke();
@@ -381,10 +385,43 @@ class GamePlay : MonoBehaviour
         }
     }
     public void OnSlimeMerged(int newLevel)
-    {   
+    {
+        UpdateProgress(newLevel);
         _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);
         if (_slimeSpawn.SwapDeck(_highestUnlockedLevel))
             RefreshPreview();
+    }
+
+    private void UpdateProgress(int zeroBasedLevel)
+    {
+        int value = zeroBasedLevel + 1;
+        if (value <= _highestPitLevelValue) return;
+
+        _highestPitLevelValue = value;
+        _gameManager.UpdateProgressHud(value);
+    }
+
+    private void RefreshProgressFromPit()
+    {
+        int highestValue = 0;
+        Slime[] slimes = _pitCtrl.GetAllContents<Slime>();
+
+        for (int i = 0; i < slimes.Length; i++)
+        {
+            Slime slime = slimes[i];
+            if (slime == null || slime.IsDestroying) continue;
+            highestValue = Mathf.Max(highestValue, slime.Data.Lv + 1);
+        }
+
+        if (highestValue == _highestPitLevelValue) return;
+        _highestPitLevelValue = highestValue;
+        _gameManager.UpdateProgressHud(highestValue);
+    }
+
+    private void ResetProgress()
+    {
+        _highestPitLevelValue = 0;
+        _gameManager.UpdateProgressHud(0);
     }
 
     public Slime[] GetSlimesInPit()

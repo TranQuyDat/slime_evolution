@@ -13,6 +13,8 @@ class PlayPanel : UIStateBase
     [SerializeField]private Button _btnCancleRemoveSlime;
     [SerializeField]private Button _btnRemove3SlimesSupport;
     [SerializeField]private Image _ImgPreview;
+    [SerializeField]private Image _progress;
+    [SerializeField]private Image _progressValue;
     [SerializeField]private TextMeshProUGUI _txtScore;
     [SerializeField]private TextMeshProUGUI _txtCombo;
     [SerializeField]private FloatingScore _prefabFloatingScore;
@@ -26,6 +28,7 @@ class PlayPanel : UIStateBase
     private float _timeDelay;
     private int _displayedScore;
     private Tween _scoreTween;
+    private Tween _progressTween;
     private Sequence _selectionSequence;
     private readonly PlayPanelTransition _transition = new PlayPanelTransition();
     
@@ -34,6 +37,7 @@ class PlayPanel : UIStateBase
         _gameManager = GameManager.Instance;
         _hud = GameManager.Instance.Hud;
         _hud.SetBackGround(_spriteBG);
+        _progressValue.fillAmount = 0f;
     }
     void OnEnable()
     {
@@ -65,6 +69,7 @@ class PlayPanel : UIStateBase
 
         _hud.OnCommand +=HandleUpdateHightScore;
         _hud.OnCommand +=HandleUpdatePreview;
+        _hud.OnCommand +=HandleUpdateProgress;
         _hud.OnCommand +=HandleUpdateScore;
         _hud.OnCommand +=HandleUpdateCombo;
         _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
@@ -78,16 +83,19 @@ class PlayPanel : UIStateBase
             _btnPause.transform,
             _btnTrigerRemove3SlimesSupport.transform,
             _ImgPreview.transform,
-            _btnMute != null ? _btnMute.transform : null);
+            _btnMute != null ? _btnMute.transform : null,
+            _progress.transform);
     }
 
     public override void Exit()
     {
         _scoreTween?.Kill();
+        _progressTween?.Kill();
         _selectionSequence?.Kill();
 
         _hud.OnCommand -=HandleUpdateHightScore;
         _hud.OnCommand -=HandleUpdatePreview;
+        _hud.OnCommand -=HandleUpdateProgress;
         _hud.OnCommand -=HandleUpdateScore;
         _hud.OnCommand -=HandleUpdateCombo;
         _hud.OnCommand -=HandleUpdateRemove3SlimesSupport;
@@ -254,6 +262,18 @@ class PlayPanel : UIStateBase
         _transition.FxShowNextSlime(_ImgPreview.transform);
     }
 
+    private void HandleUpdateProgress(CommandType cm, object data)
+    {
+        if (cm != CommandType.UpdateProgress) return;
+
+        float targetFill = Mathf.Clamp((int)data, 0, 12) / 12f;
+        _progressTween?.Kill();
+        _progressTween = _progressValue
+            .DOFillAmount(targetFill, 0.35f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
+    }
+
     private void HandleFlyPreviewToSpawn(CommandType cm, object data)
     {
         if (cm != CommandType.FlyPreviewToSpawn) return;
@@ -297,6 +317,8 @@ class PlayPanelTransition : UItransitionBase
     private bool _hasNextSlimeTargetScale;
     private Vector3 _comboTargetScale;
     private bool _hasComboTargetScale;
+    private Vector3 _progressTargetScale;
+    private bool _hasProgressTargetScale;
 
     public void PlayIntro(
         Transform score,
@@ -304,7 +326,8 @@ class PlayPanelTransition : UItransitionBase
         Transform pause,
         Transform remove,
         Transform nextSlime,
-        Transform mute)
+        Transform mute,
+        Transform progress)
     {
         FxMoveFrom(score, Vector3.up * ScoreVerticalOffset, MoveDuration, Ease.OutBack);
         DOTween.Sequence()
@@ -319,6 +342,7 @@ class PlayPanelTransition : UItransitionBase
         FxShowNextSlime(nextSlime);
         if (mute != null)
             FxShowButtonPop(mute, 0.2f);
+        FxShowProgress(progress);
     }
 
     public Sequence FxShowNextSlime(Transform nextSlime)
@@ -343,6 +367,17 @@ class PlayPanelTransition : UItransitionBase
         }
 
         return FxPop(combo, _comboTargetScale, 1.2f, 0.25f);
+    }
+
+    private Sequence FxShowProgress(Transform progress)
+    {
+        if (!_hasProgressTargetScale)
+        {
+            _progressTargetScale = progress.localScale;
+            _hasProgressTargetScale = true;
+        }
+
+        return FxPop(progress, _progressTargetScale, 1.15f, 0.3f);
     }
 
     public Sequence FxFlyNextSlimeToSpawn(
