@@ -75,11 +75,11 @@ class GoalRegistry : ScriptableObject
             index++;
         }
     }
-
+    #if UNITY_EDITOR
     [ContextMenu("Save")]
     private void Save() => EditorSaveData.Save("GoalRegistry", this );
     [ContextMenu("Load")]
     private void Load()=> EditorSaveData.Load("GoalRegistry", this);
-    
+    #endif
 }
     

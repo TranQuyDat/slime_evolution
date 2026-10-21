@@ -1,5 +1,5 @@
 using UnityEngine;
-
+#if UNITY_EDITOR
 static class EditorSaveData
 {
     public static void Save(string key , object value)
@@ -16,3 +16,5 @@ static class EditorSaveData
         }
     }
 }
+
+#endif
