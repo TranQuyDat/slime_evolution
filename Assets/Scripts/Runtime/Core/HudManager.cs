@@ -14,10 +14,11 @@ public enum StateType
 public enum CommandType
 {
     //game flow command
-    Play,  Pause,  Resume, Reset, Home,
+    Play ,Pause ,Resume ,Reset ,Home ,
     //game event command
-    AddScore,UpdateHightScore,Revive,Remove3Slimes,TrigerRemove3Slimes,CancleRemoveSlime,
-    UpdateRemoveSlimesText,UpdateCombo,UpdatePreview,FloatingScore,FlyPreviewToSpawn,UpdateProgress
+    AddScore ,UpdateHightScore ,Revive ,Remove3Slimes ,TrigerRemove3Slimes ,CancleRemoveSlime ,
+    UpdateRemoveSlimesText ,UpdateCombo ,UpdatePreview ,FloatingScore ,FlyPreviewToSpawn ,UpdateProgress ,
+    InitGoal ,UpdateGoal ,
 }
 class HudManager : MonoBehaviour
 {

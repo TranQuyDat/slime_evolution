@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 class PlayPanel : UIStateBase
@@ -24,6 +26,9 @@ class PlayPanel : UIStateBase
 
     [SerializeField]private GameObject _PanelSelectSlimes;
     [SerializeField]private Sprite _spriteBG;
+    [SerializeField]private Transform _GoalContainer;
+    [SerializeField]private GoalUI _goalUIPrefab;
+    [SerializeField] private Sprite[] _goalIcons;
 
     private float _timeDelay;
     private int _displayedScore;
@@ -31,6 +36,7 @@ class PlayPanel : UIStateBase
     private Tween _progressTween;
     private Sequence _selectionSequence;
     private readonly PlayPanelTransition _transition = new PlayPanelTransition();
+    private List<GoalUI> _goalUis = new();
     
     void Awake()
     {
@@ -74,8 +80,10 @@ class PlayPanel : UIStateBase
         _hud.OnCommand +=HandleUpdateCombo;
         _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand +=HandleFloatingScore;
-        _hud.OnCommand += HandleCancelSelectSlimePanel;
-        _hud.OnCommand += HandleFlyPreviewToSpawn;
+        _hud.OnCommand +=HandleCancelSelectSlimePanel;
+        _hud.OnCommand +=HandleFlyPreviewToSpawn;
+        _hud.OnCommand +=HandleInitGoal;
+        _hud.OnCommand +=HandleUpdateGoal;
 
         _transition.PlayIntro(
             _txtScore.transform,
@@ -100,8 +108,10 @@ class PlayPanel : UIStateBase
         _hud.OnCommand -=HandleUpdateCombo;
         _hud.OnCommand -=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand -=HandleFloatingScore;
-        _hud.OnCommand -= HandleCancelSelectSlimePanel;
-        _hud.OnCommand -= HandleFlyPreviewToSpawn;
+        _hud.OnCommand -=HandleCancelSelectSlimePanel;
+        _hud.OnCommand -=HandleFlyPreviewToSpawn;
+        _hud.OnCommand -=HandleInitGoal;
+        _hud.OnCommand -=HandleUpdateGoal;
 
         _btnPause.onClick.RemoveListener(BtnPause);
         if (_btnMute != null)
@@ -110,13 +120,6 @@ class PlayPanel : UIStateBase
         _btnTrigerRemove3SlimesSupport.onClick.RemoveListener(
             BtnTrigerRemove3SlimesSupport);
         _btnCancleRemoveSlime.onClick.RemoveListener(BtnCancleSelectSlimePanel);
-    }
-    private void HandleChangeHud(StateType type)
-    {
-        if(type != StateType.Menu) return;
-        this.gameObject.SetActive(false);
-        _hud.OnChangeHud -=HandleChangeHud;
-        _txtCombo.gameObject.SetActive(false);
     }
 
     // buttons
@@ -175,7 +178,26 @@ class PlayPanel : UIStateBase
     }
 
 
-    //
+    // Handles 
+
+    private void HandleChangeHud(StateType type)
+    {
+        if(type != StateType.Menu) return;
+        _hud.OnChangeHud -=HandleChangeHud;
+
+        this.gameObject.SetActive(false);
+        _txtCombo.gameObject.SetActive(false);
+
+        if(_goalUis == null || _goalUis.Count == 0) return;
+        
+        foreach (var goalUI in _goalUis)
+        {
+            ObjectPoolSystem.Instance.Cancel<GoalUI>(goalUI,"GoalUIPool");
+        }
+        _goalUis.Clear();
+
+    }
+
     private void HandleCancelSelectSlimePanel(CommandType type ,object _)
     {
         if(type != CommandType.CancleRemoveSlime) return;
@@ -297,11 +319,45 @@ class PlayPanel : UIStateBase
         _txtHightScore.text = HudManager.FormatScore(hightscore);
     }
 
-    private void HandleUpdateRemove3SlimesSupport(CommandType cm,object data)
+    private void HandleUpdateRemove3SlimesSupport(CommandType cm ,object data)
     {
         if(cm != CommandType.UpdateRemoveSlimesText) return;
         int count = (int)data;
         _txtRemove3Slimes.text = "Selected: "+count+"/3";
+    }
+
+    private void HandleInitGoal(CommandType cm , object data)
+    {
+        if(cm != CommandType.InitGoal) return;
+        var (type, goalText, targetValue) = ((QuestionType type, string goalText, float targetValue))data;
+        var GoalUI = ObjectPoolSystem.Instance.Order<GoalUI>(_goalUIPrefab,"GoalUIPool");
+        GoalUI.transform.SetParent(_GoalContainer,false);
+        
+        _goalUis.Add(GoalUI);
+        print($"GoalUI Count: {_goalUis.Count}");
+
+        if(_goalIcons != null && _goalIcons.Length > 0)
+        {
+            int id =  UnityEngine.Random.Range(0, _goalIcons.Length);
+            var icon = _goalIcons[id];
+            GoalUI.Init(type ,icon ,goalText ,targetValue);
+            return;
+        }
+        GoalUI.Init(type ,null,goalText ,targetValue);
+    }
+
+    private void HandleUpdateGoal(CommandType cm , object data)
+    {
+        if(cm != CommandType.UpdateGoal || _goalUis.Count <= 0) return;
+
+        var (type , progressValue) = ((QuestionType type ,float progressValue))data;
+        
+        foreach(var goalUI in _goalUis)
+        {
+            if(goalUI.Type != type) continue;
+            goalUI.UpdateProgress(progressValue);
+        }
+
     }
 
 

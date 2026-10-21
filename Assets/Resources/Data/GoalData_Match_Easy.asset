@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d5fa4f1e608dddfbec4c0545d08b82, type: 3}
+  m_Name: GoalData_Match_Easy
+  m_EditorClassIdentifier: Assembly-CSharp::GoalData
+  _goalId: Goal_1
+  _type: 0
+  _difficulty: 1
+  _questions:
+  - _id: Quest1
+    _type: 0
+    _question: Merge 10 slimes
+    _target: 10
+  - _id: Quest2
+    _type: 0
+    _question: Merge 25 slimes
+    _target: 25
+  - _id: Quest3
+    _type: 1
+    _question: Reach 1,000 points
+    _target: 1000
+  - _id: Quest4
+    _type: 1
+    _question: Reach 3,000 points
+    _target: 3000
+  - _id: Quest5
+    _type: 3
+    _question: Reach a combo of 3
+    _target: 3
+  - _id: Quest6
+    _type: 3
+    _question: Reach a combo of 5
+    _target: 5

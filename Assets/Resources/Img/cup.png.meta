@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0bdb96f962987a417a399c0296b600f9
+guid: c7c801e26cb99fdb5b785832ac1b95e4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3290573182547071134
-    second: Ellipse 7_0
+      213: 9103656482713568619
+    second: cup_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ellipse 7_0
+      name: cup_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 275
-        height: 276
+        width: 208
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 26feadaef198552d0800000000000000
-      internalID: -3290573182547071134
+      spriteID: b650359765fa65e70800000000000000
+      internalID: 9103656482713568619
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ellipse 7_0: -3290573182547071134
+      cup_0: 9103656482713568619
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -10,25 +10,34 @@ class MenuPanel : UIStateBase
     [SerializeField]private TextMeshProUGUI _txtHightScore;
     [SerializeField]private Button _btnPlay;
     [SerializeField] private Button _btnMute;
+    [SerializeField] private Button _btnAchivement;
     [SerializeField]private Sprite _SpriteBG;
     [SerializeField]private MenuPanelTransition _transition;
+    [SerializeField]private Transform _achivementFrame;
+    [SerializeField]private Transform _achivementContents;
+    [SerializeField]private Sprite[] _AchivementIcons;
+    [SerializeField]private AchivementUI _achivementUIPrefab;
 
     void Awake()
     {
         _gameManager = GameManager.Instance;
         _hud = GameManager.Instance.Hud;
         _hud.SetBackGround(_SpriteBG);
+
     }
     public override void Enter()
     {
         this.gameObject.SetActive(true);
         _btnPlay.onClick.AddListener(BtnPlay); 
+        _btnAchivement.onClick.AddListener(BtnAchivement);
         if (_btnMute != null)
         {
             _btnMute.onClick.AddListener(BtnMute);
             _hud.RefreshMuteButton(_btnMute);
         }
+        _hud.OnCommand += InitAchivementUI;
         _hud.OnCommand +=HandleUpdateHightScore;
+        _hud.OnCommand +=HandleUpdateGoal;
 
         //fx
         _transition.OnStart();
@@ -48,10 +57,17 @@ class MenuPanel : UIStateBase
 
     public override void Exit()
     {
+        _hud.OnCommand -=InitAchivementUI;
         _hud.OnCommand -=HandleUpdateHightScore;
+        _hud.OnCommand -=HandleUpdateGoal;
         _btnPlay.onClick.RemoveListener(BtnPlay);
+        _btnAchivement.onClick.RemoveListener(BtnAchivement);
+        CancelAchivementUI();
+
         if (_btnMute != null)
             _btnMute.onClick.RemoveListener(BtnMute);
+        
+        _achivementFrame.gameObject.SetActive(false);
         this.gameObject.SetActive(false);
     }
 
@@ -71,11 +87,72 @@ class MenuPanel : UIStateBase
             _hud.SendCommand(CommandType.Play);
         });
     }
+
+    private void BtnAchivement()
+    {
+        _transition.FxClickBtn(_btnAchivement.transform, () =>
+        {
+            // Nếu khung frame đang chạy animation thì bỏ qua luôn, không cho bấm tiếp
+            if (DOTween.IsTweening(_achivementFrame.transform)) return;
+
+            bool isOpening = !_achivementFrame.gameObject.activeSelf;
+
+            if (isOpening)
+            {
+                _achivementFrame.gameObject.SetActive(true);
+                _achivementFrame.transform.localScale = Vector3.zero;
+            }
+
+            DOTween.Sequence()
+                .Append(_transition.FxPop(_achivementFrame, isOpening ? Vector3.one : Vector3.zero))
+                .OnComplete(() =>
+                {
+                    if (!isOpening) _achivementFrame.gameObject.SetActive(false);
+                })
+                .SetTarget(_achivementFrame.transform); // Gắn Target để DOTween.IsTweening nhận diện được
+        });
+    }
+
     private void HandleUpdateHightScore(CommandType cm,object data)
     {
         if(cm != CommandType.UpdateHightScore) return;
         int hightscore = (int)data;
         _txtHightScore.text = HudManager.FormatScore(hightscore);
+    }
+
+    private void InitAchivementUI(CommandType cm,object data)
+    {
+        if(cm != CommandType.InitGoal
+        || data is not (QuestionType type, string title, float progress, float targetValue)) return;
+        
+        AchivementUI achivementUI = ObjectPoolSystem.Instance.Order<AchivementUI>(_achivementUIPrefab,"AchivementUIPool");
+        achivementUI.transform.SetParent(_achivementContents,false);
+        achivementUI.Init(type, title, progress, targetValue, _AchivementIcons[(int)type]);
+        
+    }
+    private void CancelAchivementUI()
+    {
+        var achivements = _achivementContents.GetComponentsInChildren<AchivementUI>();
+        foreach(var a in achivements)
+        {
+            ObjectPoolSystem.Instance.Cancel<AchivementUI>(a,"AchivementUIPool");
+        }
+    }
+
+    private void HandleUpdateGoal(CommandType cm,object data)
+    {
+        if(cm != CommandType.UpdateGoal) return;
+        var (type , progressValue) = ((QuestionType type ,float progressValue))data;
+        //update Achivement ui
+        foreach(Transform child in _achivementContents)
+        {
+            if(!child.TryGetComponent<AchivementUI>(out var a))
+        
+            if(a.Type != type) continue;
+            a.UpdateProgress(progressValue);
+            
+        }
+
     }
 
 }
@@ -174,5 +251,6 @@ class MenuPanelTransition : UItransitionBase
         .Join(_bestScoreTrns.DOMove(oriPos,duration))
         ;
     }
+
 
 }

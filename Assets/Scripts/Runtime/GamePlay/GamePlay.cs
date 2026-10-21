@@ -18,6 +18,7 @@ class GamePlay : MonoBehaviour
     private GameManager _gameManager;
     private ScoreSystem _scoreSystem;
     private ComboSystem _comboSystem;
+    private GoalSystem _goalSystem;
     private PitController _pitCtrl;
     private float _timeDelay = 0f;
     private float _spawnReadyTime;
@@ -37,17 +38,22 @@ class GamePlay : MonoBehaviour
     private int _highestUnlockedLevel = 0;
     private int _highestPitLevelValue;
     private int _spawnRequestVersion;
+    private int _highestComboCount;
+    private int _mergeCount;
+
     public bool IsGameOver {get;private set;}
     public ScoreSystem ScoreSystem => _scoreSystem;
+    public GoalSystem GoalSystem => _goalSystem;
 
 #region Initialize
-    void Awake()
+    async void Awake()
     {
         _gameManager = GameManager.Instance;
         _scoreSystem = new ScoreSystem(); 
         _comboSystem = new ComboSystem();
         _camera = Camera.main;
         _cametaShake = _camera.GetComponent<CameraShake>();
+        _goalSystem = _gameManager.GoalSystem;
        
     }
     void Start()
@@ -114,6 +120,22 @@ class GamePlay : MonoBehaviour
         if(_removeSlimeAction == null)
             _removeSlimeAction = new RemoveSlimeAction(_inputSystem);
     }
+    public void InitializeGoalQuestions()
+    {
+        _goalSystem.RemoveQuest(GoalData.Type.Match);
+        _goalSystem.AddRandomMatch(GoalData.Difficulty.Easy);
+        _goalSystem.AddRandomMatch(GoalData.Difficulty.Medium);
+        _goalSystem.AddRandomMatch(GoalData.Difficulty.Hard);
+
+
+        var questions = _goalSystem.GetQuests(GoalData.Type.Match);
+        print($"so luong quest moi math {questions.Length}");
+
+        foreach(var q in questions)
+        {
+            _gameManager.InitGoalHud(q.quest.Type,q.quest.QuestionText, q.quest.Target);
+        }
+    }
     public void SubscribeEvents()
     {
         _comboSystem.OnComboChanged += HandleComboChange;
@@ -126,8 +148,13 @@ class GamePlay : MonoBehaviour
         InitializePit();
         InitializeUI();
         InitializeSupport();
+        InitializeGoalQuestions();
         SubscribeEvents();
         ResetVariables();
+
+
+        
+    
     }
     public void StartPlay()
     {
@@ -372,6 +399,8 @@ class GamePlay : MonoBehaviour
         _canPlay = true;
         IsGameOver = false;
         _highestUnlockedLevel = 0;
+        _highestComboCount = 0;
+        _mergeCount = 0;
     }
     private void clearRound()
     {
@@ -387,6 +416,7 @@ class GamePlay : MonoBehaviour
     public void OnSlimeMerged(int newLevel)
     {
         UpdateProgress(newLevel);
+        _gameManager.UpdateGoalHud(QuestionType.Merge_Slimes,++_mergeCount);
         _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);
         if (_slimeSpawn.SwapDeck(_highestUnlockedLevel))
             RefreshPreview();
@@ -443,6 +473,9 @@ class GamePlay : MonoBehaviour
     private void HandleComboChange(int cb)
     {
         _gameManager.updateComboHud(cb);
+        if(cb <= _highestComboCount) return;
+        _highestComboCount = cb;
+        _gameManager.UpdateGoalHud(QuestionType.Reach_Combo,cb);
     }
 
     void OnDrawGizmosSelected()

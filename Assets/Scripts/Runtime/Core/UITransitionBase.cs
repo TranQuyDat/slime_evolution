@@ -26,7 +26,7 @@ abstract class UItransitionBase
         return FxPop(button, targetScale, 1.15f, duration);
     }
 
-    protected Tween FxFadeOverlay(
+    public Tween FxFadeOverlay(
         Transform panel,
         float targetAlpha,
         float duration)
@@ -52,7 +52,7 @@ abstract class UItransitionBase
             .Join(group.DOFade(1f, duration));
     }
 
-    protected Tween FxScale(
+    public Tween FxScale(
         Transform target,
         float startScale,
         float duration,
@@ -64,7 +64,7 @@ abstract class UItransitionBase
         return target.DOScale(targetScale, duration).SetEase(ease);
     }
 
-    protected Tween FxMoveFrom(
+    public Tween FxMoveFrom(
         Transform target,
         Vector3 offset,
         float duration,
@@ -76,7 +76,7 @@ abstract class UItransitionBase
         return target.DOLocalMove(targetPosition, duration).SetEase(ease);
     }
 
-    protected Sequence FxPop(
+    public Sequence FxPop(
         Transform target,
         Vector3 targetScale,
         float overshoot = 1.15f,
@@ -91,7 +91,7 @@ abstract class UItransitionBase
                 .SetEase(Ease.OutQuad));
     }
 
-    protected Sequence FxScaleFade(
+    public Sequence FxScaleFade(
         Transform target,
         float startScale,
         float duration,
@@ -104,7 +104,7 @@ abstract class UItransitionBase
             .Join(group.DOFade(1f, duration));
     }
 
-    protected Sequence FxSlideScale(
+    public Sequence FxSlideScale(
         Transform target,
         Vector3 offset,
         float startScale,
@@ -123,7 +123,7 @@ abstract class UItransitionBase
             .Join(target.DOScale(targetScale, duration).SetEase(scaleEase));
     }
 
-    protected static CanvasGroup GetOrAddCanvasGroup(GameObject target)
+    public static CanvasGroup GetOrAddCanvasGroup(GameObject target)
     {
         CanvasGroup group = target.GetComponent<CanvasGroup>();
         return group != null ? group : target.AddComponent<CanvasGroup>();
