@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d5fa4f1e608dddfbec4c0545d08b82, type: 3}
+  m_Name: GoalData_Achievement
+  m_EditorClassIdentifier: Assembly-CSharp::GoalData
+  _goalId: 
+  _type: 1
+  _difficulty: 0
+  _questions:
+  - _id: Quest1
+    _type: 0
+    _question: Merge a slime for the first time
+    _target: 1
+  - _id: Quest2
+    _type: 0
+    _question: Merge 100 slimes in total
+    _target: 100
+  - _id: Quest3
+    _type: 0
+    _question: Merge 1,000 slimes in total
+    _target: 1000
+  - _id: Quest4
+    _type: 2
+    _question: 'Best score 30,000 points '
+    _target: 30000
+  - _id: Quest5
+    _type: 2
+    _question: Best score 50,000 points
+    _target: 50000
+  - _id: Quest6
+    _type: 2
+    _question: Best score 100,000 points
+    _target: 100000

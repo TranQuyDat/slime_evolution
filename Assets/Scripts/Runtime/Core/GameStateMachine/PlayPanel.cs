@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 
 class PlayPanel : UIStateBase
@@ -13,6 +15,8 @@ class PlayPanel : UIStateBase
     [SerializeField]private Button _btnCancleRemoveSlime;
     [SerializeField]private Button _btnRemove3SlimesSupport;
     [SerializeField]private Image _ImgPreview;
+    [SerializeField]private Image _progress;
+    [SerializeField]private Image _progressValue;
     [SerializeField]private TextMeshProUGUI _txtScore;
     [SerializeField]private TextMeshProUGUI _txtCombo;
     [SerializeField]private FloatingScore _prefabFloatingScore;
@@ -22,18 +26,24 @@ class PlayPanel : UIStateBase
 
     [SerializeField]private GameObject _PanelSelectSlimes;
     [SerializeField]private Sprite _spriteBG;
+    [SerializeField]private Transform _GoalContainer;
+    [SerializeField]private GoalUI _goalUIPrefab;
+    [SerializeField] private Sprite[] _goalIcons;
 
     private float _timeDelay;
     private int _displayedScore;
     private Tween _scoreTween;
+    private Tween _progressTween;
     private Sequence _selectionSequence;
     private readonly PlayPanelTransition _transition = new PlayPanelTransition();
+    private List<GoalUI> _goalUis = new();
     
     void Awake()
     {
         _gameManager = GameManager.Instance;
         _hud = GameManager.Instance.Hud;
         _hud.SetBackGround(_spriteBG);
+        _progressValue.fillAmount = 0f;
     }
     void OnEnable()
     {
@@ -65,12 +75,15 @@ class PlayPanel : UIStateBase
 
         _hud.OnCommand +=HandleUpdateHightScore;
         _hud.OnCommand +=HandleUpdatePreview;
+        _hud.OnCommand +=HandleUpdateProgress;
         _hud.OnCommand +=HandleUpdateScore;
         _hud.OnCommand +=HandleUpdateCombo;
         _hud.OnCommand +=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand +=HandleFloatingScore;
-        _hud.OnCommand += HandleCancelSelectSlimePanel;
-        _hud.OnCommand += HandleFlyPreviewToSpawn;
+        _hud.OnCommand +=HandleCancelSelectSlimePanel;
+        _hud.OnCommand +=HandleFlyPreviewToSpawn;
+        _hud.OnCommand +=HandleInitGoal;
+        _hud.OnCommand +=HandleUpdateGoal;
 
         _transition.PlayIntro(
             _txtScore.transform,
@@ -78,22 +91,27 @@ class PlayPanel : UIStateBase
             _btnPause.transform,
             _btnTrigerRemove3SlimesSupport.transform,
             _ImgPreview.transform,
-            _btnMute != null ? _btnMute.transform : null);
+            _btnMute != null ? _btnMute.transform : null,
+            _progress.transform);
     }
 
     public override void Exit()
     {
         _scoreTween?.Kill();
+        _progressTween?.Kill();
         _selectionSequence?.Kill();
 
         _hud.OnCommand -=HandleUpdateHightScore;
         _hud.OnCommand -=HandleUpdatePreview;
+        _hud.OnCommand -=HandleUpdateProgress;
         _hud.OnCommand -=HandleUpdateScore;
         _hud.OnCommand -=HandleUpdateCombo;
         _hud.OnCommand -=HandleUpdateRemove3SlimesSupport;
         _hud.OnCommand -=HandleFloatingScore;
-        _hud.OnCommand -= HandleCancelSelectSlimePanel;
-        _hud.OnCommand -= HandleFlyPreviewToSpawn;
+        _hud.OnCommand -=HandleCancelSelectSlimePanel;
+        _hud.OnCommand -=HandleFlyPreviewToSpawn;
+        _hud.OnCommand -=HandleInitGoal;
+        _hud.OnCommand -=HandleUpdateGoal;
 
         _btnPause.onClick.RemoveListener(BtnPause);
         if (_btnMute != null)
@@ -102,13 +120,6 @@ class PlayPanel : UIStateBase
         _btnTrigerRemove3SlimesSupport.onClick.RemoveListener(
             BtnTrigerRemove3SlimesSupport);
         _btnCancleRemoveSlime.onClick.RemoveListener(BtnCancleSelectSlimePanel);
-    }
-    private void HandleChangeHud(StateType type)
-    {
-        if(type != StateType.Menu) return;
-        this.gameObject.SetActive(false);
-        _hud.OnChangeHud -=HandleChangeHud;
-        _txtCombo.gameObject.SetActive(false);
     }
 
     // buttons
@@ -167,7 +178,26 @@ class PlayPanel : UIStateBase
     }
 
 
-    //
+    // Handles 
+
+    private void HandleChangeHud(StateType type)
+    {
+        if(type != StateType.Menu) return;
+        _hud.OnChangeHud -=HandleChangeHud;
+
+        this.gameObject.SetActive(false);
+        _txtCombo.gameObject.SetActive(false);
+
+        if(_goalUis == null || _goalUis.Count == 0) return;
+        
+        foreach (var goalUI in _goalUis)
+        {
+            ObjectPoolSystem.Instance.Cancel<GoalUI>(goalUI,"GoalUIPool");
+        }
+        _goalUis.Clear();
+
+    }
+
     private void HandleCancelSelectSlimePanel(CommandType type ,object _)
     {
         if(type != CommandType.CancleRemoveSlime) return;
@@ -254,6 +284,18 @@ class PlayPanel : UIStateBase
         _transition.FxShowNextSlime(_ImgPreview.transform);
     }
 
+    private void HandleUpdateProgress(CommandType cm, object data)
+    {
+        if (cm != CommandType.UpdateProgress) return;
+
+        float targetFill = Mathf.Clamp((int)data, 0, 12) / 12f;
+        _progressTween?.Kill();
+        _progressTween = _progressValue
+            .DOFillAmount(targetFill, 0.35f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
+    }
+
     private void HandleFlyPreviewToSpawn(CommandType cm, object data)
     {
         if (cm != CommandType.FlyPreviewToSpawn) return;
@@ -277,11 +319,45 @@ class PlayPanel : UIStateBase
         _txtHightScore.text = HudManager.FormatScore(hightscore);
     }
 
-    private void HandleUpdateRemove3SlimesSupport(CommandType cm,object data)
+    private void HandleUpdateRemove3SlimesSupport(CommandType cm ,object data)
     {
         if(cm != CommandType.UpdateRemoveSlimesText) return;
         int count = (int)data;
         _txtRemove3Slimes.text = "Selected: "+count+"/3";
+    }
+
+    private void HandleInitGoal(CommandType cm , object data)
+    {
+        if(cm != CommandType.InitGoal) return;
+        var (type, goalText, targetValue) = ((QuestionType type, string goalText, float targetValue))data;
+        var GoalUI = ObjectPoolSystem.Instance.Order<GoalUI>(_goalUIPrefab,"GoalUIPool");
+        GoalUI.transform.SetParent(_GoalContainer,false);
+        
+        _goalUis.Add(GoalUI);
+        print($"GoalUI Count: {_goalUis.Count}");
+
+        if(_goalIcons != null && _goalIcons.Length > 0)
+        {
+            int id =  UnityEngine.Random.Range(0, _goalIcons.Length);
+            var icon = _goalIcons[id];
+            GoalUI.Init(type ,icon ,goalText ,targetValue);
+            return;
+        }
+        GoalUI.Init(type ,null,goalText ,targetValue);
+    }
+
+    private void HandleUpdateGoal(CommandType cm , object data)
+    {
+        if(cm != CommandType.UpdateGoal || _goalUis.Count <= 0) return;
+
+        var (type , progressValue) = ((QuestionType type ,float progressValue))data;
+        
+        foreach(var goalUI in _goalUis)
+        {
+            if(goalUI.Type != type) continue;
+            goalUI.UpdateProgress(progressValue);
+        }
+
     }
 
 
@@ -297,6 +373,8 @@ class PlayPanelTransition : UItransitionBase
     private bool _hasNextSlimeTargetScale;
     private Vector3 _comboTargetScale;
     private bool _hasComboTargetScale;
+    private Vector3 _progressTargetScale;
+    private bool _hasProgressTargetScale;
 
     public void PlayIntro(
         Transform score,
@@ -304,7 +382,8 @@ class PlayPanelTransition : UItransitionBase
         Transform pause,
         Transform remove,
         Transform nextSlime,
-        Transform mute)
+        Transform mute,
+        Transform progress)
     {
         FxMoveFrom(score, Vector3.up * ScoreVerticalOffset, MoveDuration, Ease.OutBack);
         DOTween.Sequence()
@@ -319,6 +398,7 @@ class PlayPanelTransition : UItransitionBase
         FxShowNextSlime(nextSlime);
         if (mute != null)
             FxShowButtonPop(mute, 0.2f);
+        FxShowProgress(progress);
     }
 
     public Sequence FxShowNextSlime(Transform nextSlime)
@@ -343,6 +423,17 @@ class PlayPanelTransition : UItransitionBase
         }
 
         return FxPop(combo, _comboTargetScale, 1.2f, 0.25f);
+    }
+
+    private Sequence FxShowProgress(Transform progress)
+    {
+        if (!_hasProgressTargetScale)
+        {
+            _progressTargetScale = progress.localScale;
+            _hasProgressTargetScale = true;
+        }
+
+        return FxPop(progress, _progressTargetScale, 1.15f, 0.3f);
     }
 
     public Sequence FxFlyNextSlimeToSpawn(
