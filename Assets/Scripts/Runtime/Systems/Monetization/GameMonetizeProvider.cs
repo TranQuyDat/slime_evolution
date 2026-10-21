@@ -42,7 +42,7 @@ class GameMonetizeProvider : AdProviderBase
         _pendingAdCallback = onComplete;
 #if UNITY_WEBGL || UNITY_EDITOR
         Debug.Log("[GameMonetizeProvider] Ad request sent to GameMonetize SDK.");
-        ShowGameMonetizeAd(_gameId);
+        ShowGameMonetizeAd();
 #else
         Debug.Log(
             "[GameMonetizeProvider] Editor simulation: ad completed.");
@@ -85,6 +85,6 @@ class GameMonetizeProvider : AdProviderBase
     private static extern void InitApi(string gameId);
 
     [DllImport("__Internal", EntryPoint = "ShowBanner")]
-    private static extern void ShowGameMonetizeAd(string gameId);
+    private static extern void ShowGameMonetizeAd();
 #endif
 }

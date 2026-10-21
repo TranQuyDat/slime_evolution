@@ -41,10 +41,10 @@ class GoalData : ScriptableObject
     {
         _goalId = goalId;
     }
-
+    #if UNITY_EDITOR
     [ContextMenu("Save")]
     private void Save() => EditorSaveData.Save($"{_goalId}", this );
     [ContextMenu("Load")]
     private void Load()=> EditorSaveData.Load($"{_goalId}", this);
-    
+    #endif
 }
