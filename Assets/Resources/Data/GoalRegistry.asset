@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1141f311ecee177a6bb1b9c26af7c10e, type: 3}
+  m_Name: GoalRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::GoalRegistry
+  _entries:
+  - goalId: Goal_0
+    goalIdDisplay: Goal_0
+    goalData: {fileID: 11400000, guid: fa496c250891ea757b83724851d29463, type: 2}
+  - goalId: Goal_1
+    goalIdDisplay: Goal_1
+    goalData: {fileID: 11400000, guid: 9d5cbe795a932eaa5922e4a94335dc6c, type: 2}
+  - goalId: Goal_2
+    goalIdDisplay: Goal_2
+    goalData: {fileID: 11400000, guid: 93cf7807e0affb932ae0482ca99f3f85, type: 2}
+  - goalId: Goal_3
+    goalIdDisplay: Goal_3
+    goalData: {fileID: 11400000, guid: 1b3fdc2108cd1e853afb66976e48d28e, type: 2}

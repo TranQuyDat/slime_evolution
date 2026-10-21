@@ -18,6 +18,7 @@ class GamePlay : MonoBehaviour
     private GameManager _gameManager;
     private ScoreSystem _scoreSystem;
     private ComboSystem _comboSystem;
+    private GoalSystem _goalSystem;
     private PitController _pitCtrl;
     private float _timeDelay = 0f;
     private float _spawnReadyTime;
@@ -35,18 +36,24 @@ class GamePlay : MonoBehaviour
     private CameraShake _cametaShake;
     private Slime _slimeHolder;
     private int _highestUnlockedLevel = 0;
+    private int _highestPitLevelValue;
     private int _spawnRequestVersion;
+    private int _highestComboCount;
+    private int _mergeCount;
+
     public bool IsGameOver {get;private set;}
     public ScoreSystem ScoreSystem => _scoreSystem;
+    public GoalSystem GoalSystem => _goalSystem;
 
 #region Initialize
-    void Awake()
+    async void Awake()
     {
         _gameManager = GameManager.Instance;
         _scoreSystem = new ScoreSystem(); 
         _comboSystem = new ComboSystem();
         _camera = Camera.main;
         _cametaShake = _camera.GetComponent<CameraShake>();
+        _goalSystem = _gameManager.GoalSystem;
        
     }
     void Start()
@@ -103,6 +110,7 @@ class GamePlay : MonoBehaviour
     public void InitializeUI()
     {
         _scoreSystem.SetScore(0);
+        ResetProgress();
     }
     public void InitializeSupport()
     {
@@ -111,6 +119,22 @@ class GamePlay : MonoBehaviour
         
         if(_removeSlimeAction == null)
             _removeSlimeAction = new RemoveSlimeAction(_inputSystem);
+    }
+    public void InitializeGoalQuestions()
+    {
+        _goalSystem.RemoveQuest(GoalData.Type.Match);
+        _goalSystem.AddRandomMatch(GoalData.Difficulty.Easy);
+        _goalSystem.AddRandomMatch(GoalData.Difficulty.Medium);
+        _goalSystem.AddRandomMatch(GoalData.Difficulty.Hard);
+
+
+        var questions = _goalSystem.GetQuests(GoalData.Type.Match);
+        print($"so luong quest moi math {questions.Length}");
+
+        foreach(var q in questions)
+        {
+            _gameManager.InitGoalHud(q.quest.Type,q.quest.QuestionText, q.quest.Target);
+        }
     }
     public void SubscribeEvents()
     {
@@ -124,8 +148,13 @@ class GamePlay : MonoBehaviour
         InitializePit();
         InitializeUI();
         InitializeSupport();
+        InitializeGoalQuestions();
         SubscribeEvents();
         ResetVariables();
+
+
+        
+    
     }
     public void StartPlay()
     {
@@ -151,7 +180,7 @@ class GamePlay : MonoBehaviour
     public void ResetPlay()
     {
         IsGameOver = false;
-        _scoreSystem.SetScore(0);
+        InitializeUI();
         clearRound();
         ResetVariables();
         RefreshPreview();
@@ -230,6 +259,7 @@ class GamePlay : MonoBehaviour
     {
         _slimeHolder = null;
         _pitCtrl.AddToPit(slime.gameObject);
+        UpdateProgress(slime.Data.Lv);
     }
 
     private void RefreshPreview()
@@ -316,7 +346,7 @@ class GamePlay : MonoBehaviour
 #region Support Actions
     public void ReviveSupport()
     {
-        _reviveAction.OnAction();
+        _reviveAction.OnAction(RefreshProgressFromPit);
         ResetVariables();
 
         if (_slimeHolder != null && _slimeHolder.gameObject.activeInHierarchy)
@@ -340,6 +370,7 @@ class GamePlay : MonoBehaviour
     {
         _removeSlimeAction.OnAction(() =>
         {
+            RefreshProgressFromPit();
             _trigerRemoveSlime = false;
             _CanDropSlime = true;
             Oncomplete?.Invoke();
@@ -368,6 +399,8 @@ class GamePlay : MonoBehaviour
         _canPlay = true;
         IsGameOver = false;
         _highestUnlockedLevel = 0;
+        _highestComboCount = 0;
+        _mergeCount = 0;
     }
     private void clearRound()
     {
@@ -381,10 +414,44 @@ class GamePlay : MonoBehaviour
         }
     }
     public void OnSlimeMerged(int newLevel)
-    {   
+    {
+        UpdateProgress(newLevel);
+        _gameManager.UpdateGoalHud(QuestionType.Merge_Slimes,++_mergeCount);
         _highestUnlockedLevel = Mathf.Max(_highestUnlockedLevel, newLevel);
         if (_slimeSpawn.SwapDeck(_highestUnlockedLevel))
             RefreshPreview();
+    }
+
+    private void UpdateProgress(int zeroBasedLevel)
+    {
+        int value = zeroBasedLevel + 1;
+        if (value <= _highestPitLevelValue) return;
+
+        _highestPitLevelValue = value;
+        _gameManager.UpdateProgressHud(value);
+    }
+
+    private void RefreshProgressFromPit()
+    {
+        int highestValue = 0;
+        Slime[] slimes = _pitCtrl.GetAllContents<Slime>();
+
+        for (int i = 0; i < slimes.Length; i++)
+        {
+            Slime slime = slimes[i];
+            if (slime == null || slime.IsDestroying) continue;
+            highestValue = Mathf.Max(highestValue, slime.Data.Lv + 1);
+        }
+
+        if (highestValue == _highestPitLevelValue) return;
+        _highestPitLevelValue = highestValue;
+        _gameManager.UpdateProgressHud(highestValue);
+    }
+
+    private void ResetProgress()
+    {
+        _highestPitLevelValue = 0;
+        _gameManager.UpdateProgressHud(0);
     }
 
     public Slime[] GetSlimesInPit()
@@ -406,6 +473,9 @@ class GamePlay : MonoBehaviour
     private void HandleComboChange(int cb)
     {
         _gameManager.updateComboHud(cb);
+        if(cb <= _highestComboCount) return;
+        _highestComboCount = cb;
+        _gameManager.UpdateGoalHud(QuestionType.Reach_Combo,cb);
     }
 
     void OnDrawGizmosSelected()
